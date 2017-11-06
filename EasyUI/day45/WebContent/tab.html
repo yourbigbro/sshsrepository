@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Basic Tabs - jQuery EasyUI Demo</title>
+	<link rel="stylesheet" type="text/css" href="../../themes/default/easyui.css">
+	<link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="../demo.css">
+	<script type="text/javascript" src="../../jquery.min.js"></script>
+	<script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+</head>
+<body>
+	<div id="allProduct"></div>
+	<script>/* 只有body中的内容才能加载，因此script元素要放在body中 */
+		$(function(){
+					$("#allProduct").datagrid({
+						//url：请求的路径(此处给的是一个写死的json文件)【实际开发都是指向一个Servlet查询数据库，返回的结果需要转成json格式】
+						//url:'datagrid_data.json',  
+						//EasyUI发送的请求都是异步的
+						url:'/day45/ProductServlet',  
+						//columns：列属性会自动填充数据(只要field属性的值与json数据的key的值一致，那么会自动填充该字段的值)
+					    columns:[[    
+					        {field:'pid',title:'商品ID',width:100,halign:'center',align:'center'},    
+					        {field:'pname',title:'商品名称',halign:'center'},    
+					        {field:'market_price',title:'市场价格',width:100,align:'center',halign:'center'},    
+					        {field:'shop_price',title:'商城价格',width:100,align:'center',halign:'center'},    
+					        {field:'pdesc',title:'商品描述',align:'left',halign:'center'}    
+					    ]],
+		
+					    pagination:true,//显示分页工具条
+					    pageNumber:1,//指定默认的页码
+					    pageSize:3,//每页显示大小
+					    pageList:[3,6,9],//每页可选显示大小，必须是pageSize的整数倍
+					    fit:true
+					});
+				});  
+	</script>  
+</body>
+</html>

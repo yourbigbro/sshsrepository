@@ -1,0 +1,25 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+	"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+	"http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+	
+<!-- 该文件在整合之后主要负责找到Customer实体类的映射数据库的文件 -->
+<hibernate-configuration>
+	<!-- 会话工厂 -->
+	<session-factory>
+		<!-- 数据库方言，根据数据库选择 (可以灵活切换oracle和mysql，是hibernate框架的重要特性)-->
+	    <property name="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</property>
+
+		<!--为了方便调试是否在运行hibernate时在日志中输出sql语句 -->
+		<property name="hibernate.show_sql">true</property>
+		<!-- 是否对日志中输出的sql语句进行格式化 -->
+		<property name="hibernate.format_sql">true</property>
+
+		<property name="hibernate.hbm2ddl.auto">none</property>
+		
+		<!-- 加载映射文件(需要根据映射文件的位置修改路径) -->
+		<!-- 注意com的前面没有/ -->
+		<!-- 注意resource的属性值是用斜杠分隔而不是点 -->
+		<mapping resource="com/itheima/domain/Customer.hbm.xml"/>
+	</session-factory>
+</hibernate-configuration>

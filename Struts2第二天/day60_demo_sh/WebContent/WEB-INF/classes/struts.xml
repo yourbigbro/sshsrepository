@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+	
+	<!-- 配置开发者模式：表示不用重启服务器 -->
+    <constant name="struts.devMode" value="true" />
+	<!-- abstract=true声明为抽象包 -->
+    <package name="myDefault" namespace="/" extends="struts-default" abstract="true">
+    
+    	<interceptors>
+			<!-- name属性只是一个名字，随便起 -->
+			<!-- 已经创建了拦截器类之后，在这里实例化拦截器 -->
+			<interceptor name="privilegeInterceptor" class="com.itheima.interceptor.PrivilegeInterceptor"></interceptor>
+			<!-- 声明一个拦截器栈 -->
+			<interceptor-stack name="myStack">
+				<!-- 引用拦截器和拦截器栈(都是已经创建好的才能引用) -->
+				<interceptor-ref name="privilegeInterceptor">
+					<!-- 配置不用拦截的方法，在这里展示用户列表不用登陆，也就是不用拦截器。excludeMethod方法是固定的 -->
+					<param name="excludeMethods">findAllCustomer</param>
+					<param name="excludeMethods">checkUser</param>
+				</interceptor-ref>
+				<!-- 配置默认的拦截器，以免默认的拦截器被覆盖而不执行 -->
+				<interceptor-ref name="defaultStack"></interceptor-ref>
+			</interceptor-stack>
+		</interceptors>
+	
+		 <!-- 配置默认拦截器，如果Action中配置了拦截器就不用配置拦截器了，否则就使用默认拦截器 -->
+		<!--<default-interceptor-ref name="myStack"/> -->
+       
+    </package>
+
+</struts>

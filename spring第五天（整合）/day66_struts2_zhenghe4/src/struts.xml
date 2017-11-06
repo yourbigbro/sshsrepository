@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+	<!-- 开启开发者模式，也就是在修改之后可以自动重启服务器 -->
+	<constant name="struts.devMode" value="true"/>
+	
+	<!-- 注意，action还有父元素package -->
+	<package name="default" namespace="/" extends="struts-default">
+    	<!-- class属性引用的是applicationContext.xml中的id -->
+    	<!-- 注意，class要写全名(也就是包括包名) -->
+		<action name="*_Customer" class="com.itheima.web.action.CustomerAction" method="{1}">
+			<result name="list_success">/jsp/customer/list.jsp</result>
+		</action>
+    </package>
+</struts>

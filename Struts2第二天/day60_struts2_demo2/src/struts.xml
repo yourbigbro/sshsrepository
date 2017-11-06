@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+
+	<!-- 开启开发者模式 -->
+    <constant name="struts.devMode" value="true" />
+
+    <package name="default" namespace="/" extends="struts-default">
+    
+    	<global-results>
+    		<result name="input">/reg.jsp</result>
+    	</global-results>
+    	<!-- 注意，前台页面没有的name项不能出现在这里，否则会报错 -->
+    	<!-- 属性驱动：set方法方式 -->
+		<action name="demo1" class="com.itheima.web.action.Demo1Action"></action>
+    	<!-- 属性驱动：表达式方式 -->
+		<action name="demo2" class="com.itheima.web.action.Demo2Action"></action>
+    	 <!-- 模型驱动方式 -->
+		<action name="demo3" class="com.itheima.web.action.Demo3Action"></action>
+		
+    	<!-- 封装数据到list -->
+		<action name="demo4" class="com.itheima.web.action.Demo4Action"></action>
+		
+    	<!--封装数据到map -->
+		<action name="demo5" class="com.itheima.web.action.Demo5Action"></action>
+    </package>
+
+  
+</struts>

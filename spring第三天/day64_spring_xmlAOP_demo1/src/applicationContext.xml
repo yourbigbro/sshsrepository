@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:aop="http://www.springframework.org/schema/aop" 
+    xsi:schemaLocation="
+        http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/aop 
+        http://www.springframework.org/schema/aop/spring-aop.xsd">
+        
+        <!-- 实例化Service -->
+        <bean id="customerService" class="com.itheima.service.impl.CustomerServiceImpl"></bean>
+        
+        <!-- 实例化切面类 -->
+        <bean id="MyAspect" class="com.itheima.utils.MyAspect"></bean>
+        
+        <!-- 配置AOP -->
+        <aop:config>
+        	<aop:pointcut expression="execution(* com.itheima.service.impl.*.add*(..))" id="pointid1"/>
+        	<aop:pointcut expression="execution(* com.itheima.service.impl.*.update*(..))" id="pointid2"/>
+        	<aop:pointcut expression="execution(* com.itheima.service.impl.*.delete*(..))" id="pointid3"/>
+        	<aop:aspect ref="MyAspect">
+        		<aop:before method="privilege" pointcut-ref="pointid1"/>
+        		<aop:around method="around" pointcut-ref="pointid2"/>
+        		<aop:after method="afterReturning" pointcut-ref="pointid3"/>
+        	</aop:aspect>
+        </aop:config>
+</beans>

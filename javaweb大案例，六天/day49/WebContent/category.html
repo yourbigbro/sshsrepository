@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+
+</head><!-- 该页面用来填面板 -->
+
+<body>
+	<div id="tab"></div>
+	<script type="text/javascript">/* 注意该元素不能放在head元素里面否则无法读取 */
+	$(function(){
+		$("#tab").datagrid({    
+		    url:'/day49/UserServlet?type=fillIn',    
+		    columns:[[   
+		        {field:'cid',title:'cid',width:100},    
+		        {field:'cname',title:'cname',width:100},
+		        {field:'option',title:'操作',width:100,
+		        formatter:function(value,row,index){
+					var content='<a href="javascript:void(0);" onclick="edit(\''+row.cid+'\')">编辑</a>&nbsp;&nbsp;&nbsp;';
+					content+='<a href="javascript:void(0);" onclick="delete(\''+row.cid+'\')">删除</a>';
+					return content;
+				}
+		        	}  
+		    ]],
+		    fit:true
+		});  
+
+	})
+	function edit(cid){//编辑
+		globalCid=cid;
+		$('#tab').dialog({    
+		    title: 'My Dialog',    
+		    width: 400,    
+		    height: 200,    
+		    closed: false,    
+		    cache: false,    
+		    href: 'category_edit.html',    
+		    modal: true   
+		});    
+
+	}
+	
+	function edit(cid){//删除
+		
+	}
+</script>
+</body>
+</html>
