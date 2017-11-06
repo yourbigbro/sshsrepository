@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
+  <display-name>crm</display-name>
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+    <welcome-file>index.htm</welcome-file>
+    <welcome-file>index.jsp</welcome-file>
+    <welcome-file>default.html</welcome-file>
+    <welcome-file>default.htm</welcome-file>
+    <welcome-file>default.jsp</welcome-file>
+  </welcome-file-list>
+  
+  <!-- 下面的spring核心监听器负责将配置文件applicationContext.xml文件中的内容解析并加载到servlet作用域中
+   cxf核心servlet负责从servlet作用域中取用与cxf有关的配置，也就是与项目的发布有关的内容-->
+  
+  <!-- 配置spring核心监听器 -->
+  <listener>
+  	<!-- 搜索ContextLoaderListener可以得到全路径 -->
+  	<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+  <context-param>
+  	<!-- 进入ContextLoaderListener的父类ContextLoader中可以找到 contextConfigLocation变量-->
+  	<param-name>contextConfigLocation</param-name>
+  	<!-- 找到spring配置文件 -->
+  	<param-value>classpath:applicationContext.xml</param-value>
+  </context-param>
+  
+  <!-- 配置cxf核心servlet -->
+  <servlet>
+  	<servlet-name>cxf</servlet-name>
+  	<!-- 搜索cxfservlet即可 -->
+  	<servlet-class>org.apache.cxf.transport.servlet.CXFServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>cxf</servlet-name>
+  	<url-pattern>/service/*</url-pattern>
+  </servlet-mapping>
+  
+</web-app>

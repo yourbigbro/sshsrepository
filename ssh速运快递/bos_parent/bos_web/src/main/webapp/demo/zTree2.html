@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>zTree演示</title>
+		<link rel="stylesheet" type="text/css" href="../js/easyui/themes/default/easyui.css">
+		<link rel="stylesheet" type="text/css" href="../js/easyui/themes/icon.css">
+		<link rel="stylesheet" href="../js/ztree/zTreeStyle.css" type="text/css">
+		<script type="text/javascript" src="../js/jquery-1.8.3.js"></script>
+		<script type="text/javascript" src="../js/easyui/jquery.easyui.min.js"></script>
+		<script type="text/javascript" src="../js/ztree/jquery.ztree.all-3.5.js"></script>
+		<script type="text/javascript">
+		var setting = {
+				//第一个属性
+				data: {
+					//此处的设置不变
+					simpleData: {
+						enable: true
+						//idKey: "id",
+						//pIdKey: "pId",
+						//rootPId: 0
+					}
+				},
+					//第二个属性
+					callback: {
+						onClick:  function(event, treeId, treeNode) {
+																	var title=treeNode.name;
+																	//alert(title);
+																	var exist=$('#tt').tabs('exists',title);
+																	if(exist){
+																		//选中该已存在的选项卡面板
+																		$('#tt').tabs('select',title);
+																	}else{
+																		//只有有地址才会有跳转操作
+																		if(treeNode.page!=undefined){
+																			//添加一个新的选项卡面板
+																			$('#tt').tabs('add',
+																		        {
+																				//使用全局变量确认标题的名字
+																		          title: title,
+																		          //注意width不能设置为100%也不能为auto，不设置width属性的话就会自动填满(也就是全屏)
+																		          content:'<iframe style="border:0;width:95%;height:98%" src="../'+treeNode.page+'"></iframe>',
+																		          closable:true
+																			}); 
+																		}
+																	}
+																//定义方法不能加分号，执行方法才可以加
+																}
+			}
+		}
+			$(function(){
+				
+				//本页面是动展示数据
+				
+				//为setting内部添加内容类来设置动态获取数据
+				//在里面设置click来设置对ztree的点击
+				
+				
+				//动态获得zTreeNodes变量。由于是动态请求，所以要运行(或重新运行)项目再请求
+				//第一个是请求数据的地址，第二个参数是请求的参数，既然没有就省略了
+				$.post("../data/menu.json",function(zTreeNodes){
+					//alert(typeof zTreeNodes);
+					//console.log(typeof zTreeNodes);
+					$.fn.zTree.init($("#tree"), setting, zTreeNodes);
+				//这个第四个参数json还是要加上，因为虽然tomcat7可以自动将json格式的字符串转化成json，
+				//但是tomcat6却不能。项目右键run as启动的就是eclipse默认的tomcat6
+				},"json");
+			})
+		</script>
+	</head>
+	<body class="easyui-layout"> 
+		
+			<div data-options="region:'north',title:'上部',split:true" style="height:100px;"></div> 
+			
+			<div data-options="region:'south',title:'下部',split:true" style="height:100px;"></div> 
+			
+			<div data-options="region:'east',iconCls:'icon-reload',title:'右部',split:true" style="width:100px;"></div> 
+			
+			<div data-options="region:'west',title:'左部',split:true" style="width:200px;">
+				<div id="aa" class="easyui-accordion" style="width:300px;height:200px;"> 
+					<div title="zTree功能" data-options="iconCls:'icon-save'" style="overflow:auto;padding:10px;"> 
+					
+						<!-- 这里改放zTree -->
+						<ul id="tree" class="ztree" style="width:230px; overflow:auto;"></ul>
+						
+					</div> 
+				<div title="Title2" data-options="iconCls:'icon-reload',selected:true" style="padding:10px;"> 
+					<!-- 这里改放zTree2 -->
+						<!-- <ul id="tree2" class="ztree" style="width:230px; overflow:auto;"></ul> --> 
+				</div> 
+				<div title="Title3"> 
+					content3 
+				</div> 
+			</div> 
+			</div> 
+			
+			<div data-options="region:'center',title:'中部'" style="padding:5px;background:#eee;" id="tt" class="easyui-tabs">
+			</div> 
+		
+		</body> 
+</html>

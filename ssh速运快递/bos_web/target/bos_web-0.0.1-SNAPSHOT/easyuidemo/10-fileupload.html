@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+	<script type="text/javascript" src="../js/jquery-1.8.3.js"></script>
+	<script type="text/javascript" src="../js/ocupload/jquery.ocupload-1.1.2.js"></script>
+</head>
+<body>
+<!-- struts2上传文件 -->
+<!-- <form action="xxxx" method="post" enctype="multipart/form-data">
+	<input type="file" name="upload">
+	<input type="submit" value="上传文件">
+</form> -->
+
+<!-- 把struts2上传改成页面不刷新 -->
+<!-- <iframe name="mm" hidden="true"></iframe>
+<form target="mm" action="xxxx" method="post" enctype="multipart/form-data">
+	<input type="file" name="upload">
+	<input type="submit" value="上传文件">
+</form>
+ -->
+
+<!-- ocupload = one click upload -->
+
+<input type="button" value="上传文件" id="ocu">
+<script type="text/javascript">
+	$(function(){
+		$("#ocu").upload({
+			action: 'xxx',
+			name: 'upload'
+		})
+	})
+</script>
+
+
+</body>
+</html>

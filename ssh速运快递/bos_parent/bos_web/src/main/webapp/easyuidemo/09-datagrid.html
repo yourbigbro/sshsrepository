@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+	<link rel="stylesheet" type="text/css" href="../js/easyui/themes/default/easyui.css">
+	<link rel="stylesheet" type="text/css" href="../js/easyui/themes/icon.css">
+	<script type="text/javascript" src="../js/jquery-1.8.3.js"></script>
+	<script type="text/javascript" src="../js/easyui/jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="../js/easyui/locale/easyui-lang-zh_CN.js"></script>
+</head>
+<body>
+<!-- datagrid第一种用法 -->
+<table class="easyui-datagrid">
+	<thead>
+		<tr>
+			<th data-options="field:'id'">编号</th>
+			<th data-options="field:'name'">姓名</th>
+			<th data-options="field:'age'">年龄</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>1</td>
+			<td>小明</td>
+			<td>18</td>
+		</tr>
+		<tr>
+			<td>2</td>
+			<td>小云</td>
+			<td>28</td>
+		</tr>
+	</tbody>
+</table>
+
+<hr>
+<!-- datagrid 动态获取数据 -->
+<!-- <table class="easyui-datagrid" data-options="url:'../data/datagrid.json'">
+	<thead>
+		<tr>
+			<th data-options="field:'id'">编号</th>
+			<th data-options="field:'name'">姓名</th>
+			<th data-options="field:'age'">年龄</th>
+		</tr>
+	</thead>
+</table> -->
+
+<hr>
+<!-- 表头和数据都动态加载 -->
+<table id="tt"></table>
+<script type="text/javascript">
+	$(function(){
+		$("#tt").datagrid({
+			columns : [[
+			            {"field":"id",title:"编号",checkbox:true},
+			            {"field":"name",title:"姓名"},
+			            {"field":"age",title:"年龄"}
+			            ]],
+			url : "../data/datagrid.json",
+			striped : true,
+			toolbar: [{  
+						  text : '修改',
+						  iconCls: 'icon-edit',  		
+						  handler: function(){alert('edit')}  	
+					  },'-',{ 
+						  text : '帮助',
+						  iconCls: 'icon-help',  		
+						  handler: function(){alert('help')}  	
+			}],
+			singleSelect : true,
+			pagination : true,
+			pageList : [1,2,3],
+			pageSize : 2,
+			pageNumber : 6
+		});
+	})
+</script>
+
+
+</body>
+</html>
