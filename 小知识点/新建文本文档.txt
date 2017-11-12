@@ -124,4 +124,133 @@
 30、linux进入文件：vim+文件名。开启编辑：i。退出编辑：esc+ctrl+zz
 
 
-31、
+31、dubbo改造的方法：分别在服务端和客户端的application-*.xml中添加dubbo约束和配置dubbo暴露端口。
+
+
+32、zookeeper和dubbo的关系：zookeeper是dubbo的三种连接方式之一。zookeeper的配置方法是分别在服务端和客户端的application-*.xml中进行配置。zookeeper注册中心的作用是注册服务和查找服务。zookeeper是需要开启服务的，不是配置完了打开虚拟机就完事了，光打开虚拟机不行。
+
+
+33、@RequestMapping("test/{page}/{rows}")里面的字符串里面有{}，但是和他对应的@Pathvariable("page")里面就没有{}。另外，里面还可以有参数为method=RequestMethod.get。不写的话get和post都可以。
+
+
+34、本地hosts文件（或DNS）与ngnix反向代理服务器配合的过程：域名--hosts文件--域名和ip地址（注意这里的ip地址是不带端口的）--根据ip地址找到ngnix反向代理服务器，并让ngnix反向代理服务器通过域名映射到带端口的ip地址。
+
+
+35、@RequestParam(value="要接收的前台传来的属性名",defaultValue="该属性名没有属性值时的默认值")
+
+
+36、@RequestParam和@PathVariable的应用场景区别在于前者的url格式为...?a=1，后者的url格式为.../1
+
+
+37、当pom.xml文件里面设置path元素时，url中不写项目名，前台页面的js,css等资源的相对路径正常写或者根据@RequestMapping()加上几个../都行；当没有path元素时，不仅访问的url要写项目名，前台引入的css等资源的相对路径还要根据@RequestMapping()注解加上../。注解中总共有几个层级就要加上几个../。因此，应该在pom.xml文件中加上path元素，这样就不用一直修改css等资源的相对路径，也不用将它们修改成绝对路径。
+
+
+38、打开多个ngix的时候再访问项目会报错。由于打开nginx不管成功还是失败都是黑框一闪，所以不打开任务管理器的话就无法轻松地看见nginx是否已经启动了以及是否启动了多个。
+
+
+39、查看端口占用情况的命令：netstat -ano
+    nginx的三个命令：start nginx.exe   nginx.exe -s stop   nginx.exe -s reload
+
+
+40、当直接输入目标的ip地址和端口号时，就不走反向代理和hosts文件了，直接到达目标。输入域名和端口号时，只走hosts文件（为了获得目的地的ip地址）不走反向代理（因为已经有了端口号，不必从nginx中获得端口号）。因此nginx配置文件nginx.conf中的listen对应的端口号只能是默认端口号80，为了在域名后面不输入端口号时从nginx中获得真正的前台Controller地址。并且用于输入的端口绝不可能是80，因为这样的话就不走反向代理了，而真正的端口号为了不和listen的80重合而必然不是80，因此用户输入80端口号的话永远是404找不到页面错误。
+
+
+41、hosts文件中映射的是域名和ip地址，是没有端口在里面的。
+
+42、当重新配置了nginx的配置文件nginx.conf之后，需要对nginx进行reload，但是项目不用重新开启。该配置文件中将listen（也就是监听）的属性值设置为80是因为浏览器中当不输入端口时默认是80，而listen也监听的是80就使得用户不用在url中输入端口。事实上，一旦输入端口就不会再走nginx了。
+
+
+43、zookeeper每增加一个接口就要在application-service.xml和application-dao.xml中分别多配置一个dubbo元素用来注册服务和查找服务
+
+
+44、在eclipse中配置tomcat图片服务器的方式（也就是配置保存图片的路径）：双击tomcat服务器--modules--add web module--配置path。这样的话，将图片存入到该path路径时就会将图片存入webapps文件夹下。
+
+
+45、将项目安装到本地仓库：右键--run as--maven install。
+
+
+46、反斜杠的转义问题解决方法：
+                            1）改成正斜杠
+                            2）再加一个反斜杠
+
+
+47、选中接口之后ctrl+t查看它的实现类
+
+
+48、.properties配置文件要被spring加载，也就是需要在.xml文件里面：
+                                               <context property-placeholder location="classpath:**/**.properties" />
+在代码中使用该配置文件中的键值对的方法是：
+                                         @Value("${aa}")
+                                         private String aa;
+
+
+49、网络的状态发生变化时（比如网卡被修改了）dubbo就可能出问题，比如找不到已经发布的服务。解决方式是重新启动作为dubbo服务端的项目。
+
+
+50、序列化：将对象的状态信息转换成可以存储或传输的过程。传递对象传递的其实是对象的引用，也就是对象的内存地址，无法在项目之间传递。字符串可以传递是因为字符串已经在内部做了序列化。
+
+
+51、zookeeper的启动方式：
+                        进入bin目录启动zookeeper：
+                                                [root@itcast-01 bin]# pwd
+                                                /usr/local/zookeeper-3.4.6/bin
+                                                [root@itcast-01 bin]# ./zkServer.sh start  
+
+
+52、linux回到根目录：cd /root
+
+
+53、SEO静态化之后经过过滤器*.html的index.html能够进入index.jsp是因为在前端过滤器去掉了.html之后就只剩下了index，再用springmvc.xml中的视图解析器加上前缀和后缀之后就可以通过返回接收的参数字符串而直接跳转到相应的jsp页面。SEO搜索引擎优化是为了提高页面在搜索引擎中的权重，从而更靠前。
+
+
+54、为了后台代码容易写，可以将json变成自己创建的pojo，或者map。毕竟都属性和属性值的形式。假如有多个map，还可以将这些map放在list集合中。
+
+
+55、每次修改代码之后都要重新打包，但是引入依赖却只需要一次。
+
+
+56、用private static final ObjectMapper MAPPER = new ObjectMapper();和String json = MAPPER.writeValueAsString(picUploadResult);将pojo或集合转换成json是变成了字符串格式的json，因此返回类型是String。
+
+
+57、redis的两种持久化方案：
+                         1）RDB快照：把内存中的数据来一份一摸一样的放在硬盘中。优点是数据量小，节省空间，因为只保存当前数据库的状态不保存增删改的                                     记录。缺点是在数据量大的情况下会出现卡顿，但是还原的所用的时间短。
+                         2）AOF命令保存日志：将每一条对redis的写操作命令，保存到类似日志文件中。缺点是需要的空间大，优点是加载到内存中的时候可以                                             一条一条的执行，不会出现卡顿。但是还原的时间会比较长。AOF的另一个优点是可以利用日志修改误操作，再执                                             行一遍十分方便。
+
+
+58、linux3.0以上才支持集群。
+
+
+59、pwd：显示当前完整目录名。
+
+
+60、vim 文件名 表示要修改某个文件。
+
+
+61、在文件里面/***表示要在文件中寻找字符串***。假如找到多个符合要求的字符串，按n表示跳到下一个符合要求的字符串。
+
+
+62、shift zz命令为保存退出。
+
+
+63、ctrl c结束程序
+
+
+64、select 0表示选择第一个redis数据库。
+
+
+65、创建shell脚本：vim ****.sh--编写shell脚本--保存退出--./*****.sh来执行该脚本。wxr中w表示可写，x表示可执行，r表示可读。没有权限时会显示-。此时该脚本的权限为默认的读和写，要手动添加执行权限：chmod u+x *****.sh。有执行权限之后文件夹的颜色由白色变为绿色。
+
+
+66、使用命令行从redis客户端连接redis集群：./redis-cli -h 192.168.37.131 -p 7006 -c。注意，连接主从节点均可。注意，比连接非集群的redis多了一个-c。（c是集群cluster的首字母）
+
+
+67、expire a 100 将以a为键的键值对（也就是redis数据库中的键值对）的有效期设置为100s。
+
+
+68、jedisCluster连接池和jedis连接池不一样的地方是前者不用从连接池中取出连接和将连接还给连接池。他是内部集成好的。事实上jedisCluster是连接对象，不    叫连接池。
+
+
+69、将配置写在xml配置文件而不是在代码里面写注解的原因：不用重新编译和部署。
+
+
+70、
