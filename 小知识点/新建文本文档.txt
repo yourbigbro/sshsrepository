@@ -253,4 +253,55 @@
 69、将配置写在xml配置文件而不是在代码里面写注解的原因：不用重新编译和部署。
 
 
-70、
+70、restful接口风格的五个特点：
+                             1）使用http或https协议
+                             2）使用专用的域名
+                             3）路径中不能有动词只能有名词，名词往往与数据库表格名字相对应
+                             4）用http动词进行资源操作（常用的四个是get,post,put,delete）
+                             5）用json作为返回数据的格式
+                             6）不要使用大写字母
+                             7）用中线-代替下划线_
+                             8）参数列表被encode过（防止中文参数产生乱码）
+
+
+71、最佳实践：最佳实践最好应该使用的开发方式，包括使用restful风格的接口和响应设计。restful风格的接口上面介绍过了，相应设计的最佳实践如下：
+                      1）响应体仅仅用来传输数据，不要有状态码等其他内容。
+                      2）数据要拿来就可以用，不要拆箱（例如不要嵌套json等）
+                      3）用来描述数据或者请求的元数据放在header中（也就是响应头中）。（元数据就是描述数据的数据）
+
+
+72、开发接口的工具：谷歌浏览器里面的Advanced REST client
+
+
+73、当一台服务器上有多个服务时（也就是有多个service时），zookeeper的端口不用改，dubbo的端口号20880要改，不然会冲突。但是如果使用的是分布式，也就是每个服务都不在一个服务器上的话，就不用改端口号了。
+
+
+74、web.xml中配置spring（也就是applicationContext.xml文件的路径）和spring监听器。
+
+
+75、不能同时开启redis配置和redis集群配置不是因为他们都继承的一个接口，而是我们调用的是接口，因此一个接口此时无法对应两个实现类。
+
+
+76、判断字符串是否为null或者""空字符串的方法：StringUtils.isNotBlank()
+
+
+77、对象和字符串的相互转换：
+                           private static final ObjectMapper MAPPER =new ObjectMapper();
+                           1）将对象转换为字符串：String str = MAPPER.writeValueAsString(对象);
+                           2）将字符串转换为对象：User user = MAPPER.readValue(str,User.class);
+
+
+78、在eclipse里面ctrl+h---选择file search 可以进行关键字的搜索。containing text是你要搜索的内容，file name patterns是你要搜索的文件，可以用模糊匹    配。
+    ctrl+h是跳转到该文件的指定行数。
+
+
+79、java的md5加密使用apache包的DigestUtils.md5Hex()方法。
+
+
+80、redis保证唯一性的方法：incr(aaa)方法，作用是将aaa的值加一。
+
+
+81、ticket的作用：ticket在用户登陆成功之后存储在cookie中，可以根据ticket从redis数据库中查询到用户的登录信息，从而在分布式集群中不用一直登陆，也可以在用户购物时将用户信息写入订单等位置。
+
+
+82、
