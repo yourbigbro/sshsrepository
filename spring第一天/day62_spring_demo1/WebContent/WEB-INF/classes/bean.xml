@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
-<beans>
-	<!-- admin:行政，管理 -->
-	<bean id="userDao" class="com.itheima.demo.AdminUserDaoImpl"/>
-	
-</beans>

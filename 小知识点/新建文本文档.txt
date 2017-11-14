@@ -325,4 +325,10 @@
 88、请求进入springmvc的时候会在控制台中显示出来。
 
 
-89、
+89、从数据库中查询数据并添加到索引库的步骤：
+                                          1）用mapper从数据库中查询数据
+                                          2）把数据封装到SolrInputDocument中（根据schema.xml配置文件中配置的field用addField方法进行封装进行封装）
+                                          3）用CloudSolrServer将数据添加到索引库中（调用add方法传入参数SolrInputDocument然后调用commit方法提交）
+
+
+90、
