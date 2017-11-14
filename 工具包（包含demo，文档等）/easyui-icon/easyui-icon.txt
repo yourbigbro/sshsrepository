@@ -1,0 +1,68 @@
+.icon-blank{
+background:url('icons/blank.gif') no-repeat;
+}
+.icon-add{
+background:url('icons/edit_add.png') no-repeat;
+}
+.icon-edit{
+background:url('icons/pencil.png') no-repeat;
+}
+.icon-remove{
+background:url('icons/edit_remove.png') no-repeat;
+}
+.icon-save{
+background:url('icons/filesave.png') no-repeat;
+}
+.icon-cut{
+background:url('icons/cut.png') no-repeat;
+}
+.icon-ok{
+background:url('icons/ok.png') no-repeat;
+}
+.icon-no{
+background:url('icons/no.png') no-repeat;
+}
+.icon-cancel{
+background:url('icons/cancel.png') no-repeat;
+}
+.icon-reload{
+background:url('icons/reload.png') no-repeat;
+}
+.icon-search{
+background:url('icons/search.png') no-repeat;
+}
+.icon-print{
+background:url('icons/print.png') no-repeat;
+}
+.icon-help{
+background:url('icons/help.png') no-repeat;
+}
+.icon-undo{
+background:url('icons/undo.png') no-repeat;
+}
+.icon-redo{
+background:url('icons/redo.png') no-repeat;
+}
+.icon-back{
+background:url('icons/back.png') no-repeat;
+}
+.icon-sum{
+background:url('icons/sum.png') no-repeat;
+}
+.icon-tip{
+background:url('icons/tip.png') no-repeat;
+}
+.icon-mini-add{
+background:url('icons/mini_add.png') no-repeat 2px 2px;
+}
+.icon-mini-edit{
+background:url('icons/mini_edit.png') no-repeat 2px 2px;
+}
+.icon-mini-refresh{
+background:url('icons/mini_refresh.png') no-repeat 3px 2px;
+}
+1.3.0版easyui默认图标有这些，下载easyUI的压缩包后，解压后在theme文件夹下的icon文件夹是默认的图标，如果你觉得不够用，可以上网下载16x16大小的图片，放在icon文件夹下，然后更改theme文件夹下的icon.css
+添加以下css代码即可
+.icon-你的名称{
+background:url('icons/图片名称.png') no-repeat 3px 2px;
+}
