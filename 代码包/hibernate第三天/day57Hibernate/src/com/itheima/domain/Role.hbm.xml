@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+		<class name="com.itheima.domain.Role" table="sys_role">
+			<id name="role_id" column="role_id">
+				<generator class="native"></generator>
+			</id>
+			
+			<property name="role_name" column="role_name"></property>
+			<property name="role_memo" column="role_memo"></property>
+			<!-- 配置多对多的映射关系(多对多的话role表关联的就是中间表而不是user表了)   集合 -->
+			<set name="users" table="sys_user_role" inverse="true" cascade="save-update">
+				<key column="role_id"></key>
+				<many-to-many class="com.itheima.domain.User" column="user_id"></many-to-many>
+			</set>
+			
+		</class>
+</hibernate-mapping>

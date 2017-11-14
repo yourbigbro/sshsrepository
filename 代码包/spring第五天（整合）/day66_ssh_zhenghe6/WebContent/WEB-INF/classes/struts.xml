@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+	<!-- 开启开发者模式，也就是在修改之后可以自动重启服务器 -->
+	<constant name="struts.devMode" value="true"/>
+	
+	<!-- 注意，action还有父元素package -->
+	<package name="default" namespace="/" extends="struts-default">
+		<!--  获取添加客户页面(class属性值引用的是applicationContext.xml里面的id值，管理权交给了spring) -->
+		<action name="*_Customer" class="customerAction" method="{1}">
+			<result name="list">/jsp/customer/list.jsp</result>
+		</action>
+    </package>
+</struts>

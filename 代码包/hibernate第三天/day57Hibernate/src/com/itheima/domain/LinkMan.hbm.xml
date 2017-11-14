@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+		<class name="com.itheima.domain.LinkMan" table="cst_linkman">
+			<id name="lkm_id" column="lkm_id">
+				<generator class="native"></generator>
+			</id>
+			
+			<property name="lkm_name" column="lkm_name"></property>
+			<property name="lkm_gender" column="lkm_gender"></property>
+			<property name="lkm_phone" column="lkm_phone"></property>
+			<property name="lkm_mobile" column="lkm_mobile"></property>
+			<property name="lkm_email" column="lkm_email"></property>
+			<property name="lkm_qq" column="lkm_qq"></property>
+			<property name="lkm_position" column="lkm_position"></property>
+			<property name="lkm_memo" column="lkm_memo"></property>
+			
+			<!-- 配置实体类的一对多关系  对象属性  -->
+			<!-- name: 对方在自己里面的属性名
+			class:对方的全限定名（也就是全路径名）
+			column:外键字段名称（一的一方也有，估计两者就是用它联系起来的） -->
+			<many-to-one lazy="false" cascade="save-update,delete" name="customer" class="com.itheima.domain.Customer" column="lkm_cust_id"></many-to-one>
+	
+		</class>
+</hibernate-mapping>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+	<link rel="stylesheet" type="text/css" href="../js/easyui/themes/default/easyui.css">
+	<link rel="stylesheet" type="text/css" href="../js/easyui/themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="../js/ztree/zTreeStyle.css">
+	<script type="text/javascript" src="../js/jquery-1.8.3.js"></script>
+	<script type="text/javascript" src="../js/easyui/jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="../js/ztree/jquery.ztree.all-3.5.js"></script>
+</head>
+<body>
+<div class="easyui-layout" fit=true>
+	<div data-options="title:'速运快递',region:'north'" style="height: 100px"></div>
+	<div data-options="region:'center'">
+		<div class="easyui-tabs" fit=true id="tt">
+			<div data-options="title:'区域数据'"></div>
+		</div>
+	</div>
+	<div data-options="title:'菜单',region:'west'" style="width: 200px">
+		<div class="easyui-accordion" fit=true>
+			<div data-options="title:'ztree标准数据格式显示'">
+				<ul id="tree" class="ztree"></ul>
+				<script type="text/javascript">
+					var setting = {};
+					var zTreeNodes = [
+					                  {name:"菜单一"},
+					                  {name:"菜单二",children:[
+					                                        {name:"菜单二_1"}
+					                                        ]}
+					                  ]
+					$(function(){
+						$.fn.zTree.init($("#tree"), setting, zTreeNodes);
+					})
+				</script>
+			</div>
+			<div data-options="title:'ztree简单数据格式显示'">
+				<ul id="tree1" class="ztree"></ul>
+				<script type="text/javascript">
+					var setting1 = {
+							data: {
+								simpleData: {
+									enable: true
+								}
+							}
+					};
+					var zTreeNodes1 = [
+					                  {id:"1",name:"菜单一",pId:"0"},
+					                  {id:"2",name:"菜单二",pId:"1"},
+					                  {id:"3",name:"菜单二",pId:"1"},
+					                  {id:"4",name:"菜单二",pId:"0"},
+					                  {id:"5",name:"菜单二",pId:"4"}
+					                  ]
+					$(function(){
+						$.fn.zTree.init($("#tree1"), setting1, zTreeNodes1);
+					})
+				</script>
+			</div>
+			<div data-options="title:'ztree简单数据格式动态显示数据'">
+				<ul id="tree2" class="ztree"></ul>
+				<script type="text/javascript">
+					var setting2 = {
+							data: {
+								simpleData: {
+									enable: true
+								}
+							},
+							callback: {
+								onClick: function(event, treeId, treeNode){
+									//alert(treeNode.name);
+									var title = treeNode.name;
+									var url = treeNode.page;
+									//alert(url);
+									//alert(title)
+									if(url!=undefined){
+										//判断要创建的tabs是否已经存在
+										var v = $("#tt").tabs("exists", title);
+										if(v){
+											//如果存在，选中该tabs
+											$("#tt").tabs("select", title);
+										}else{
+											//创建新的tabs
+											$("#tt").tabs("add",{
+												title : title,
+												content : '<iframe src="../'+url+'" style="height: 95%;width: 98%;border: 0"></iframe>'
+											})
+										};
+									}
+								}
+							}
+					};
+					$(function(){
+						$.post("../data/menu.json",function(data){
+							$.fn.zTree.init($("#tree2"), setting2, data);
+						})
+					})
+				</script>
+			</div>
+		</div>
+	</div>
+</div>
+</body>
+</html>

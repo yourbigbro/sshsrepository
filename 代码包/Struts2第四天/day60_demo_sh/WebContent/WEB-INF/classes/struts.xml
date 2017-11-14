@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+	
+	<!-- 配置开发者模式：表示不用重启服务器 -->
+    <constant name="struts.devMode" value="true" />
+	
+    <package name="default" namespace="/" extends="struts-default">
+    
+    	<interceptors>
+			<!-- name属性只是一个名字，随便起 -->
+			<!-- 已经创建了拦截器类之后，在这里实例化拦截器 -->
+			<interceptor name="privilegeInterceptor" class="com.itheima.interceptor.PrivilegeInterceptor"></interceptor>
+			<!-- 声明一个拦截器栈 -->
+			<interceptor-stack name="myStack">
+				<!-- 引用拦截器和拦截器栈(都是已经创建好的才能引用) -->
+				<interceptor-ref name="privilegeInterceptor">
+					<!-- 配置不用拦截的方法，在这里展示用户列表不用登陆，也就是不用拦截器。excludeMethod方法是固定的 -->
+					<param name="excludeMethods">findAllCustomer</param>
+					<param name="excludeMethods">checkUser</param>
+					
+				</interceptor-ref>
+				<!-- 配置默认的拦截器，以免默认的拦截器被覆盖而不执行 -->
+				<interceptor-ref name="defaultStack"></interceptor-ref>
+			</interceptor-stack>
+		</interceptors>
+	
+		<action name="*_Customer" class="com.itheima.web.action.CustomerAction" method="{1}">
+			<result name="success">/jsp/customer/list.jsp</result>
+			<result name="edit_success">/jsp/customer/edit.jsp</result><!-- name属性里面是应该return的值 -->
+			<result name="add_success" type="redirectAction">/findAllCustomer_Customer.action</result>
+			<result name="login">/login.jsp</result>
+			<interceptor-ref name="myStack"></interceptor-ref>
+		</action>
+		
+		<action name="*_User" class="com.itheima.web.action.UserAction" method="{1}">
+			<!-- 也就是当什么也不返回时会跳转到首页 -->
+			<result name="success">/index.jsp</result>
+			<result name="login">/login.jsp</result>
+			<interceptor-ref name="myStack"></interceptor-ref>
+		</action>
+       
+    </package>
+
+</struts>

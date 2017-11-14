@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:aop="http://www.springframework.org/schema/aop"
+        xmlns:context="http://www.springframework.org/schema/context"
+        xmlns:tx="http://www.springframework.org/schema/tx" 
+        xsi:schemaLocation="http://www.springframework.org/schema/beans 
+        		http://www.springframework.org/schema/beans/spring-beans.xsd
+        		http://www.springframework.org/schema/tx 
+        		http://www.springframework.org/schema/tx/spring-tx.xsd
+              http://www.springframework.org/schema/context
+              http://www.springframework.org/schema/context/spring-context.xsd     
+              http://www.springframework.org/schema/aop 
+        		http://www.springframework.org/schema/aop/spring-aop.xsd">
+   
+   <!-- 配置SessionFactory的方式见下面。由引用hibernate.cfg.xml变成了直接将他整合进来(也就是吸收合并) -->
+	<!-- <bean id="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+		<property name="configLocation" value="classpath:hibernate.cfg.xml"/>
+	</bean> -->
+	
+	
+	<!-- 配置数据源 (即连接池以及连接数据库的信息。在原来的hibernate配置文件中这两项是分开的)-->
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+		<property name="driverClass" value="com.mysql.jdbc.Driver"></property>
+		<property name="jdbcUrl" value="jdbc:mysql:///crm64"></property>
+		<property name="user" value="root"></property>
+		<property name="password" value="root"></property>
+	</bean>
+	
+	<!-- 配置SessionFactory (可以看出来SessionFactory是以DataSource为基础的)-->
+	<bean id="sessionFactory" 
+			class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+			<!-- 1、连接数据库(原来的连接池)的信息 -->
+			<property name="dataSource" ref="dataSource"></property>
+			<!-- 2、hibernate的基本配置 -->
+			<property name="hibernateProperties">
+				<props>
+					<!-- 数据库的方言-->
+					<prop key="hibernate.dialect">
+							org.hibernate.dialect.MySQLDialect
+					</prop>
+					<!-- 是否显示sql语句-->
+					<prop key="hibernate.show_sql">true</prop>
+					<!-- 是否格式化sql语句-->
+					<prop key="hibernate.format_sql">false</prop>
+					<!-- 采用何种方式生成数据库表结构 -->
+					<prop key="hibernate.hbm2ddl.auto">update</prop>
+					<!-- 是spring把sesion绑定到当前线程上的配置 -->
+					<prop key="hibernate.current_session_context_class">
+						org.springframework.orm.hibernate5.SpringSessionContext
+					</prop>
+				</props>
+			</property>
+			<!-- 3、映射文件的位置 (下面的三种都是一种用途)
+				mappingResources：配置映射文件的位置，需要写映射文件名称。
+								  并且有几个映射文件，就要写几个<value></value>。
+				mappingLocations：配置映射文件的位置，需要写映射文件名称。可以使用通配符。
+				mappingDirectoryLocations：配置映射文件的位置，直接写到包的目录即可。
+			-->
+			<!-- 原来是在hibernate配置文件里面进行映射，由于hibernate配置文件消失了，所以只能在application配置文件里面进行映射 -->
+			<property name="mappingLocations">
+				<array>
+					<value>classpath:com/itheima/domain/*.hbm.xml</value>
+				</array>
+			</property>
+		</bean>
+	
+        	
+   <!-- 把资源交给spring来管理 (只要是配置就是将资源交给spring管理)-->
+	<!-- 配置dao -->
+	<bean id="customerDao" class="com.itheima.dao.impl.CustomerDaoImpl">
+		<!-- 将SessionFactory注入dao，相当于注入了连接池 -->
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+		
+	<!-- 配置service -->
+	<bean id="customerService" class="com.itheima.service.impl.CustomerServiceImpl">
+		<!-- 注入dao (因爲service引用了dao)-->
+		<property name="customerDao" ref="customerDao"></property>
+	</bean>  
+	
+	<!-- 配置事务管理器(没用到事务的话就不用配置事务，不是一定要配置事务。) -->
+	<bean id="transactionManager" 
+			class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+		<!-- 注入SessionFactory 。name属性的值应该是不能改-->
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>  
+	
+	<!-- 配置事务的通知 -->
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<!-- 配置事务的属性 --><!-- 毕竟查找只需要读不需要写，所以设置成了read-only -->
+		<tx:attributes>
+			<!-- 估计是前面的覆盖后面的，所以越精确的越放在后面 -->
+			<!-- propagation="REQUIRED"表示没有事务就创建一个，所以该项是必须要配置事务的，因为它必然涉及到事务 -->
+			<tx:method name="*" read-only="false" propagation="REQUIRED"/>
+			<tx:method name="find*" read-only="true" propagation="SUPPORTS"/>
+		</tx:attributes>
+	</tx:advice>
+	
+	<!-- 配置aop -->
+	<aop:config>
+		<!-- 配置通用切入点表达式 -->
+		<aop:pointcut expression="execution(* com.itheima.service.impl.*.*(..))" id="pt1"/>
+		<!-- 建立事务通知和切入点表达式的对应关系 -->
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="pt1"/>
+	</aop:config>
+	
+	<!-- 配置Action，用spring管理action -->
+	<bean id="customerAction" class="com.itheima.web.action.CustomerAction" 
+			scope="prototype"><!-- 配置为多例 -->
+		<!-- 注入service (将service注入action，因为后者要引用前者)-->
+	<!-- name属性应该是固定的-->
+		<property name="customerService" ref="customerService"></property>
+	</bean>	
+        	
+</beans>

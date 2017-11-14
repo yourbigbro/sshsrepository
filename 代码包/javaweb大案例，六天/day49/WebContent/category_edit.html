@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<form id="ff" method="post"></form>
+	<script>
+		$(function(){
+			$("#ff").form("load","day49/UserServlet?type=edit&cid="+globalCid);
+		})
+		function ff(){
+			$("#ff").form('submit', {//异步    
+			    url:"day49/UserServlet?type=submit",    
+			    success:function(data){    
+			        alert(data)  //处理servlet返回的信息  
+			    }    
+			});  
+
+		}
+	</script>
+</body>
+</html>

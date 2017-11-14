@@ -1,0 +1,17 @@
+com\itheima\domain\Archive.class
+com\itheima\domain\Courier.class
+com\itheima\domain\SubArea.class
+com\itheima\domain\FixedArea.class
+com\itheima\domain\WorkBill.class
+com\itheima\system\Menu.class
+com\itheima\domain\SubArchive.class
+com\itheima\domain\Vehicle.class
+com\itheima\system\Permission.class
+com\itheima\domain\Order.class
+com\itheima\domain\WayBill.class
+com\itheima\domain\Standard.class
+com\itheima\domain\Area.class
+com\itheima\system\Role.class
+com\itheima\system\User.class
+com\itheima\crm\Customer.class
+com\itheima\domain\TakeTime.class

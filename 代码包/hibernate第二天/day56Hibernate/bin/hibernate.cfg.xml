@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+	"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+	"http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+	
+<hibernate-configuration>
+	<session-factory>
+			<!-- 必选 -->
+					<property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+					<property name="hibernate.connection.url">jdbc:mysql:///day55</property>
+					<property name="hibernate.connection.username">root</property>
+					<property name="hibernate.connection.password">root</property>
+					<property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+			<!-- 可选 -->
+					<property name="hibernate.connection.provider_class">org.hibernate.connection.C3P0ConnectionProvider</property>
+					<property name="hibernate.show_sql">true</property>
+					<property name="hibernate.format_sql">true</property>
+					<property name="hibernate.hbm2ddl.auto">update</property>
+			<!--  配置当前线程的session，需要先开启才能使用与线程绑定的session -->
+					<property name="hibernate.current_session_context_class">thread</property>
+			<!-- 引入映射文件的地址 -->
+					<mapping resource="com/itheima/domain/Customer.hbm.xml"/>	
+			</session-factory>
+</hibernate-configuration>

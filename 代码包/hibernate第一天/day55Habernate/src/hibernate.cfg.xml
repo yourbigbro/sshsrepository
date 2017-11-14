@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+	"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+	"http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+			<session-factory>
+					<!-- 配置数据库的连接信息了 必选项 5个-->
+					<property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+					<property name="hibernate.connection.url">jdbc:mysql:///day55</property>
+					<property name="hibernate.connection.username">root</property>
+					<property name="hibernate.connection.password">root</property>
+					<!-- 方言 分页查询每一个数据库都不一样 -->
+					<!-- 作用:让hibernate自动去匹配符合当前数据库的sql语句 -->
+					<property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+					
+					
+					<!-- 可选项 -->
+					<property name="hibernate.connection.provider_class">org.hibernate.connection.C3P0ConnectionProvider</property>
+					<!-- 让控制台输出hibernate给我们自动生成的sql语句 -->
+					<property name="hibernate.show_sql">true</property>
+					<!-- 把输出的sql语句格式化排列下 -->
+					<property name="hibernate.format_sql">true</property>
+					
+					<!-- 让hibernate生成对应的数据库表 -->
+					<!-- 
+						create : 没有表自动创建表,有表删除再给你创建
+						create-drop: 没有表自动创建表,有表删除再给你创建,最终用完就删除
+											测试数据
+											
+						update: 没有表创建表,有表使用表
+						validate:默认没有配置的值  不让hibernate创建表 得自己维护表
+					 -->
+					<property name="hibernate.hbm2ddl.auto">update</property>
+					
+					<!-- 引入映射文件地址  -->
+					<mapping resource="com/itheima/domain/Customer.hbm.xml"/> 
+					
+			</session-factory>  
+</hibernate-configuration>

@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>区域设置</title>
+		<!-- 导入jquery核心类库 -->
+		<script type="text/javascript" src="../../js/jquery-1.8.3.js"></script>
+		<!-- 导入easyui类库 -->
+		<link rel="stylesheet" type="text/css" href="../../js/easyui/themes/default/easyui.css">
+		<link rel="stylesheet" type="text/css" href="../../js/easyui/themes/icon.css">
+		<link rel="stylesheet" type="text/css" href="../../js/easyui/ext/portal.css">
+		<link rel="stylesheet" type="text/css" href="../../css/default.css">
+		<script type="text/javascript" src="../../js/easyui/jquery.easyui.min.js"></script>
+		<script type="text/javascript" src="../../js/easyui/ext/jquery.portal.js"></script>
+		<script type="text/javascript" src="../../js/easyui/ext/jquery.cookie.js"></script>
+		<script src="../../js/easyui/locale/easyui-lang-zh_CN.js" type="text/javascript"></script>
+		<!-- 注意一键上传这个前端插件是基于jquery的，因此要先引用jquery -->
+		<!-- 该一键上传插件不仅可以上传excel文档，而且可以上传任何文件，例如图片等 -->
+		<script src="../../js/ocupload/jquery.ocupload-1.1.2.js" type="text/javascript"></script>
+		<script type="text/javascript">
+			function doAdd(){
+				$('#addWindow').window("open");
+			}
+			
+			function doView(){
+				alert("修改...");
+			}
+			
+			function doDelete(){
+				alert("删除...");
+			}
+			
+			function doUpload(){
+				alert("上传...");
+				
+			}
+			
+			//该方法用于下载pdf文档
+			function doExport(){
+				window.location.href="../../exportPdf.action";
+			}
+			
+			//工具栏
+			var toolbar = [ {
+				id : 'button-edit',	
+				text : '修改',
+				iconCls : 'icon-edit',
+				handler : doView
+			}, {
+				id : 'button-add',
+				text : '增加',
+				iconCls : 'icon-add',
+				handler : doAdd
+			}, {
+				id : 'button-delete',
+				text : '删除',
+				iconCls : 'icon-cancel',
+				handler : doDelete
+			}, {
+				//该按钮用于将规定格式的excel文档传入数据库中
+				id : 'button-import',
+				text : '导入',
+				iconCls : 'icon-redo',
+				//注意此处没有handler属性
+			}, {
+				//该按钮用于导出pdf格式的数据库信息
+				id : 'button-export',
+				text : '导出',
+				iconCls : 'icon-redo',
+				handler : doExport
+			}];
+			
+			
+			
+			// 定义列
+			var columns = [ [ {
+				field : 'id',
+				checkbox : true,
+			},{
+				field : 'province',
+				title : '省',
+				width : 120,
+				align : 'center'
+			}, {
+				field : 'city',
+				title : '市',
+				width : 120,
+				align : 'center'
+			}, {
+				field : 'district',
+				title : '区',
+				width : 120,
+				align : 'center'
+			}, {
+				field : 'postcode',
+				title : '邮编',
+				width : 120,
+				align : 'center'
+			}, {
+				field : 'shortcode',
+				title : '简码',
+				width : 120,
+				align : 'center'
+			}, {
+				field : 'citycode',
+				title : '城市编码',
+				width : 200,
+				align : 'center'
+			} ] ];
+			
+			$(function(){
+				// 先将body隐藏，再显示，不会出现页面刷新效果
+				$("body").css({visibility:"visible"});
+				
+				// 区域管理数据表格
+				$('#grid').datagrid( {
+					iconCls : 'icon-forward',
+					fit : true,
+					border : false,
+					rownumbers : true,
+					striped : true,
+					pageList: [30,50,100],
+					pagination : true,
+					toolbar : toolbar,
+					//用easyui的方式对后台页面进行请求以查询数据库
+					url : "../../areaAction_listajax.action",
+					idField : 'id',
+					columns : columns,
+					onDblClickRow : doDblClickRow
+				});
+				
+				// 添加、修改区域窗口
+				$('#addWindow').window({
+			        title: '添加修改区域',
+			        width: 400,
+			        modal: true,
+			        shadow: true,
+			        closed: true,
+			        height: 400,
+			        resizable:false
+			    });
+				//注意，虽然一个页面中可以有多个$(function(){})，但是一个<script>元素里面只能有一个$(function(){})
+				//ocupload一件上传的前端部分十分简单，只有下面这么一点(这是封装的jquery)。他里面其实是封装的普通的html文件上传的方式，用的是元素拼接
+					$("#button-import").upload({
+						action:"../../upload_xlFile.action",
+						//name随意命名，后台用属性驱动接收的时候要用到
+						name:"xlsFile",
+						//下面的方法定义了如何处理后台返回的数据
+						//注意，data只是形参，和后台定义的参数名字无关，后台只是传过来了一个值而已
+						onComplete:function(data){
+							if(data=="1"){
+								//注意，第三个参数也是字符串，他决定了提示框的类型
+								$.messager.alert("成功","上传成功","success");
+							}else{
+								$.messager.alert("失败","上传失败","error");
+							}
+						}
+					});
+			});
+		
+			function doDblClickRow(){
+				alert("双击表格数据...");
+			}
+		</script>
+	</head>
+
+	<body class="easyui-layout" style="visibility:hidden;">
+		<div region="center" border="false">
+			<table id="grid"></table>
+			
+		
+			
+		</div>
+		<div class="easyui-window" title="区域添加修改" id="addWindow" collapsible="false" minimizable="false" maximizable="false" style="top:20px;left:200px">
+			<div region="north" style="height:31px;overflow:hidden;" split="false" border="false">
+				<div class="datagrid-toolbar">
+					<a id="save" icon="icon-save" href="#" class="easyui-linkbutton" plain="true">保存</a>
+				</div>
+			</div>
+
+			<div region="center" style="overflow:auto;padding:5px;" border="false">
+				<form>
+					<table class="table-edit" width="80%" align="center">
+						<tr class="title">
+							<td colspan="2">区域信息</td>
+						</tr>
+						<tr>
+							<td>省</td>
+							<td>
+								<input type="text" name="province" class="easyui-validatebox" required="true" />
+							</td>
+						</tr>
+						<tr>
+							<td>市</td>
+							<td>
+								<input type="text" name="city" class="easyui-validatebox" required="true" />
+							</td>
+						</tr>
+						<tr>
+							<td>区</td>
+							<td>
+								<input type="text" name="district" class="easyui-validatebox" required="true" />
+							</td>
+						</tr>
+						<tr>
+							<td>邮编</td>
+							<td>
+								<input type="text" name="postcode" class="easyui-validatebox" required="true" />
+							</td>
+						</tr>
+						<tr>
+							<td>简码</td>
+							<td>
+								<input type="text" name="shortcode" class="easyui-validatebox" required="true" />
+							</td>
+						</tr>
+						<tr>
+							<td>城市编码</td>
+							<td>
+								<input type="text" name="citycode" class="easyui-validatebox" required="true" />
+							</td>
+						</tr>
+					</table>
+				</form>
+			</div>
+		</div>
+		
+		<!-- 查询区域-->
+		<div class="easyui-window" title="查询区域窗口" closed="true" id="searchWindow" collapsible="false" minimizable="false" maximizable="false" style="width: 400px; top:40px;left:200px">
+			<div style="overflow:auto;padding:5px;" border="false">
+				<form id="searchForm">
+					<table class="table-edit" width="80%" align="center">
+						<tr class="title">
+							<td colspan="2">查询条件</td>
+						</tr>
+						<tr>
+							<td>省份</td>
+							<td>
+								<input type="text" name="province" />
+							</td>
+						</tr>
+						<tr>
+							<td>城市</td>
+							<td>
+								<input type="text" name="city" />
+							</td>
+						</tr>
+						<tr>
+							<td>区（县）</td>
+							<td>
+								<input type="text" name="district" />
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2"><a id="searchBtn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'">查询</a> </td>
+						</tr>
+					</table>
+				</form>
+			</div>
+		</div>
+	</body>
+
+</html>

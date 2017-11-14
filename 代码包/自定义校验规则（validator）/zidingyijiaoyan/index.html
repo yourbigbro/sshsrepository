@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<style type="text/css">
+			
+		</style>
+		<script src="js/jquery-1.11.0.min.js" type="text/javascript">
+			
+		</script>
+		<script src="js/jquery.validate.js" type="text/javascript">
+			
+		</script>
+		<script src="js/messages_zh.js" type="text/javascript">
+			
+		</script>
+		<script type="text/javascript">
+			$(function(){
+				//编写自定义校验规则
+				$.validator.addMethod("changdu",function(value,element,params){//三个参数分别是用户输入的表单值，表单元素，以及第三十七行传入的参数。
+					if(value.length<params){//利用参数params
+						return false;
+					}
+					return true;
+				},"长度不够");
+				
+				
+				//表单校验
+				$("#fuck").validate({//所有项都用逗号间隔，多项都用花括号包裹。
+					rules:{zuixiao:{
+						required:true,
+						min:5
+					},bitian:{
+						required:true
+					},xingming:{
+						changdu:5
+					}},
+					messages:{zuixiao:{
+						required:"必须填",
+						min:"最小字符数为5"
+					},bitian:{
+						required:"必须填"
+					},xingming:{
+						changdu:"长度不够"
+					}}
+				});
+			});
+		</script>
+	</head>
+	<body>
+		
+		
+		<!--表单校验-->
+		<form name="fuck" action="" method="get" id="fuck"><br />
+			姓名：<input type="" name="xingming" id="xingming" value="" /><br />
+			密码<input type="" name="mima" id="mima" value="" /><br />
+			重复密码<input type="" name="chongfu" id="chongfu" value="" /><br />
+			必须填<input type="" name="bitian" id="bitian" value="" /><br />
+			最小为5<input type="" name="zuixiao" id="zuixiao" value="" /><br />
+			<input type="submit" value="提交"/>
+		</form>
+		
+	</body>
+</html>
+

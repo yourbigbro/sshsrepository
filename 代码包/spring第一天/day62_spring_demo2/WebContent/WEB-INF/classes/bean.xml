@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans  xmlns="http://www.springframework.org/schema/beans"
+	xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	<!-- admin:行政，管理 -->
+	<!-- <bean id="userDao" class="com.itheima.demo1.AdminUserDaoImpl">
+		注意，property有value属性，不是写在标签的外面。
+		<property name="hehe" value="caonima"/>
+	</bean> -->
+	
+	<!-- <bean id="bean3" class="com.itheima.demo1.Bean3" init-method="init" destroy-method="close"/> -->
+	
+	<!-- 静态工厂实例化的方式 ，createBean为静态方法，是工厂里的方法(而该类中的其他方法不调用) -->
+	<!-- <bean id="bean1" class="com.itheima.demo2.Bean1Factory" factory-method="createBean"></bean> -->
+	
+	<!-- 实例工厂实例化的方式 ，createBean不是静态方法 -->
+	<!-- <bean id="bean2Factory" class="com.itheima.demo2.Bean2Factory"></bean> -->
+	<!-- 下面的一句表示在工厂类里面调用这个createBean方法(而该类中的其他方法不调用) -->
+	<!-- <bean id="bean2" factory-bean="bean2Factory" factory-method="createBean"></bean> --> 
+	
+	<!-- Spring的属性的注入 --><!-- 下面的四种方法其实就是两种方法的两两组合 -->
+	<!-- set方法注入的方式 -->
+	<bean id="car1" class="com.itheima.demo3.Car1">
+	<!-- property元素有name属性和value属性 -->
+		<property name="name" value="奥迪"/>
+		<property name="price" value="2000"/>
+	</bean>
+	<!-- 构造函数方法注入的方式 -->
+	<bean id="car2" class="com.itheima.demo3.Car2">
+	<!-- constructor-arg元素也有name属性和value属性 -->
+		<constructor-arg name="name" value="奔驰"></constructor-arg>
+		<constructor-arg name="price" value="3000"></constructor-arg>
+	</bean>
+	
+	<!-- spel表达式为属性赋值 -->
+	<bean id="calc" class="com.itheima.demo3.Calc"/>
+	<!-- set方法注入的方式 -->
+	<bean id="car3" class="com.itheima.demo3.Car3">
+	<!-- property元素有name属性和value属性 -->
+		<property name="name" value="#{'奥迪'}"/>
+		<property name="price" value="#{calc.fy()}"/>
+	</bean>
+	
+	<!-- 构造函数方法注入的方式 -->
+	<bean id="car4" class="com.itheima.demo3.Car4">
+	<!-- constructor-arg元素也有name属性和value属性 -->
+		<constructor-arg name="name" value="#{'奔驰'}"></constructor-arg>
+		<constructor-arg name="price" value="#{calc.fy()}"></constructor-arg>
+	</bean>
+	
+	<!-- p名称空间语法 -->
+	<bean id="employee" class="com.itheima.demo3.Employee" p:name="夏利" p:car-ref="car1"/>
+	
+	<!-- 1.6.1集合属性的注入 --><!-- 每次赋值都有一个property元素，它的name属性值是相应的成员变量的名字 -->
+	<bean id="collctionBean" class="com.itheima.demo4.CollectionBean">
+		<!-- 给数组赋值 -->
+		<property name="arr">
+			<array>
+				<value>a</value>
+				<value>b</value>
+				<value>c</value>
+			</array>
+		</property>
+		
+		<!-- 给list集合赋值 -->
+		<property name="list">
+			<list>
+				<value>aa</value>
+				<value>bb</value>
+				<value>cc</value>
+				<!-- 表示引用对象作为集合元素 -->
+				<ref bean="car1"/>
+			</list>
+		</property>
+		
+		<!-- 给set集合赋值(和给list集合赋值的方法一样) -->
+		<property name="set">
+			<set>
+				<value>aaa</value>
+				<value>bbb</value>
+				<value>ccc</value>
+				<ref bean="car2"/>
+			</set>
+		</property>
+		
+		<!-- 给map集合赋值 -->
+		<property name="map">
+			<map>
+				<entry key="a" value="aaaa"></entry>
+				<entry key="b" value="bbbb"></entry>
+				<entry key="c" value="cccc"></entry>
+				<entry key="d" value-ref="car3"></entry>
+			</map>
+		</property>
+		
+		<!-- 给map集合赋值 -->
+		<property name="prop">
+			<props>
+				<prop key="a">aaaaaa</prop>
+				<prop key="b">bbbbbb</prop>
+				<prop key="c">cccccc</prop>
+			</props>
+		</property>
+	</bean>
+</beans>

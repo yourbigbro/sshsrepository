@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>layout布局</title>
+		<link rel="stylesheet" type="text/css" href="../js/easyui/themes/default/easyui.css">
+		<link rel="stylesheet" type="text/css" href="../js/easyui/themes/icon.css">
+		<script type="text/javascript" src="../js/jquery-1.8.3.js"></script>
+		<script type="text/javascript" src="../js/easyui/jquery.easyui.min.js"></script>
+		<script type="text/javascript">
+			$(function(){
+				$('a').click(function(){
+					var athis=$(this);
+					//注意this不加引号
+					//用全局变量的形式保存面板的标题
+					//jquery获取元素内的文本用text()方法
+					var title=$(this).text();
+					var exist=$('#tt').tabs('exists',title);
+					if(exist){
+						//选中该已存在的选项卡面板
+						$('#tt').tabs('select',title);
+					}else{
+						//添加一个新的选项卡面板
+						$('#tt').tabs('add',
+					        {
+							//使用全局变量确认标题的名字
+					          title: title,
+					          //注意width不能设置为100%也不能为auto，不设置width属性的话就会自动填满(也就是全屏)
+					          content:'<iframe style="border:0;width:95%;height:98%" src="'+athis.attr("href")+'"></iframe>',
+					          closable:true
+					          //... 
+						}); 
+						//阻止默认的href的页面跳转功能
+						return false;
+					}
+				}
+				
+				
+				);
+			})
+		</script>
+	</head>
+	<body class="easyui-layout"> 
+		<div data-options="region:'north',title:'上部',split:true" style="height:100px;"></div> 
+		
+		<div data-options="region:'south',title:'下部',split:true" style="height:100px;"></div> 
+		
+		<div data-options="region:'east',iconCls:'icon-reload',title:'右部',split:true" style="width:100px;"></div> 
+		
+		<div data-options="region:'west',title:'左部',split:true" style="width:200px;">
+			<div id="aa" class="easyui-accordion" style="width:300px;height:200px;"> 
+				<div title="Title1" data-options="iconCls:'icon-save'" style="overflow:auto;padding:10px;"> 
+					<ul id="tt1" class="easyui-tree"> 
+						<li> 
+							<span>Folder</span> 
+							<ul> 
+								<li> 
+									<span>Sub Folder 1</span> 
+									<ul> 
+									<!-- 注意url的前面必须加http://否则访问的是http://localhost:8080/bos_web/demo/www.baidu.com -->
+										<li> 
+											<a href="http://www.baidu.com">百度</a> 
+										</li> 
+										<li> 
+											<a href="http://www.itcast.com">传智</a> 
+										</li> 
+										<li> 
+											<a href="http://www.1688.com">阿里巴巴</a> 
+										</li> 
+									</ul> 
+								</li> 
+								<li> 
+									<span>File 2</span> 
+								</li> 
+								<li> 
+									<span>File 3</span> 
+								</li> 
+							</ul> 
+						</li> 
+						<li> 
+							<span>File21</span> 
+						</li> 
+					</ul>
+				</div> 
+			<div title="Title2" data-options="iconCls:'icon-reload',selected:true" style="padding:10px;"> 
+				content2 
+			</div> 
+			<div title="Title3"> 
+				content3 
+			</div> 
+		</div> 
+		</div> 
+		
+		<div data-options="region:'center',title:'中部'" style="padding:5px;background:#eee;" id="tt" class="easyui-tabs" >
+		</div> 
+	
+	</body> 
+
+</html>

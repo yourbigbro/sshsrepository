@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans>
+   <bean id="IUserService" class="com.itheima.day49.user.service.impl.UserServiceImpl"/>
+   
+   <bean id="IUserDao" class="com.itheima.day49.user.dao.impl.UserDaoImpl"/>
+</beans>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:aop="http://www.springframework.org/schema/aop"
+        xmlns:context="http://www.springframework.org/schema/context"
+        xmlns:tx="http://www.springframework.org/schema/tx" 
+        xsi:schemaLocation="http://www.springframework.org/schema/beans 
+        		http://www.springframework.org/schema/beans/spring-beans.xsd
+        		http://www.springframework.org/schema/tx 
+        		http://www.springframework.org/schema/tx/spring-tx.xsd
+              http://www.springframework.org/schema/context
+              http://www.springframework.org/schema/context/spring-context.xsd     
+              http://www.springframework.org/schema/aop 
+        		http://www.springframework.org/schema/aop/spring-aop.xsd">
+   
+   <!-- 配置SessionFactory -->
+	<bean id="sessionFactory" 
+				class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+	<!-- 使用的是hibernate主配置文件中的内容(也就是使用的是hibernate主配置文件中的连接池)，因此我们只需要指定hibernate主配置文件的所在位置 -->
+		<property name="configLocation" value="classpath:hibernate.cfg.xml"/>
+	</bean>
+        	
+   <!-- 把资源交给spring来管理 (只要是配置就是将资源交给spring管理)-->
+	<!-- 配置dao -->
+	<bean id="customerDao" class="com.itheima.dao.impl.CustomerDaoImpl">
+		<!-- 将SessionFactory注入dao，相当于注入了连接池 -->
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+		
+	<!-- 配置service -->
+	<bean id="customerService" class="com.itheima.service.impl.CustomerServiceImpl">
+		<!-- 注入dao (因爲service引用了dao)-->
+		<property name="customerDao" ref="customerDao"></property>
+	</bean>  
+	
+	<!-- 配置事务管理器(没用到事务的话就不用配置事务，不是一定要配置事务。) -->
+	<bean id="transactionManager" 
+			class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+		<!-- 注入SessionFactory 。name属性的值应该是不能改-->
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>  
+	
+	<!-- 配置事务的通知 -->
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<!-- 配置事务的属性 --><!-- 毕竟查找只需要读不需要写，所以设置成了read-only -->
+		<tx:attributes>
+			<!-- 估计是前面的覆盖后面的，所以越精确的越放在后面 -->
+			<!-- propagation="REQUIRED"表示没有事务就创建一个，所以该项是必须要配置事务的，因为它必然涉及到事务 -->
+			<tx:method name="*" read-only="false" propagation="REQUIRED"/>
+			<tx:method name="find*" read-only="true" propagation="SUPPORTS"/>
+		</tx:attributes>
+	</tx:advice>
+	
+	<!-- 配置aop -->
+	<aop:config>
+		<!-- 配置通用切入点表达式 -->
+		<aop:pointcut expression="execution(* com.itheima.service.impl.*.*(..))" id="pt1"/>
+		<!-- 建立事务通知和切入点表达式的对应关系 -->
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="pt1"/>
+	</aop:config>
+	
+	<!-- 配置Action，用spring管理action -->
+	<bean id="customerAction" class="com.itheima.web.action.CustomerAction" 
+			scope="prototype"><!-- 配置为多例 -->
+		<!-- 注入service (将service注入action，因为后者要引用前者)-->
+	<!-- name属性应该是固定的-->
+		<property name="customerService" ref="customerService"></property>
+	</bean>	
+        	
+</beans>

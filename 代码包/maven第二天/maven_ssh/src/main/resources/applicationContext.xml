@@ -1,0 +1,64 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans.xsd 
+	http://www.springframework.org/schema/context 
+	http://www.springframework.org/schema/context/spring-context.xsd 
+	http://www.springframework.org/schema/aop 
+	http://www.springframework.org/schema/aop/spring-aop.xsd 
+	http://www.springframework.org/schema/tx  
+	http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+	<!-- 记住bean是spring框架中的元素 -->
+	<!-- 数据库连接池 ce\3p0-->
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+		<property name="driverClass" value="com.mysql.jdbc.Driver" />
+		<property name="jdbcUrl" value="jdbc:mysql://localhost:3306/maven" />
+		<property name="user" value="root" />
+		<property name="password" value="root" />
+	</bean>
+
+	<!-- 配置sessionFactory -->
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+		<!-- 依赖dataSource -->
+		<property name="dataSource" ref="dataSource"/>
+		<!-- 创建工厂需要加载hibernate映射文件 -->
+		<property name="configLocations" value="classpath:hibernate.cfg.xml"></property>
+	</bean>
+	
+	<bean  id="transactionManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+	<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	
+	<tx:advice id="advice" transaction-manager="transactionManager">
+	<tx:attributes>
+	 <tx:method name="find*" read-only="true" />
+	</tx:attributes>
+	</tx:advice>
+	
+	<aop:config>
+	<!-- execution中的路径不要忘了改 -->
+	 <aop:pointcut  id="serviceMethod"  expression="execution(* com.itheima.service.impl.*.*(..))"/>
+	 <aop:advisor advice-ref="advice" pointcut-ref="serviceMethod"/>
+	</aop:config>
+	
+	<!-- 连接三层架构(与注解的作用相同) -->
+	<!-- 注意class中是点而不是斜杠 -->
+	<bean id="customerDao" class="com.itheima.dao.impl.CustomerDaoImpl">
+		<!-- 注意引用的是sessionFactory而不是transactionManager -->
+		<!-- 注意在该配置文件里，customerDao和transactionManager两处引用了sessionFactory -->
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	
+	<bean id="customerService" class="com.itheima.service.impl.CustomerServiceImpl">
+		<!-- 前面是起的名字，后面是引用的id名称，他们两个一般会设置为相等的 -->
+		<property name="customerDao" ref="customerDao"></property>
+	</bean>
+	<!-- 记得将struts2由单例改成多例。也就是每个用户访问之后都创建一个实例。注意多例指的是struts2而不是spring -->
+	<!-- struts1是单例，struts2是多例 -->
+	<bean id="customerAction" class="com.itheima.web.action.CustomerAction" scope="prototype">
+		<property name="customerService" ref="customerService"></property>
+	</bean>
+	
+</beans>
