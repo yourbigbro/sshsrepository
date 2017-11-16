@@ -506,7 +506,7 @@ FileWriter的追加写入：
 118、在每次创建子类对象时，父类的class文件也会进入内存中。代码体现在子类的构造方法调用时，一定先调用父类的构造方法。
      子类的每个构造方法中均有默认的super(),调用父类的空参构造。手动调用父类构造会覆盖默认的super();
 
-
+=======================================================================================================================================================================================
 119、抽象方法和抽象类：
                       分析事物时，发现了共性内容，就出现向上抽取。会有这样一种特殊情况，就是方法功能声明相同，但方法功能主体不同。那么这时也可以抽取，但只抽取方法声明，不抽取方法主体。那么                      此方法就是一个抽象方法。
     定义了抽象函数的类也必须被abstract关键字修饰（也就是有抽象方法的类必然是抽象类），被abstract关键字修饰的类是抽象类。
@@ -520,10 +520,10 @@ abstract class 类名 {
 抽象类无法直接创建对象，只能被子类继承后，创建子类对象。
 子类需要继承抽象父类并完成最终的方法实现细节(即重写方法，完成方法体)。
 
-?抽象类一定是个父类，因为抽象类是不断抽取共性需求而来的。
-?抽象类中是可以不定义抽象方法的，此时仅仅是不让该类创建对象，用于某些特殊的设计需要。
+抽象类一定是个父类，因为抽象类是不断抽取共性需求而来的。
+抽象类中是可以不定义抽象方法的，此时仅仅是不让该类创建对象，用于某些特殊的设计需要。
 
-
+======================================================================================================================================================================================
 
 120、接口：
           ?接口中的方法均为公共访问（也就是public）的抽象方法
@@ -534,12 +534,12 @@ abstract class 类名 {
 3、接口不可以创建对象。
 4、子类必须覆盖掉接口中所有的抽象方法后，子类才可以实例化。否则子类是一个抽象类。
 
-
+=====================================================================================================================================================================================
 121、抽象类和接口的区别:
 ?                     抽象类为部分方法提供实现,避免子类重复实现这些方法,提高代码重用性;接口只能包含抽象方法;
 ?                     一个类只能继承一个直接父类(可能是抽象类),却可以实现多个接口;(接口弥补了Java的单继承)
                        抽象类为继承体系中的共性内容,接口为继承体系中的扩展功能
-
+======================================================================================================================================================================================
 
 122、多态：
           最终多态体现为父类引用变量可以指向子类对象。
@@ -550,6 +550,7 @@ abstract class 类名 {
 变量名.方法名();
 此时，虽然该变量指向的是子类对象，但表现为一个父类的形态，可以调用一切父类的方法，子类特有的方法将不能调用。
 
+========================================================================================================================================================================================
 123、多态的存在意义(优点)为： 
                             配合继承与方法重写提高了代码的复用性与扩展性，如果没有方法重写，则多态同样没有意义。
 
@@ -558,8 +559,1007 @@ abstract class 类名 {
 
 向上转型就是多态，向下转型（也就是子类转换成父类）是需要强转的。
 
-
+==========================================================================================================================================================================================
 124、instanceof：java 中的instanceof 运算符是用来在运行时指出对象是否是特定类的一个实例。instanceof通过返回一个布尔值来指出，这个对象是否是这个特定类或者是它的子类的一个实例。
 
+===========================================================================================================================================================================================
+125、static：
+            static修饰的成员被多个对象共享。被static修饰的成员可以并且建议通过类名直接访问。也可以通过某个对象访到属于类的静态成员，原因即多个对象均属于一个类，共享使用同一个静态成员。
 
-125、
+
+126、静态代码块：
+静态代码块是定义在成员位置，使用static修饰的代码块。
+特点：
+?  它优先于主方法执行、优先于构造代码块执行，当以任意形式第一次使用到该类时执行。
+?  该类不管创建多少对象，静态代码块只执行一次。
+    可用于给静态变量赋值，用来给类进行初始化。
+
+
+127、final：
+final的意思为最终，不可变。final是个修饰符，它可以用来修饰类，类的成员，以及局 部变量。
+?final修饰类不可以被继承，但是可以继承其他类。
+?final修饰的方法不可以被覆盖,但父类中没有被final修饰方法，子类覆盖后可以加final。
+final修饰的变量称为常量，这些变量只能赋值一次。
+引用类型的变量值为对象地址值，地址值不能更改，但是地址内的对象属性值可以修改。
+?修饰成员变量，需要在创建对象前赋值，否则报错。(当没有显式赋值时，多个构造方法的均需要为其赋值。)
+
+
+
+128、?import导包代码书写的位置：在声明包package后，定义所有类class前，使用导包import包名.包名.类名;
+
+
+129、四种访问权限修饰符：
+?要想仅能在本类中访问使用private修饰；
+?要想本包中的类都可以访问不加修饰符即可（也就是其他包中的子类也不可以访问）；
+?要想本包中的类与其他包中的子类可以访问使用protected修饰
+?要想所有包中的所有类都可以访问使用public修饰。
+?注意：如果类用public修饰，则类名必须与文件名相同。一个文件中只能有一个public修饰的类。
+
+
+130、内部类：
+?什么是内部类
+将类写在其他类的内部，可以写在其他类的成员位置和局部位置，这时写在其他类内部的类就称为内部类。其他类也称为外部类。
+?什么时候使用内部类
+在描述事物时，若一个事物内部还包含其他可能包含的事物，比如在描述汽车时，汽车中还包含这发动机，这时发动机就可以使用内部类来描述。
+class 汽车 { //外部类
+	class 发动机 { //内部类
+}
+}
+?内部类的分类
+内部类分为成员内部类与局部内部类。
+我们定义内部类时，就是一个正常定义类的过程，同样包含各种修饰符、继承与实现关系等。在内部类中可以直接访问外部类的所有成员。
+成员内部类，定义在外部类中的成员位置。与类中的成员变量相似，可通过外部类对象进行访问
+?定义格式
+class 外部类 { 
+	修饰符 class 内部类 {
+		//其他代码
+}
+}
+?访问方式
+外部类名.内部类名 变量名 = new 外部类名().new 内部类名();
+
+
+131、匿名内部类：
+最常用到的内部类就是匿名内部类，它是局部内部类的一种。
+定义的匿名内部类有两个含义：
+?临时定义某一指定类型的子类
+?定义后即刻创建刚刚定义的这个子类的对象
+
+格式：
+new 父类或接口(){
+	//进行方法重写
+} 
+
+
+132、异常：
+在Java等面向对象的编程语言中，异常本身是一个类，产生异常就是创建异常对象并抛出了一个异常对象。Java处理异常的方式是中断处理。
+异常的根类是Throwable，其下有两个子类：Error与Exception，平常所说的异常指Exception。
+?严重错误Error，无法通过处理的错误
+?编译时异常Exception，编译时无法编译通过。如日期格式化异常
+?运行时异常RuntimeException，是Exception的子类，运行时可能会报错，可以不处理。如数学异常
+
+?抛出异常（JDK已有定义的异常会自动抛出异常，自定义异常需要手动抛出）
+抛出异常的方法：throw new 异常类名(参数);
+throws用于进行异常类的声明，若该方法可能有多种异常情况产生，那么在throws后面可以写多个异常类，用逗号隔开。
+区分抛出异常throw和声明异常throws
+
+final关键字的作用：
+有一些特定的代码无论异常是否发生，都需要执行。另外，因为异常会引发程序跳转，导致有些语句执行不到。而finally就是解决这个问题的，在finally代码块中存放的代码都是一定会被执行的。
+
+
+133、多异常处理：
+?多异常处理
+捕获处理：
+1.多个异常分别处理
+	2.多个异常一次捕获多次处理
+	3.多个异常一次捕获一次处理
+声明抛出异常：
+	声明上使用,一次声明多个异常	
+
+?运行时异常被抛出可以不处理。即不捕获也不声明抛出
+?如果父类抛出了多个异常,子类覆盖父类方法时,只能抛出相同的异常或者是他的子集（也就是不能抛出父类没有的异常）
+?父类方法没有抛出异常，子类覆盖父类该方法时也不可抛出异常。此时子类产生该异常，只能捕获处理，不能声明抛出
+?当多异常处理时，捕获处理，前边的类不能是后边类的父类（也就是从小到大捕获）
+?在try/catch后可以追加finally代码块，其中的代码一定会被执行，通常用于资源回收。
+方法中已经出现返回语句返回值A，再在finally中修改A值，则最终的返回值仍为修改前A的值。但在该方法中A的值已经被修改了。
+
+?继承Exception（编译时异常），必须要throws声明，一声明就告知调用者进行捕获，一旦问题处理了调用者的程序会继续执行。
+?继承RuntimeExcpetion（运行时异常）,不需要throws声明的，这时调用是不需要编写捕获代码的，因为调用根本就不知道有问题。一旦发生NoAgeException，调用者程序会停掉，并有jvm将信息显示到屏幕，让调用者看到问题，修正代码。
+
+134、System类：
+               System类不能手动创建对象，因为构造方法被private修饰，阻止外界创建对象。System类中的都是static方法，类名访问即可。在JDK中，有许多这样的类。
+
+
+135、基本来类型包装类：
+                       其中需要注意int对应的是Integer，char对应的Character，其他6个都是基本类型首字母大写即可。
+
+
+136、parseXXX(String s);其中XXX表示基本类型，参数为可以转成基本类型的字符串（注意不是转换成包装类型）
+
+
+137、正则表达式的两种用法：
+代码演示：
+	String qq = "604154942";
+	String regex = "[1-9][0-9]{4,14}";
+	booleanflag2 = qq.matches(regex);
+
+代码演示：
+String s = "18-22-40-65";
+	String regex = "-";
+	String[] result = s.split(regex);
+
+
+138、正则表达式规则：
+正则表达式中明确区分大小写字母。我们来学习语法规则。
+正则表达式的语法规则：
+字符：x
+含义：代表的是字符x
+例如：匹配规则为 "a"，那么需要匹配的字符串内容就是 ”a”
+
+字符：\\
+含义：代表的是斜线字符'\' 
+例如：匹配规则为"\\" ，那么需要匹配的字符串内容就是 ”\”
+
+字符：\t
+含义：制表符
+例如：匹配规则为"\\t" ，那么对应的效果就是产生一个制表符的空间
+
+字符：\n
+含义：换行符
+例如：匹配规则为"\\n"，那么对应的效果就是换行,光标在原有位置的下一行
+
+字符：\r
+含义：回车符
+例如：匹配规则为"\\r"，那么对应的效果就是回车后的效果,光标来到下一行行首
+
+字符类：[abc]
+含义：代表的是字符a、b 或 c
+例如：匹配规则为"[abc]"，那么需要匹配的内容就是字符a，或者字符b，或字符c的一个
+
+字符类：[^abc]
+含义：代表的是除了 a、b 或 c以外的任何字符
+例如：匹配规则为"[^abc]"，那么需要匹配的内容就是不是字符a，或者不是字符b，或不是字符c的任意一个字符
+
+字符类：[a-zA-Z]
+含义：代表的是a 到 z 或 A 到 Z，两头的字母包括在内
+例如：匹配规则为"[a-zA-Z]"，那么需要匹配的是一个大写或者小写字母
+
+字符类：[0-9]
+含义：代表的是 0到9数字，两头的数字包括在内
+例如：匹配规则为"[0-9]"，那么需要匹配的是一个数字
+
+字符类：[a-zA-Z_0-9]
+含义：代表的字母或者数字或者下划线(即单词字符)
+例如：匹配规则为" [a-zA-Z_0-9] "，那么需要匹配的是一个字母或者是一个数字或一个下滑线
+
+预定义字符类：.
+含义：代表的是任何字符
+例如：匹配规则为" . "，那么需要匹配的是一个任意字符。如果，就想使用 . 的话，使用匹配规则"\\."来实现
+
+预定义字符类：\d
+含义：代表的是 0到9数字，两头的数字包括在内，相当于[0-9]
+例如：匹配规则为"\\d "，那么需要匹配的是一个数字
+
+预定义字符类：\w
+含义：代表的字母或者数字或者下划线(即单词字符)，相当于[a-zA-Z_0-9]
+例如：匹配规则为"\\w "，，那么需要匹配的是一个字母或者是一个数字或一个下滑线
+
+边界匹配器：^
+含义：代表的是行的开头
+例如：匹配规则为^[abc][0-9]$ ，那么需要匹配的内容从[abc]这个位置开始, 相当于左双引号
+
+边界匹配器：$
+含义：代表的是行的结尾
+例如：匹配规则为^[abc][0-9]$ ，那么需要匹配的内容以[0-9]这个结束, 相当于右双引号
+
+边界匹配器：\b
+含义：代表的是单词边界
+例如：匹配规则为"\\b[abc]\\b"，那么代表的是字母a或b或c的左右两边需要的是非单词字符([a-zA-Z_0-9])
+		String regex = ".*\\b[abc]\\b.*";
+		String str = "abc a bbc";
+		booleanflag = str.matches(regex);
+
+数量词：X?
+含义：代表的是X出现一次或一次也没有
+例如：匹配规则为"a?"，那么需要匹配的内容是一个字符a，或者一个a都没有
+
+数量词：X*
+含义：代表的是X出现零次或多次
+例如：匹配规则为"a*"，那么需要匹配的内容是多个字符a，或者一个a都没有
+
+数量词：X+
+含义：代表的是X出现一次或多次
+例如：匹配规则为"a+"，那么需要匹配的内容是多个字符a，或者一个a
+
+数量词：X{n}
+含义：代表的是X出现恰好 n 次
+例如：匹配规则为"a{5}"，那么需要匹配的内容是5个字符a
+
+数量词：X{n,}
+含义：代表的是X出现至少 n 次
+例如：匹配规则为"a{5, }"，那么需要匹配的内容是最少有5个字符a
+
+数量词：X{n,m}
+含义：代表的是X出现至少 n 次，但是不超过 m 次
+例如：匹配规则为"a{5,8}"，那么需要匹配的内容是有5个字符a 到 8个字符a之间
+
+逻辑运算符：XY
+含义：代表的是X后跟Y
+例如：匹配规则为"ab"，那么需要匹配的字符串内容就是 ”ab”
+
+逻辑运算符：X|Y
+含义：代表的是X 或 Y
+例如：匹配规则为"a|b"，那么需要匹配的字符串内容就是 ”a”或”b”
+
+逻辑运算符：(X)
+含义：代表的是（）括号内的数据作为一组数据出现，(X)的方式称为正则表达式中的组
+
+
+139、Collection集合：
+Collection接口是集合中的顶层接口
+?Collecton接口常用的子接口有：List接口、Set接口
+?List接口常用的子类有：ArrayList类、LinkedList类
+Set接口常用的子类有：HashSet类、LinkedHashSet类
+
+
+140、Iterator迭代器：
+迭代的常规用法中我们要尽量避免在迭代过程中为集合添加/删除数据。否则会报错，原因是Java抛出了并发修改异常。	
+迭代过程中并发修改异常的原因为迭代器中”记忆”的集合长度与集合中实际长度不同，而导致出现索引与实际元素不符甚至无限循环的情况发生。
+所以在使用Iterator时，避免类似操作，for循环底层为迭代器实现，所以也需要避免类似操作。
+
+java中提供了很多个集合，它们在存储元素时，采用的存储方式不同。我们要取出这些集合中的元素，可通过一种通用的获取方式来完成。
+增强for循环是JDK1.5以后出来的一个高级for循环，专门用来遍历数组和集合的。它的内部原理其实是个Iterator迭代器，所以在遍历的过程中，不能对集合中的元素进行增删操作。（和普通for循环一样）
+
+增强for循环和老式的for循环有什么区别？
+注意：新for循环必须有被遍历的目标。目标只能是Collection或者是数组。
+建议：遍历数组时，如果仅为遍历，可以使用增强for如果要对数组的元素进行 操作，使用老式for循环可以通过角标操作。
+
+
+141、泛型：
+使用泛型的好处：
+?将运行时期的ClassCastException，转移到了编译时期变成了编译失败。
+?避免了类型强转的麻烦。
+
+含有泛型的类：修饰符 class 类名<代表泛型的变量> {  }
+含有泛型的方法：
+定义格式：修饰符 <代表泛型的变量> 返回值类型 方法名(参数){  }（分为参数中有泛型和返回值中有泛型）
+例如，
+Public class GenericMethod <E>{
+	
+	Public void show(E e){
+		System.out.println(e);
+	}
+
+
+含有泛型的接口：
+	定义格式：修饰符 interface接口名<代表泛型的变量> {  }
+?例如，
+Public interface Inter <E>{
+	Public abstractvoid show(E e);
+}
+
+
+142、数据存储的常用结构有：堆栈、队列、数组、链表。
+
+
+143、set集合：
+             查阅Set集合的API介绍，通过元素的equals方法，来判断是否为重复元素，它是个不包含重复元素的集合。Set集合取出元素的方式可以采用：迭代器、增强for。
+
+
+144、HashSet：
+查阅HashSet集合的API介绍：此类实现Set接口，由哈希表支持（实际上是一个 HashMap集合）。HashSet集合不能保证的迭代顺序与元素存储顺序相同。
+HashSet集合，采用哈希表结构存储数据，保证元素唯一性的方式依赖于：hashCode()与equals()方法。
+
+2.2HashSet集合存储数据的结构（哈希表）
+什么是哈希表呢？
+哈希表底层使用的也是数组机制，数组中也存放对象，而这些对象往数组中存放时的位置比较特殊，当需要把这些对象给数组中存放时，那么会根据这些对象的特有数据结合相应的算法，计算出这个对象在数组中的位置，然后把这个对象存放在数组中。而这样的数组就称为哈希数组，即就是哈希表。
+当向哈希表中存放元素时，需要根据元素的特有数据结合相应的算法，这个算法其实就是Object类中的hashCode方法。由于任何对象都是Object类的子类，所以任何对象有拥有这个方法。即就是在给哈希表中存放对象时，会调用对象的hashCode方法，算出对象在表中的存放位置，这里需要注意，如果两个对象hashCode方法算出结果一样，这样现象称为哈希冲突，这时会调用对象的equals方法，比较这两个对象是不是同一个对象，如果equals方法返回的是true，那么就不会把第二个对象存放在哈希表中，如果返回的是false，就会把这个值存放在哈希表中。
+总结：保证HashSet集合元素的唯一，其实就是根据对象的hashCode和equals方法来决定的。如果我们往集合中存放自定义的对象，那么保证其唯一，就必须复写hashCode和equals方法建立属于当前对象的比较方式。
+
+给HashSet中存储JavaAPI中提供的类型元素时，不需要重写元素的hashCode和equals方法，因为这两个方法，在JavaAPI的每个类中已经重写完毕，如String类、Integer类等。
+
+3.1ArrayList的contains方法判断元素是否重复原理：
+当ArrayList存放自定义类型时，由于自定义类型在未重写equals方法前，判断是否重复的依据是地址值，所以如果想根据内容判断是否为重复元素（contains()方法），需要重写元素的equals方法。
+
+
+145、Map集合遍历键找值方式：
+//创建Map对象
+		Map<String, String> map = new HashMap<String,String>();
+		//给map中添加元素
+		map.put("邓超", "孙俪");
+		map.put("李晨", "范冰冰");
+map.put("刘德华", "柳岩");
+		//获取Map中的所有key
+		Set<String> keySet = map.keySet();
+		//遍历存放所有key的Set集合
+		Iterator<String> it =keySet.iterator();
+		while(it.hasNext()){
+			//得到每一个key
+			String key = it.next();
+			//通过key获取对应的value
+			String value = map.get(key);
+			System.out.println(key+"="+value);
+		}
+
+第二种遍历方式：
+//创建Map对象
+		Map<String, String> map = new HashMap<String,String>();
+		//给map中添加元素
+		map.put("邓超", "孙俪");
+		map.put("李晨", "范冰冰");
+map.put("刘德华", "柳岩");
+		//获取Map中的所有key与value的对应关系
+		Set<Map.Entry<String,String>> entrySet = map.entrySet();
+		//遍历Set集合
+		Iterator<Map.Entry<String,String>> it =entrySet.iterator();
+		while(it.hasNext()){
+			//得到每一对对应关系
+			Map.Entry<String,String> entry = it.next();
+			//通过每一对对应关系获取对应的key
+			String key = entry.getKey();
+			//通过每一对对应关系获取对应的value
+			String value = entry.getValue();
+			System.out.println(key+"="+value);
+		}
+
+注意：Map集合不能直接使用迭代器或者foreach进行遍历。但是转成Set之后就可以使用了。
+
+
+146、LinkedHashMap：
+?如果要保证map中存放的key和取出的顺序一致，可以使用LinkedHashMap集合来存放。
+我们知道HashMap保证成对元素唯一，并且查询速度很快，可是成对元素存放进去是没有顺序的，那么我们要保证有序，还要速度快怎么办呢？
+在HashMap下面有一个子类LinkedHashMap，它是链表和哈希表组合的一个数据存储结构。
+
+
+147、可变参数：如果在方法书写时，这个方法拥有多参数，参数中包含可变参数，可变参数一定要写在参数列表的末尾位置。
+
+
+148、Collections集合工具类（注意下面的方法没有返回值）：
+public static <T> void sort(List<T> list) // 集合元素排序
+?public static void shuffle(List<?> list) //  集合元素存储位置打乱
+
+
+149、File对象：
+//File构造函数演示
+		String pathName = "e:\\java_code\\day22e\\hello.java";
+		File f1 = new File(pathName);//将Test22文件封装成File对象。注意；有可以封装不存在文件或者文件夹，变成对象。
+
+
+150、获取文件名称和文件对象：
+public class FileMethodDemo3 {
+	public static void main(String[] args) {
+		File dir = new File("e:\\java_code");
+		//获取的是目录下的当前的文件以及文件夹的名称。
+		String[] names = dir.list();
+		for(String name : names){
+			System.out.println(name);
+		}
+		//获取目录下当前文件以及文件对象，只要拿到了文件对象，那么就可以获取其中想要的信息
+		File[] files = dir.listFiles();
+		for(File file : files){
+			System.out.println(file);
+		}
+	}
+}
+
+注意：在获取指定目录下的文件或者文件夹时必须满足下面两个条件
+1，指定的目录必须是存在的，
+2，指定的必须是目录。否则容易引发返回数组为null，出现NullPointerException
+
+
+151、递归
+递归，指在当前方法内调用自己的这种现象
+public void method(){
+	System.out.println(“递归的演示”);
+	//在当前方法内调用自己
+	method();
+}
+递归分为两种，直接递归和间接递归。
+直接递归称为方法自身调用自己。间接递归可以A方法调用B方法，B方法调用C方法，C方法调用A方法。
+?递归的代码演示，计算1-n之间的和，使用递归完成
+public class DiGuiDemo {
+	public static void main(String[] args) {
+		//计算1~num的和，使用递归完成
+		int n = 5;
+		int sum = getSum(n);
+		System.out.println(sum);
+		
+	}
+        //外层定义方法，里层调用方法
+	public static int getSum(int n) {
+		if(n == 1){
+			return 1;
+		}
+		return n + getSum(n-1);
+	}
+}
+
+注意：递归一定要有条件限定，保证递归能够停止下来，否则会发生栈内存溢出。
+在递归中虽然有限定条件，但是递归次数不能太多。否则也会发生栈内存溢出。（看来方法是在栈里）
+
+
+152、写入文件和读取文件：
+public class FileOutputStreamDemo2 {
+	public static void main(String[] args) throws Exception {
+		File file = new File("c:\\file.txt");
+		FileOutputStream fos = new FileOutputStream(file, true);
+		String str = "\r\n"+"itcast";
+		fos.write(str.getBytes());
+		fos.close();
+	}
+}
+
+public class FileInputStreamDemo {
+	public static void main(String[] args) throws IOException {
+		File file = new File("c:\\file.txt");
+		//创建一个字节输入流对象,必须明确数据源，其实就是创建字节读取流和数据源相关联。
+		FileInputStream fis = new FileInputStream(file);
+		//读取数据。使用 read();一次读一个字节。
+		int ch = 0;
+		while((ch=fis.read())!=-1){
+			System.out.println("ch="+(char)ch);
+		}
+		// 关闭资源。
+		fis.close();
+	}
+}
+
+
+153、序列化：
+Serializable标记接口。该接口给需要序列化的类，提供了一个序列版本号。serialVersionUID. 该版本号的目的在于验证序列化的对象和对应类是否版本匹配。
+
+瞬态关键字transient
+当一个类的对象需要被序列化时，某些属性不需要被序列化，这时不需要序列化的属性可以使用关键字transient修饰。只要被transient修饰了，序列化时这个属性就不会被序列化了。
+同时静态修饰也不会被序列化，因为序列化是把对象数据进行持久化存储，而静态的属于类加载时的数据（也就是并不属于具体对象，而是属于类），不会被序列化。
+
+
+154、打印流：
+打印流根据流的分类：
+?字节打印流	PrintStream
+?字符打印流	PrintWriter
+?方法：
+void print(String str): 输出任意类型的数据，
+void println(String str): 输出任意类型的数据，自动写入换行操作
+?代码演示：
+ /* 
+ * 需求：把指定的数据，写入到printFile.txt文件中
+ * 
+ * 分析：
+ * 	1，创建流
+ * 	2，写数据
+ * 	3，关闭流
+ */
+public class PrintWriterDemo {
+	public static void main(String[] args) throws IOException {
+		//创建流
+		//PrintWriter out = new PrintWriter(new FileWriter("printFile.txt"));
+		PrintWriter out = new PrintWriter("printFile.txt");
+		//2，写数据
+		for (int i=0; i<5; i++) {
+			out.println("helloWorld");
+		}
+		//3,关闭流
+		out.close();
+	}
+}
+
+
+155、多线程：
+一个程序运行后至少有一个进程，一个进程中可以包含多个线程
+
+
+156、线程运行的原理：
+
+?分时调度：
+所有线程轮流使用 CPU 的使用权，平均分配每个线程占用 CPU 的时间。
+?抢占式调度：
+优先让优先级高的线程使用 CPU，如果线程的优先级相同，那么会随机选择一个(线程随机性)，Java使用的为抢占式调度。
+
+其实，多线程程序并不能提高程序的运行速度，但能够提高程序运行效率，让CPU的使用率更高。
+
+
+157、
+创建新执行线程有两种方法：
+?一种方法是将类声明为 Thread 的子类。该子类应重写 Thread 类的 run 方法。创建对象，开启线程。run方法相当于其他线程的main方法。
+另一种方法是声明一个实现 Runnable 接口的类。该类然后实现 run 方法。然后创建Runnable的子类对象，传入到某个线程的构造方法中，开启线程。
+
+158、创建线程的第一种方式：
+
+创建线程方式一继承Thread类
+创建线程的步骤：
+1 定义一个类继承Thread。
+2 重写run方法。
+3 创建子类对象，就是创建线程对象。
+4 调用start方法，开启线程并让线程执行，同时还会告诉jvm去调用run方法。
+?测试类
+public class Demo01 {
+	public static void main(String[] args) {
+		//创建自定义线程对象
+		MyThread mt = new MyThread("新的线程！");
+		//开启新线程
+		mt.start();
+		//在主方法中执行for循环
+		for (int i = 0; i < 10; i++) {
+			System.out.println("main线程！"+i);
+		}
+	}
+}
+?自定义线程类
+public class MyThread extends Thread {
+	//定义指定线程名称的构造方法
+	public MyThread(String name) {
+		//调用父类的String参数的构造方法，指定线程的名称
+		super(name);
+	}
+	/**
+	 * 重写run方法，完成该线程执行的逻辑
+	 */
+	@Override
+	public void run() {
+		for (int i = 0; i < 10; i++) {
+			System.out.println(getName()+"：正在执行！"+i);
+		}
+	}
+}
+
+思考：线程对象调用 run方法和调用start方法区别？
+线程对象调用run方法不开启线程，仅是对象调用方法。线程对象调用start开启线程，并让jvm调用run方法在开启的线程中执行。
+继承Thread类原理
+我们为什么要继承Thread类，并调用其的start方法才能开启线程呢？
+继承Thread类：因为Thread类用来描述线程，具备线程应该有功能。那为什么不直接创建Thread类的对象呢？如下代码：
+Thread t1 = new Thread();
+t1.start();//这样做没有错，但是该start调用的是Thread类中的run方法，而这个run方法没有做什么事情，更重要的是这个run方法中并没有定义我们需要让线程执行的代码。
+
+多线程执行时，到底在内存中是如何运行的呢？
+以上个程序为例，进行图解说明：
+多线程执行时，在栈内存中，其实每一个执行线程都有一片自己所属的栈内存空间。进行方法的压栈和弹栈。
+当执行线程的任务结束了，线程自动在栈内存中释放了。但是当所有的执行线程都结束了，那么进程就结束了。
+
+?Thread.currentThread()获取当前线程对象
+Thread.currentThread().getName();获取当前线程对象的名称
+
+通过结果观察，原来主线程的名称：main；自定义的线程：Thread-0，线程多个时，数字顺延。如Thread-1......
+进行多线程编程时，不要忘记了Java程序运行是从主线程开始，main方法就是主线程的线程执行内容。
+
+
+159、创建线程的第二种方式：
+
+创建线程的另一种方法是声明实现 Runnable 接口的类。该类然后实现 run 方法。然后创建Runnable的子类对象，传入到某个线程的构造方法中，开启线程。
+创建线程的步骤。
+1、定义类实现Runnable接口。
+2、覆盖接口中的run方法。。
+3、创建Thread类的对象
+4、将Runnable接口的子类对象作为参数传递给Thread类的构造函数。
+5、调用Thread类的start方法开启线程。
+?代码演示：
+public class Demo02 {
+	public static void main(String[] args) {
+		//创建线程执行目标类对象
+		Runnable runn = new MyRunnable();
+		//将Runnable接口的子类对象作为参数传递给Thread类的构造函数
+		Thread thread = new Thread(runn);
+		Thread thread2 = new Thread(runn);
+		//开启线程
+		thread.start();
+		thread2.start();
+		for (int i = 0; i < 10; i++) {
+			System.out.println("main线程：正在执行！"+i);
+		}
+	}
+}
+?自定义线程执行任务类
+public class MyRunnable implements Runnable{
+
+	//定义线程要执行的run方法逻辑
+	@Override
+	public void run() {
+		
+		for (int i = 0; i < 10; i++) {
+			System.out.println("我的线程：正在执行！"+i);
+		}
+	}
+}
+
+为什么需要定一个类去实现Runnable接口呢？继承Thread类和实现Runnable接口有啥区别呢？
+实现Runnable接口，避免了继承Thread类的单继承局限性。覆盖Runnable接口中的run方法，将线程任务代码定义到run方法中。
+
+160、匿名内部类的方式创建线程：
+
+使用线程的内匿名内部类方式，可以方便的实现每个线程执行不同的线程任务操作。
+?方式1：创建线程对象时，直接重写Thread类中的run方法
+		new Thread() {
+			public void run() {
+				for (int x = 0; x < 40; x++) {
+					System.out.println(Thread.currentThread().getName()
+							+ "...X...." + x);
+				}
+			}
+		}.start();
+
+?方式2：使用匿名内部类的方式实现Runnable接口，重新Runnable接口中的run方法
+		Runnable r = new Runnable() {
+			public void run() {
+				for (int x = 0; x < 40; x++) {
+					System.out.println(Thread.currentThread().getName()
+							+ "...Y...." + x);
+				}
+			}
+		};
+		new Thread(r).start();
+
+
+161、Runnable比Thread创建线程的优点：
+
+java不允许多继承，因此实现了Runnable接口的类可以再继承其他类。
+Runnable就相当于一个作业，而Thread才是真正的处理线程，我们需要的只是定义这个作业，然后将作业交给线程去处理，这样就达到了松耦合，也符合面向对象里面组合的使用，另外也节省了函数开销，继承Thread的同时，不仅拥有了作业的方法run()，还继承了其他所有的方法。也体现了面向对象的三大特性中的封装特性，体现了面向对象的设计思想。
+
+
+162、线程安全问题产生的原因：
+其实，线程安全问题都是由全局变量及静态变量引起的。若每个线程中对全局变量、静态变量只有读操作，而无写操作，一般来说，这个全局变量是线程安全的；若有多个线程同时执行写操作，一般都需要考虑线程同步，否则的话就可能影响线程安全。
+
+产生多线程问题的例子：
+
+需要窗口，采用线程对象来模拟；需要票，Runnable接口子类来模拟
+?测试类
+public class ThreadDemo {
+	public static void main(String[] args) {
+		//创建票对象
+		Ticket ticket = new Ticket();
+		
+		//创建3个窗口
+		Thread t1  = new Thread(ticket, "窗口1");
+		Thread t2  = new Thread(ticket, "窗口2");
+		Thread t3  = new Thread(ticket, "窗口3");
+		
+		t1.start();
+		t2.start();
+		t3.start();
+	}
+}
+?模拟票
+public class Ticket implements Runnable {
+	//共100票
+	int ticket = 100;
+
+	@Override
+	public void run() {
+		//模拟卖票
+		while(true){
+			if (ticket > 0) {
+				//模拟选坐的操作
+				try {
+					Thread.sleep(1);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				System.out.println(Thread.currentThread().getName() + "正在卖票:" + ticket--);
+			}
+		}
+	}
+
+解决方法：Synchronized同步方法和同步代码块。前者的锁是this对象，后者的锁是自己定义的对象。静态同步方法中的锁对象是 类名.class。
+
+
+163、Lock接口解决多线程安全问题：
+查阅API，查阅Lock接口描述，Lock 实现提供了比使用 synchronized 方法和语句可获得的更广泛的锁定操作。
+我们使用Lock接口，以及其中的lock()方法和unlock()方法替代同步，对电影院卖票案例中Ticket类进行如下代码修改：
+public class Ticket implements Runnable {
+	//共100票
+	int ticket = 100;
+	
+	//创建Lock锁对象
+	Lock ck = new ReentrantLock();
+	
+	@Override
+	public void run() {
+		//模拟卖票
+		while(true){
+			//synchronized (lock){
+			ck.lock();
+				if (ticket > 0) {
+					//模拟选坐的操作
+					try {
+						Thread.sleep(10);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					System.out.println(Thread.currentThread().getName() + "正在卖票:" + ticket--);
+				}
+			ck.unlock();
+			//}
+		}
+	}
+}
+
+
+164、线程的状态：
+等待和休眠不能进入阻塞态，但是反之可以。休眠sleep()传入时间参数，到时候自己唤醒；等待需要手动唤醒。等待不释放锁，休眠释放锁。
+
+
+165、TCP/IP协议：
+TCP/IP协议中的四层分别是应用层、传输层（tcp）、网络层(ip)和链路层，每层分别负责不同的通信功能。
+
+
+166、注解：
+?什么是注解：Annotation注解，是一种代码级别的说明。它是JDK1.5及以后版本引入的一个特性，与类、接口、枚举是在同一个层次
+?对比注释：注释是给开发人员阅读的，注解是给计算机提供相应信息的。
+?注解的作用：
+1.编译检查：通过代码里标识注解，让编译器能够实现基本的编译检查。例如：@Override
+2.编写文档：通过代码里标识注解，辅助生成帮助文档对应的内容，@Document
+
+
+167、反射的具体内容参见就业班第15天笔记。反射的定义：获取类的class对象，进而通过class对象获取类的一切。
+
+
+168、类加载器：?
+
+类加载器：类加载器是负责加载类的对象。将class文件（硬盘）加载到内存生成Class对象。
+所有的类加载器都是  java.lang.ClassLoader 的子类
+类.class.getClassLoader() 获得加载自己的类加载器
+采用全盘负责委托机制保证一个class文件只会被加载一次，形成一个Class对象。
+
+类加载器的三个组成部分：
+Bootstrap ClassLoader根类加载器：负责java核心类的加载。
+Extension ClassLoader扩展类加载器：负责JRE的扩展目录中jar包的加载。
+System ClassLoader系统类加载器：负责在JVM启动时加载来自java命令的class文件，以及classpath环境变量所指定的jar包的类路径。
+
+
+169、动态代理：
+
+java代理有jdk动态代理、cglib代理，这里只说下jdk动态代理，jdk动态代理主要使用的是java反射机制（既java.lang.reflect包）
+
+原理是（歌手、经纪人做例子）：
+?建立一个公共的接口，比如：歌手public interface Singer；
+?用具体的类实现接口，比如：周杰伦，他是歌手所以实现Singer这个接口，class MySinger implements Singer,重写singer方法.
+?建立代理类，这里也就是经纪人，他需要实现InvocationHandler接口，并重写invoke方法
+?这样当有什么事情，要找周杰伦（具体类）唱歌的时候，就必须先到经纪人（代理类）那里处理，代理人在决定要不要与你见面（该方法要不要执行）,找到经纪人方法invoke,经纪人方法invoke来找周杰伦的singer方法
+
+170、Schema约束：
+什么是Schema
+Schema是新的XML文档约束；
+Schema要比DTD强大很多，是DTD 替代者；
+Schema本身也是XML文档，但Schema文档的扩展名为xsd，而不是xml。
+Schema 功能更强大，数据类型更完善
+Schema 支持名称空间
+
+声明命名空间
+默认命名空间：<xxx xmlns=””>，使用<标签>
+显式命名空间：<xxx xmlns:别名=””>，使用<别名:标签>
+
+
+171、数据库
+
+在价格排序(降序)的基础上，以分类排序(降序)
+SELECT * FROM product ORDER BY price DESC,category_id DESC;
+
+
+?having与where的区别:
+?having是在分组后对数据进行过滤.
+where是在分组前对数据进行过滤
+
+统计各个分类商品的个数,且只显示个数大于1的信息：
+SELECT category_id ,COUNT(*) FROM product GROUP BY category_id HAVING COUNT(*) > 1;
+
+172、sql注入问题的解决方法：我们使用PreparedStatement来解决对应的问题。
+PreparedStatement预处理对象，处理的每条sql语句中所有的实际参数，都必须使用占位符?替换。
+String sql = "select * from user where username = ? and password = ?";
+	PreparedStatement使用，需要通过以下3步骤完成：
+1.PreparedStatement预处理对象代码：
+#获得预处理对象，需要提供已经使用占位符处理后的SQL语句
+PreparedStatement psmt = conn.prepareStatement(sql)
+2.设置实际参数
+void setXxx(int index, Xxx xx) 将指定参数设置指定类型的值
+	参数1：index 实际参数序列号，从1开始。
+	参数2：xxx 实际参数值，xxx表示具体的类型。
+例如：
+setString(2, "1234") 把SQL语句中第2个位置的占位符?替换成实际参数 "1234"
+3.执行SQL语句:
+int executeUpdate(); --执行insert update delete语句.
+ResultSet executeQuery(); --执行select语句.
+boolean execute(); --执行select返回true 执行其他的语句返回false.
+
+
+173、jdbc原理：
+Java提供访问数据库规范称为JDBC，而生产厂商提供规范的实现类称为驱动。JDBC是接口，驱动是接口的实现。
+
+
+175、jdbc编程步骤：
+
+1.注册驱动.
+2.获得连接.
+3.获得语句执行平台
+4.执行sql语句
+5.处理结果
+6.释放资源.
+
+//1 注册驱动
+	Class.forName("com.mysql.jdbc.Driver");
+	
+	//2 获得连接
+	String url = "jdbc:mysql://localhost:3306/mydb";
+	Connection conn = DriverManager.getConnection(url, "root", "root");
+	
+	//3获得语句执行者
+	Statement st = conn.createStatement();
+	
+	//4执行SQL语句
+	ResultSet rs = st.executeQuery("select * from category");
+	
+	//5处理结果集
+	while(rs.next()){
+		// 获得一行数据
+		
+		Integer cid = rs.getInt("cid");
+		String cname = rs.getString("cname");
+		
+		System.out.println(cid + " , " + cname);
+	}
+	//6释放资源
+	rs.close();
+	st.close();
+	conn.close();
+
+
+176、事务：
+事务是指逻辑上的一组操作;要么全部成功,要么全部失败;
+作用:保证数据的安全性和完整性!
+
+
+177、事务的特性：
+
+原子性;(事务内的操作是一个整体,不可分割);
+一致性;(在事务开启之后,到事务提交之前,应该保证事务的操作不能改变);
+隔离性;(一个事务在执行期间不能受到其他事务的干扰)
+持久性;(事务一旦结束,结果就不能再次改变);
+
+
+178、数据库隔离级别:
+1 read uncommitted	:读未提交.脏读，不可重复读，虚读/幻读都可能发生.
+2 read committed	:读已提交.避免脏读.但是不可重复读和虚读/幻读有可能发生.（Oracle默认）
+4 repeatable read	:可重复读.避免脏读,不可重复读.但是虚读/幻读有可能发生.（MySql默认）
+8 serializable		:串行化，可解决所有问题（也就是没有任何问题）
+
+脏读：还没有提交的就被读取了
+不可重复读：在读取的过程中另一个线程修改了数据，导致两次读到的不一样
+虚读/幻读：在读取的过程中另一个线程增加/减少了数据，导致两次读到的数据条数不一样
+
+179、三层架构表现层，业务层，持久层的好处：
+1:高内聚
+2:低耦合
+3:可维护
+4:可重用
+5:可扩展
+
+
+180、ThreadLocal:
+当使用ThreadLocal维护变量时，ThreadLocal为每个使用该变量的线程提供独立的变量副本，所以每一个线程都可以独立地改变自己的副本，而不会影响其它线程所对应的副本。
+
+
+181、http请求包括：请求行，请求头，请求体
+     http响应包括：响应行，响应头，响应体
+
+
+182、Servlet生命周期：
+用户第一次访问Servlet时创建Servlet的实例并执行init()方法，移除项目或者关闭服务器的时候销毁Servlet。
+get方法的话就会访问doGet()，post方法的话就会访问doPost()。
+每次请求服务器都会创建一个新的线程访问service()方法。
+
+
+183、Cookie能保存中文吗？
+     回答是：不能！但是可以对中文数据进行处理之后进行保存！
+
+
+184、Session：
+             Session如何销毁呢？
+		方式一：invalidate();
+		方式二：服务器非正常关闭【正常关闭，session依旧存在，服务器在正常关闭的时候会将session进行序列化到本地磁盘，下次启动会将磁盘的数据反序列化到内存中去】
+		方式三：让它超时(默认存活30分钟)
+
+session在访问tomcat服务器HttpServletRequest的getSession(true)的时候创建，tomcat的ManagerBase类提供创建sessionid的方法：随机数+时间+jvmid；
+
+存储在服务器的内存中，tomcat的StandardManager类将session存储在内存中，也可以持久化到file，数据库，memcache，redis等。客户端只保存sessionid到cookie中，而不会保存session，session销毁只能通过invalidate或超时，关掉浏览器并不会关闭session。
+
+
+185、Cookie：
+
+Cookie的生命
+	Cookie的默认生命是一个会话级别的(关闭浏览器就没了)
+		设置Cookie的生命让其存活的时间更持久
+			setMaxAge(int s);//设置 cookie 的最大生存时间，以秒为单位。
+		追杀cookie
+			setMaxAge(0);
+
+Cookie的规范(你只需要知道一点：cookie的大小和个数是有限制的)
+	Cookie的规范是一个组织指定！
+		单个的Cookie的大小不超过4KB;
+		一个服务器最多可以向客户端浏览器保存20个cookie
+		一个客户端浏览器最多保存300个Cookie
+
+	但是在浏览器大战的今天，一些浏览器厂商为了抢夺客户，对cookie进行了扩容(也是有限度的)，比如 8KB,100，500
+
+Cookie的路径
+	cookie的路径只与是否归还(归还的路径)有关，不能按照常规的路径去理解！！！
+		归还的路径：目前指的就是创建这个cookie的路径(cookie的默认路径就是当前创建这个cookie所在的Servlet的路径：端口之后servlet名称之前的这么一段)（端口之后就是项目名）
+	
+		案例中：
+			Servlet的路径是：/day37_Cookie_64
+			cookie的路径是：/day37_Cookie_64
+			
+			后面你访问的路径如何包含了之前cookie的路径，那么就会将这个cookie携带过去！否则携带不过去*****************************
+			http://localhost:8080/day37_Cookie_64/LastVisitTimeServlet
+
+
+186、jsp注释：
+?JSP注释、Java注释、HTML注释对比：
+<%-- jsp注释--%>
+<%	//java注释	%>
+<!-- html注释-->
+
+（不管是什么注释都是写在jsp里面，所以源码阶段可见其实是废话）
+Jsp注释：源码阶段可见、java文件中不可见、html源码不可见
+Java注释：源码阶段可见、java文件中可见、html源码不可见（注释方法比较奇怪）
+Html注释：源码阶段可见、java文件中可见、html源码可见
+
+脚本：(嵌套java代码片段、输出、声明)
+		嵌套java代码片段：<% java代码 %>    	等价于类中的方法(方法里面可以写啥，这个脚本中就可以写啥！)
+		输出：<%= %>  注意：%与=中间不能有空格	等价于response.getWriter().write();
+		声明：<%！ %>						等价于类(类中能写啥，这个脚本中就能写啥！)
+
+
+
+187、jsp的四个域范围：
+?page：表示当前页，通常没用。jsp标签底层使用。
+?request：表示一次请求。通常一次请求就一个页面，但如果使用请求转发，可以涉及多个页面。
+?session：表示一次会话。可以在多次请求之间共享数据。（一次会话指的是从第一次访问页面到关闭浏览器，因为关闭浏览器之后保存在cookie之中的sessionId就没了。当然，可以设置cookie有效时间）
+?application：表示 一个web应用(项目)。可以整个web项目共享，多次会话共享数据。有效期和Servlet生命一样长，直到关闭服务器或移除项目保存的信息才会消失。
+
+
+188、JSTL介绍
+我们说EL是获取数据，说白了就是等价于<%= %>,jstl它是取代<%  %>的！但是一直没有全部替换掉。愿景！
+jstl需要taglib指令。
+
+189、三层架构与mvc区别：
+
+M:model 模型 由javabean负责(负责数据的流转)
+V:view 视图 由JSP负责(将Javabean里面的数据显示给用户看)
+C:controller 控制器 由servlet负责(接收处理响应，一些操作的流程走向)
+
+JavaEE三层结构分别是WEB层、业务逻辑层、数据访问层。而MVC主要解决WEB层的技术！
+
+
+190、Filter：
+?          过滤器是一个运行在服务器端，先于与之相关的Servlet或者Jsp页面之前运行，对请求资源进行过滤功能的技术。它是JavaWEB三大组件(Servlet、Filter、 Listener)之一！
+
+?过滤器的编写流程
+第一步：编写一个类实现javax.servlet.Filter接口（配置文件拦截之后进入该类中的方法，满足某些逻辑之后就用chain.doFilter(request,response);语句放行）
+第二步：在web.xml中配置<filer>和<filter-mapping>配置项【快速创建方式不需要】
+
+
+191、
+什么是装设者设计模式呢？
+			设计模式：指的是对某一类问题提出的一套解决方案！(单例设计模式：一个类只允许创建一个实例对象)
+			装饰者设计模式：专门解决对方法近增强的这一类问题！
+				所有的设计模式都有固定的格式：
+					动态代理：	
+						第一步：创建一个被代理对象
+						第二步：创建一个代理对象（在代理对象中的invoke方法中对指定的方法进行增强）
+
+					装饰者设计模式：
+						1.自己编写的类(MyHttpServletRequest)与要增强的类或者接口()要有共同的接口(HttpServletRequest)
+						2.在自己编写的类(MyHttpServletRequest)的构造方法中要有已知实现类(需要增强的这个类)的一个引用
+						3.在自己编写的类(MyHttpServletRequest)要有成员私有变量来存储已知实现类(目的是为了在自己编写的这个类中实现共同接口方法的时候直接调用已知实现类的方法)
+						4.对指定的方法进行增强(getParameter)
+						5.对其它方法(后续需要使用的方法)进行实现
+
+chain.doFilter(request,response);语句用来放行过滤器（也就是通过了过滤器，没有被拦截）
+
+
+
+192、Listener监听器：
+所谓的监听器是指对整个WEB环境的监听,当被监视的对象(事件源)发生改变时，立即调用相应的方法进行处理。(被监视的对象什么时候发生改变？调用什么方法？)
+	域对象本身：创建和销毁
+	域对象属性：域对象属性的变更(添加、替换、删除)
+	JavaBean：你将这个JavaBean保存session,替换，移除
+
+
+193、
