@@ -1562,4 +1562,975 @@ chain.doFilter(request,response);Óï¾äÓÃÀ´·ÅĞĞ¹ıÂËÆ÷£¨Ò²¾ÍÊÇÍ¨¹ıÁË¹ıÂËÆ÷£¬Ã»ÓĞ±»À
 	JavaBean£ºÄã½«Õâ¸öJavaBean±£´æsession,Ìæ»»£¬ÒÆ³ı
 
 
-193¡¢
+193¡¢Ajax
+
+1.Ê¹ÓÃÍ¬²½·½Ê½À´Íê³É×¢²á±íµ¥ÓÃ»§ÃûºóÌ¨Ğ£Ñé
+		Ê¹ÓÃÕâÖÖ·½Ê½ÊµÏÖ£¬ÎÒÃÇ·¢ÏÖ£¬Ò»µ©ÓÃ»§×¢²áµÄÊ±ºò£¬ÊäÈëµÄÓÃ»§Ãû±»Õ¼ÓÃÁË£¬ÄÇÃ´ÏÂÃæËùÓĞµÄÊäÈëÏîÄÚÈİ¶¼Ã»ÁË£¬Èç¹û¶à²Ù×÷¼¸´Î£¬»¹ÊÇÕâ¸öÑù×Ó£¬»áµ¼ÖÂÓÃ»§Á÷Ê§£¡
+		ÕâÖÖ»á½«Õû¸öÒ³Ãæ½øË¢ĞÂµÄĞ§¹û£¬¶ÔÓÚÓÃ»§¶øÑÔ£¬ÌåÑéĞ§¹ûÊÇÌØ±ğ²îµÄ£¡ÎÒÃÇµÃ½â¾öÕâ¸öÎÊÌâ£¡¿ÉÒÔÊ¹ÓÃÒì²½µÄ·½Ê½(Ajax·½Ê½)£¡£¡£¡
+		
+	2.AjaxµÄ½éÉÜ
+		AjaxÖ¸µÄÊÇ£ºÒì²½µÄjavascriptºÍxml£¡ÔÚ²»Ë¢ĞÂÕû¸öÒ³ÃæµÄÇ°ÌáÏÂ£¬¶Ô¾Ö²¿µÄÒ³ÃæÄÚÈİ½øĞĞË¢ĞÂ£¡ÀïÃæÊ¹ÓÃµÄ¶¼ÊÇÀÏ¼¼Êõ(ºÜÔç³öÏÖµÄ)£¬ĞÂË¼Ïë£¡£¡£¡Ëü¿ÉÒÔÊ¹µÃÒ³Ãæ²»ÔÙ½øĞĞÈ«²¿Ë¢ĞÂ£¬¶øÊÇ¾Ö²¿ÄÚÈİË¢ĞÂ£¡
+			javascriptÊÇºËĞÄ£¬xmlÊÇ´«µİÊı¾İµÄ¸ñÊ½(ÏÖÔÚ¼¸ºõ²»ÓÃÁË£¡Ê¹ÓÃjsonÊı¾İ¸ñÊ½À´Ìæ»»)
+		
+		Í¬²½·½Ê½£º½«Êı¾İ±£´æµ½Óò¶ÔÏó£¡Ò³ÃæÌø×ª(ÔÚÒ³Ãæ´ÓÓò¶ÔÏóÖĞ»ñÈ¡)
+		Òì²½·½Ê½£ºÖ±½ÓÍ¨¹ıÏìÓ¦Ìå½«Êı¾İÏìÓ¦µ½¿Í»§¶Ëä¯ÀÀÆ÷
+		
+	3.AjaxµÄ²Ù×÷
+		Óï·¨£º$.post(url,data,callback,type);  ¡¾ÖØµãÕÆÎÕ¡¿
+			url:·¢ËÍÇëÇóµÄµØÖ·(Ö¸ÏòÒ»¸öServlet)
+			data:ÇëÇó²ÎÊı(Ê¹ÓÃjsonÊı¾İ¸ñÊ½£¬ÀıÈç£º{"color":"red","background-color":"black"})
+			callback£º»Øµ÷º¯Êı(µ±·şÎñÆ÷¶ËservletÃ»ÓĞÒì³£,¼´ÏìÓ¦×´Ì¬ÂëÎª200µÄÊ±ºò²Å»áÖµÖ´ĞĞ)
+			tyep:Õû¸öÊı¾İ´«ÊäÊ¹ÓÃµÄ¸ñÊ½(text,json)(×¢ÒâÊÇ·şÎñÆ÷·µ»ØÊı¾İµÄÊı¾İ¸ñÊ½£¬¶ø²»ÊÇä¯ÀÀÆ÷·¢ËÍÇëÇóµÄÊı¾İ¸ñÊ½)
+	
+		ÀıÈç£º$.post("${pageContext.request.contextPath}/RegisterServlet",{"username":"jack"},function(data){
+				//µ±·şÎñÆ÷¶ËÏìÓ¦µÄ×´Ì¬ÂëÎª200µÄÊ±ºò£¬Õâ¸öÀïÃæµÄ´úÂë¾Í»áÖ´ĞĞ£¡
+				//data£º´ú±íµÄÊÇ´Ó·şÎñÆ÷¶ËÏìÓ¦¹ıÀ´µÄÊı¾İ£¡
+			});
+
+	4.$.get()·½·¨
+		³ıÁËÇëÇó·½Ê½Óë´¦ÀíÂÒÂëµÄ·½Ê½Óëpost²»Ò»ÑùÒÔÍâ£¬²Ù×÷Ò»Ä£Ò»Ñù£¡
+		Óï·¨£º$.get(url,data,callback,type);
+			url£ºÇëÇóµÄÂ·¾¶(Ö¸ÏòÒ»¸öservlet)
+			data:ÇëÇó²ÎÊı(Ê¹ÓÃjsonÊı¾İ¸ñÊ½£¬ÀıÈç£º{"username":"jack"})
+			callback:»Øµ÷º¯Êı(Ö»ÓĞ·şÎñÆ÷ÏìÓ¦×´Ì¬ÂëÎª200µÄÊ±ºò£¬Ëü»á²ÅÖ´ĞĞ)
+			type:´«ÊäµÄÊı¾İ¸ñÊ½
+		
+		¿ª·¢ÖĞ£¬ÓÅÏÈ¿¼ÂÇÊ¹ÓÃ$.post();·½·¨
+
+	5.$().load()·½·¨  ¡¾ÁË½â¡¿
+		ÖÇÄÜµÄAjaxµÄ·½Ê½£¬¿ª·¢ÖĞ²»ÓÃ£¡£¡£¡Ëü¶ÔÖ¸¶¨µÄÔªËØ½øĞĞ²Ù×÷£¡
+		
+		load·½·¨£ºÈç¹ûÓĞ²ÎÊı£¬¾ÍÊÇpostÇëÇó£»Ã»ÓĞ´í²ÎÊı£¬¾ÍÊÇgetÇëÇó
+			$("#div1").load(url,data,function(data){
+				//»Øµ÷º¯ÊıÒªÏëÖ´ĞĞ£¬·şÎñÆ÷¶ËÏìÓ¦×´Ì¬Âë±ØĞëÊÇ200£¡
+			});
+			¸ÄĞ´£º
+			$.post(url,data,function(data){
+				$("#div1").html(data);
+			});
+
+	6.$.ajax()·½·¨ ¡¾ÖØµãÕÆÎÕ£¡£¡£¡£¡¡¿
+		ËüÊÇ¹¦ÄÜ×îÇ¿´óµÄÒ»¸öajaxµÄ·½·¨£¡Ò²ÊÇ¿ªÖĞÖĞ×î³£ÓÃµÄÒ»¸ö£¡£¡£¡£¡
+		Óï·¨:
+			$.ajax({
+				type:"get",//ÇëÇó·½Ê½
+				url:"${pageContext.request.contextPath}/RegisterServlet",//ÇëÇóÂ·¾¶
+				data:{"username":"jack"},//ÇëÇó²ÎÊı
+				success:function(data){
+					//·şÎñÆ÷ÏìÓ¦×´Ì¬ÂëÎª200Ö´ĞĞµÄÄÚÈİ
+					//data:·şÎñÆ÷¶ËÏìÓ¦µÄÊı¾İ
+				},
+				error:function(XMLHttpRequest, textStatus, errorThrown){
+					//·şÎñÆ÷¶Ë³öÏÖÒì³£(×´Ì¬ÂëÎª4xx£¬5xx)Ö´ĞĞµÄ´úÂë
+					//XMLHttpRequest£ºajaxµÄºËĞÄÒıÇæ¶ÔÏó£¡
+					//textStatus£º´íÎóĞÅÏ¢(³öÏÖÎÊÌâ£¬´íÎóĞÅÏ¢ÔÚÕâ¸ö²ÎÊıÖĞ£¬Öµ¿ÉÄÜÎª£ºnull,error,notmodifed,timeout,parsererror)
+					//errorThrown£º²¶»ñµÄÒì³£¶ÔÏó
+				}
+			});
+
+		Ê¹ÓÃÖ®Ç°µÄ$.post»òÕß$.getµÄ·½·¨£¬¶¼¿ÉÒÔÊ¹ÓÃ$.ajax½øĞĞ¸ÄĞ´£¡£¡£¡£¡
+
+	7.AjaxµÄÖ´ĞĞÔ­Àí
+		Ö®Ç°Ê¹ÓÃµÄ¶¼ÊÇjQueryµÄAjax·½Ê½£¬³ıÁË²Ù×÷±È´«Í³µÄÒª¼ò±ã£¬×îÖØÒªµÄÒ»µã£¬ËüÃÇ¶¼½â¾öÁËä¯ÀÀÆ÷¼æÈİÎÊÌâ£¡
+
+
+	8.Í¬²½ÓëÒì²½µÄÇø±ğ
+		Í¬²½£º
+			1.½«Êı¾İ±£´æµ½Óò¶ÔÏó£¬È»ºóÒ³ÃæÌø×ª½øĞĞ²Ù×÷
+			2.ÕûÌåË¢ĞÂ(Õû¸öÒ³Ãæ¶¼Ë¢ĞÂ£¬ÓÃ»§ÌåÑé²î)
+			3.·¢ËÍÒ»´ÎÇëÇó£¬Èç¹ûÃ»ÓĞµÃµ½ÏìÓ¦£¬ÄÇÃ´ÊÇÎŞ·¨½øĞĞÆäËüµÄ²Ù×÷(ÔÙ´Î·¢ËÍÁíÍâµÄÇëÇó£¡)
+			
+		Òì²½£º
+			1.Ö±½ÓÍ¨¹ıÏìÓ¦Ìå(response.getWriter.write())À´²Ù×÷µÄ£¡
+			2.¾Ö²¿Ë¢ĞÂ(ÓÃ»§ÌåÑéÁ¼ºÃ)
+			3.·¢ËÍÒ»¸öÇëÇó£¬²»¹ÜÓĞÃ»ÓĞÏìÓ¦£¬¶¼¿ÉÒÔ½øĞĞÆäËüµÄ²Ù×÷(Í¬Ê±·¢ËÍ¶à¸ö²»Í¬µÄÇëÇó)
+
+	9.ÇëÇó·½Ê½·µ»ØÊı¾İ¸ñÊ½type
+		type£º´Ó·şÎñÆ÷¶ËÏìÓ¦¹ıÀ´Êı¾İµÄ¸ñÊ½£¬Ä¬ÈÏµÄÊÇtext,Ê¹ÓÃ×î¶àµÄÊÇjsonÊı¾İ¸ñÊ½
+		Èç¹ûÊÇjsonÊı¾İ¸ñÊ½£¬´¦ÀíÂÒÂë¾Í»á·¢Éú¸Ä±ä£º
+		ÒÔÇ°£º¡¾Í¬²½¡¿
+			response.setContentType("text/html;charset=utf-8");
+		ÏÖÔÚ£º¡¾Òì²½¡¿
+			response.setContentType("application/json;charset=utf-8");
+
+		¹ØÓÚjsonÊı¾İ¸ñÊ½£º
+			Ò»¸öÑÏ¸ñµÄjsonÊı¾İ£¬ÆäkeyºÍvalue¶¼±ØĞë´øÉÏÒıºÅ£¡Èç¹ûvalueËüÊÇÒ»¸ö±äÁ¿£¬ÒıºÅ²»ÓÃĞ´£¡Êµ¼Ê¿ª·¢£¬·¢ËÍÊı¾İ¸øµÄjson,keyµÄÒıºÅ¿ÉÒÔÊ¡ÂÔ²»Ğ´£»ÏìÓ¦µÄÊı¾İkey¶¼ÊÇÓĞÒıºÅµÄ£¡
+			jsonÊÇÒ»ÖÖÇáÁ¿¼¶µÄÊı¾İ½»»»¸ñÊ½¡£JSON²ÉÓÃÍêÈ«¶ÀÁ¢ÓÚÓïÑÔµÄÎÄ±¾¸ñÊ½£¬¾ÍÊÇËµ²»Í¬µÄ±à³ÌÓïÑÔJSONÊı¾İÊÇÒ»ÖÂµÄ¡£(Ëü²»ÊÇjavaÌØÓĞµÄ£¡)ËüµÄ´«ÊäĞ§ÂÊÌØ±ğ¸ß(±Èxml¸ß£¡)
+		ÀıÈç£ºÒ»¸öjsonÊı¾İ£º
+			{"key1":"value1","key2":"value2","key3":"value3","key4":"value4"¡­¡­}
+
+		¿ª·¢ÖĞ£¬Èç¹û×öÒ»¸ö²éÑ¯£¬Ò»°ãµÃµ½µÄ¶¼ÊÇÒ»¸öJava¶ÔÏó»òÕß¶ÔÏó¼¯ºÏ£¡¶øÏìÓ¦Êı¾İ¶¼»áÊ¹ÓÃjsonÊı¾İ¸ñÊ½£¬ÄÇÃ´ÈçºÎ½«¶ÔÏó»òÕß¶ÔÏóµÄ¼¯ºÏ×ª³ÉjsonÊı¾İ¸ñÊ½ÄØ£¿¡¾Ê¹ÓÃ¹¤¾ß£¡¡¿
+		
+		Ò»µ©×ª»»ÁË£¬ÎÒÃÇ¾ÍµÃµ½ÁËÒ»¸ö×Ö·û´®µÄjsonÊı¾İÁË£¬¹Ø¼üÎÊÌâÊÇ£¬ÎÒÃÇÔõÃ´»ñµÃjson×Ö·û´®ÖĞµÄÊı¾İÄØ£¿
+		
+	10.»ñµÃjsonÖĞµÄÊı¾İ
+		//1.json¶ÔÏó
+		var city = {
+			"name":"±±¾©",	
+			"desc":"µÛ¶¼"
+		}
+		//»ñµÃÃèÊöĞÅÏ¢:µÛ¶¼
+		alert(city.desc);
+		alert(city["desc"]);
+		
+		//2.jsonÊı×é
+		var province = ["ºÓÄÏ","Õã½­","½­ËÕ","ËÄ´¨"];
+		//»ñµÃÊ¡·İ:ËÄ´¨
+		alert(province[3]);
+		
+		//3.¸´ÔÓµÄjsonÊı¾İ£¨Êı×éÀïÃæ°üº¬json£©
+		var pc = [{
+			"cityName":"ĞÅÑô",
+			"cityDesc":"Ã«¼â"
+		},{
+			"name":"ÓÂ¸ç",
+			"desc":"Æ¤¸ï³§"
+		},{
+			"sex":"FatBoy",
+			"hobby":"³éÑÌ"
+		}];
+		//»ñµÃÊı¾İ£º³éÑÌ
+		alert(pc[2].hobby);
+
+	11.Java¶ÔÏóÓëjsonÖ®¼äµÄ×ª»»
+		JSON-LIB£ºĞèÒªµ¼ÈëÏà¹ØµÄjar°ü(ÓĞ6¸ö)
+			¿ª·¢ÖĞ:
+				String json = JSONArray.fromObject(data).toString();//data:ĞèÒª×ªµÄÊı¾İ
+				String json = JSONObject.fromObject(data).toString();//data:ĞèÒª×ªµÄÊı¾İ
+			JSONArray£ºÊı×é¡¢list(listÖĞÓĞ¶ÔÏó£¡)  £¨µ¥ÁĞ£©
+			JSONObject£º¶ÔÏó£¡Map  £¨Ë«ÁĞ£©
+
+
+194¡¢Linux³£ÓÃÃüÁî£º
+ll(ÏÔÊ¾µ±Ç°ÎÄ¼ş¼ĞÄÚµÄÎÄ¼şµÄÏêÏ¸ĞÅÏ¢),ls(ÏÔÊ¾µ±Ç°ÎÄ¼ş¼ĞÄÚµÄÎÄ¼şĞÅÏ¢)vim,pwd,cd,rm ,cat(ÎÄ¼ş½ÏĞ¡Ê±²é¿´ÎÄ¼şÄÚÈİ),mv,find(²é¿´Ö¸¶¨Ãû³ÆµÄÎÄ¼şËùÔÚµÄÄ¿Â¼),zxvf,zcvf,ifconfig(ÏÔÊ¾ÍøÂçÉè±¸),ping,ps(²é¿´µ±Ç°Ê±¼äµÄ½ø³ÌĞÅÏ¢),kill -9 pid(Ç¿ÖÆÖÕÖ¹),grep -i(¹ÜµÀ),rmdir(É¾³ıÄ¿Â¼£¬Èç¹ûÄ¿Â¼ÖĞÓĞÎÄ¼şÏÈ±ØĞëÉ¾³ıÄ¿Â¼ÖĞµÄÎÄ¼ş)
+
+
+195¡¢ORM£º
+ORM£ºObject Relational Mapping¶ÔÏó¹ØÏµÓ³Éä¡£
+½«¶ÔÏóÓëÊı¾İ¿âÖĞ±í½¨Á¢Ó³Éä¹ØÏµ£¬²Ù×÷¶ÔÏó¾Í¿ÉÒÔ²Ù×÷Êı¾İ¿âÖĞ±í¡£
+
+
+196¡¢Hibernate£º·â×°ÁËjdbc£¬¼ò»¯ÁËdao²ãµÄÊéĞ´¡£¿ÉÀ©Õ¹ĞÔÇ¿£¬µ±±¾Éí¹¦ÄÜ²»¹»ÓÃÊ±£¬¿ÉÒÔ×ÔĞĞ±àÂë½øĞĞÀ©Õ¹¡£
+HibernateµÄÓ³ÉäÎÄ¼şÖ»ÒªÊÇÒ»¸öXMLÎÄ¼ş¾Í¿ÉÒÔÁË¡£Ò»°ãÓ³ÉäÃüÃû£ºÀàÃû.hbm.xml¡£¸ÃÎÄ¼şÀïÃæÊÇÊµÌåÀàºÍÊı¾İ¿â±íµÄÓ³Éä¡£
+HibernateºËĞÄÅäÖÃÎÄ¼ş£º Ä¬ÈÏSRCÏÂÓĞ¸öhibernate.cfg.xmlÎÄ¼ş¡£¸ÃÎÄ¼şÀïÃæÊÇÁ¬½ÓÊı¾İ¿âµÄĞÅÏ¢¡¢¼ÓÔØ.hbm.xmlÓ³ÉäÎÄ¼ş¡¢hibernateµÄÊôĞÔ¡£
+
+
+197¡¢hibernate´úÂë²Ù×÷µÄ²½Öè£º
+1¡¢¼ÓÔØhibernateºËĞÄÅäÖÃÎÄ¼ş
+2¡¢´´½¨SessionFactory£ºsession¹¤³§¶ÔÏó¡££¨Session¹¤³§£¬ÊÇÒ»¸öÏß³Ì°²È«µÄ¶ÔÏó£¬ÄÚ²¿Î¬»¤HibernateµÄÁ¬½Ó³Ø¡£Ò»°ãÒ»¸öÓ¦ÓÃÖ»ĞèÒª´´½¨Ò»´ÎµÄ¶ÔÏó¡££©
+3¡¢´ÓSessionFactoryÖĞ¿ªÆôÊÂÎñ
+4¡¢²Ù×÷Êı¾İ¿â
+5¡¢Ìá½»ÊÂÎñ
+
+ÆäÖĞsessionµÄ·½·¨ÓĞget,update£¬delete¡£ÆäÖĞ´´½¨ºÍĞŞ¸Ä¶¼ÊÇupdate¡£
+
+getºÍloadµÄÇø±ğ£º
+
+getÊ¹ÓÃµÄÊÇÁ¢¼´¼ÓÔØ£¬Ò²¾ÍÊÇÂíÉÏ·¢ËÍsqlÓï¾ä¡£
+get²éÑ¯·µ»ØµÄ¶ÔÏóÊÇÕæÊµ¶ÔÏó±¾Éí¡£
+get²éÑ¯Ò»¸öÕÒ²»µ½µÄ¶ÔÏóµÄÊ±ºò·µ»Ønull
+
+loadÊ¹ÓÃµÄÊÇÑÓ³Ù¼ÓÔØ£¬Ö»ÓĞµ±ÓÃµ½Õâ¸ö¶ÔÏóµÄ·ÇÖ÷¼üĞÅÏ¢µÄÊ±ºò²Å»á·¢ËÍsqlÓï¾ä¡£
+load·µ»ØµÄÊÇ´úÀí¶ÔÏó¡£
+ÕÒ²»µ½¶ÔÏóµÄÊ±ºòÅ×³öÒì³£¡£
+
+198¡¢³Ö¾Ã»¯Àà£º
+³Ö¾Ã»¯Àà: Óë±í½¨Á¢ÁËÓ³Éä¹ØÏµµÄÊµÌåÀà,¾Í¿ÉÒÔ³ÆÖ®Îª³Ö¾Ã»¯Àà
+³Ö¾Ã»¯Àà = JavaÀà + Ó³ÉäÎÄ¼ş
+
+
+199¡¢³Ö¾Ã»¯ÀàµÄ±àĞ´¹æÔò£º
+
+?Ìá¹©ÎŞ²ÎÊıµÄ¹¹Ôì·½·¨		
+?ÀàÖĞµÄ³ÉÔ±¶¼ÊÇË½ÓĞµÄprivate					
+?¶ÔË½ÓĞÊôĞÔÌá¹©get/set·½·¨	
+?ÊôĞÔ¾¡Á¿Ê¹ÓÃ°ü×°ÀàÀàĞÍ							£ºÄ¬ÈÏÖµ²»Í¬µÄ£¬°ü×°ÀàÄ¬ÈÏÖµnull£¬»ù±¾Êı¾İÀàĞÍÄ¬ÈÏ0¡£
+?³Ö¾Ã»¯Àà²»ÒªÊ¹ÓÃfinal½øĞĞĞŞÊÎ					£ºÊ¹ÓÃfinalĞŞÊÎ£¬ÑÓ³Ù¼ÓÔØÊ§Ğ§£¬±äÎªÁ¢¼´¼ÓÔØ¡£
+?ÀàÖĞĞèÒªÌá¹©±êÊ¶ÊôĞÔ(OID)£¬Óë±íÖĞÖ÷¼ü½¨Á¢Ó³Éä¹ØÏµ	£ºHibernate¸ù¾İ±êÊ¶ÊôĞÔÀ´ÅĞ¶Ï¶ÔÏóÊÇ·ñÊÇÍ¬Ò»¸öµÄ¡£
+
+
+200¡¢HibernateµÄÖ÷¼üÉú³É²ßÂÔ
+Ö÷¼ü²»Ó¦¸ÃÓÉÓÃ»§×Ô¼ºÎ¬»¤£¬Ó¦¸ÃÍ³Ò»¹ÜÀí£¬ÄÇÃ´Hibernate¾ÍÌá¹©ÁËÖ÷¼üÍ³Ò»¹ÜÀíµÄ·½Ê½£ºÖ÷¼üÉú³É²ßÂÔ¡£
+
+
+?increment		£º×Ô¶¯Ôö³¤£¬ÊÇHibernateÖĞÌá¹©Ò»ÖÖ×Ô¶¯Ôö³¤·½Ê½£¬²»ÊÇÊı¾İ¿âÖĞµÄ×Ô¶¯Ôö³¤¡£(ÊÊÓÃÓÚshort¡¢int¡¢longÀàĞÍµÄÖ÷¼ü(×ÜÖ®ÊÇÊı×Ö))
+Ê×ÏÈÊ¹ÓÃselect max(cust_id) from cst_customer;½«Õâ¸ö×î´óÖµ+1×÷ÎªÏÂÒ»Ìõ¼ÇÂ¼µÄÖ÷¼ü¡£
+¶ÔÓÚ²¢·¢·ÃÎÊÊı¾İ¿â²»ÊÊÓÃ
+
+?identity			£º×Ô¶¯Ôö³¤£¬ÊÊÓÃÓÚshort¡¢int¡¢longÀàĞÍµÄÖ÷¼ü£¬Ê¹ÓÃµÄÊÇÊı¾İ¿â×Ô¶¯Ôö³¤»úÖÆ¡£²»ÊÇËùÓĞÊı¾İ¿â¶¼Ö§³Ö×Ô¶¯Ôö³¤£¬±ÈÈçOracleÃ»ÓĞ×Ô¶¯Ôö³¤¡£ £¨²»¿ÉÊÖ¶¯ÉèÖÃÖ÷¼ü£©
+?sequence			£ºĞòÁĞ£¬ÊÊÓÃÓÚshort¡¢int¡¢longÀàĞÍµÄÖ÷¼ü£¬Ê¹ÓÃĞòÁĞ·½Ê½Íê³ÉÖ÷¼üµÄÉú³É¡£±ØĞëÊÇÖ§³ÖĞòÁĞµÄ·½Ê½µÄÊı¾İ¿â¡£OracleµÄ×Ô¶¯Ôö³¤  £¨²»¿ÉÊÖ¶¯ÉèÖÃÖ÷¼ü£©
+
+?native			£º±¾µØ²ßÂÔ£¬¸ù¾İµ×²ãµÄÊı¾İ¿â²»Í¬£¬×Ô¶¯Ñ¡ÔñÊ¹ÓÃidentity»¹ÊÇsequence¡£
+
+?uuid				£ºËæ»ú×Ö·û´®£¬ÊÊÓÃÓÚ×Ö·û´®ÀàĞÍµÄÖ÷¼ü¡£
+
+?assigned			£ºHibernate²»Î¬»¤Ö÷¼ü£¬¿ª·¢ÈËÔ±ĞèÒªÊÖ¶¯ÉèÖÃÖ÷¼ü¡£
+
+
+×Ü½á: ÒÔºóÈç¹ûÕë¶ÔÊÇÊıÖµĞÍ,Ñ¡ÔñÓÃnative £¨Ò²¾ÍÊÇÈÃhibernate×Ô¶¯Ñ¡Ôñ£© Èç¹ûÊÇvarcharÀàĞÍ,¿ÉÒÔÑ¡ÔñÓÃuuid
+     µ«ÊÇÒ²¿ÉÒÔ²»ÓÃhibernateÎ¬»¤,×Ô¼ºÔÚ³ÌĞòÖĞÊÖ¶¯Éè¶¨Î¨Ò»·Ç¿Õ(assigned)
+
+
+201¡¢HibernateµÄ³Ö¾Ã»¯ÀàµÄÈıÖÖ×´Ì¬
+Hibernate¿ò¼ÜÎªÁË¸üºÃ¹ÜÀí³Ö¾Ã»¯Àà£¬½«³Ö¾Ã»¯Àà·Ö³ÉÁËÈıÖÖ×´Ì¬£º
+?Ë²Ê±Ì¬	£ºÃ»ÓĞ³Ö¾Ã»¯±êÊ¶OID£¬Ã»ÓĞ±»session²Ù×÷¹ÜÀí¡££¨¸Õ´´½¨¶ÔÏóÃ»ÓĞ±£´æµ½Êı¾İ¿âÊ±£©
+?³Ö¾ÃÌ¬	£ºÓĞ³Ö¾Ã»¯±êÊ¶OID£¬ÒÑ¾­±»session²Ù×÷¹ÜÀí¡££¨±£´æµ½Êı¾İ¿âÖ®ºó£©
+ÍÑ¹ÜÌ¬(ÀëÏßÌ¬)	£ºÓĞ³Ö¾Ã»¯±êÊ¶OID£¬Ã»ÓĞ±»session²Ù×÷¹ÜÀí¡££¨Ìá½»ÊÂÎñ²¢¹Ø±ÕsessionÁ¬½ÓÖ®ºó£©
+
+
+202¡¢³Ö¾ÃÌ¬ÓëÒ»¼¶»º´æÖĞµÄÁ½¸öÇø£º
+
+³Ö¾ÃÌ¬: Ö»ÒªÊ¹ÓÃheibernate²éÑ¯³öµÄ¶ÔÏó,¾Í¶¼ÊÇ³Ö¾ÃÌ¬¶ÔÏó
+  ÌØĞÔ: ³Ö¾ÃÌ¬¶ÔÏó»á×Ô¶¯È¥¸üĞÂÊı¾İ¿âµÄÊı¾İ (Ò»¼¶»º´æÔì³ÉµÄ)
+
+ ²úÉúÔ­Òò:
+
+	session.get(Customer.class, 1L);  // »áÈ¥Êı¾İ²éÑ¯,²éÍê·ÅÔÚÒ»¼¶»º´æÖĞ
+							Ò»¼¶»º´æ2¸öÇø:
+								´æ´¢Çø: ·ÅÔÚÕâÒ»·İ
+								¿ìÕÕÇø: ±¸·İÒ»·İÕâÕâÀï
+
+
+	ct.setCust_name("roseabcd");  // »áÈ¥Ò»¼¶»º´æÖĞĞŞ¸ÄÊı¾İ,µ«ÊÇÖ»ĞŞ¸Ä´æ´¢ÇøµÄÊı¾İ,²»ĞŞ¸Ä¿ìÕÕÇøµÄÊı¾İ
+								´æ´¢Çø: ĞŞ¸ÄÁË
+								¿ìÕÕÇø: ÒÔÇ°Ã»ĞŞ¸ÄµÄÊı¾İ
+
+
+	tx.commit();   // »áÈ¥Ò»¼¶»º´æÖĞ»ñÈ¡´æ´¢ÇøºÍ¿ìÕÕÇøµÄÊı¾İ,¶Ô±ÈÕâ2¸öÇøµÄÊı¾İÊÇ·ñÒ»ÖÂ
+						Ò»ÖÂ:Ê²Ã´¶¼²»²Ù×÷
+						²»Ò»ÖÂ:Ö´ĞĞupdate¸üĞÂÓï¾ä¸üĞÂÊı¾İ¿â
+
+
+	session.close()  // Ò»¼¶»º´æµÄÊı¾İÈ«²¿Çå¿Õ¡£Ò²¾ÍÊÇÁ¬½Ó¹Ø±ÕÖ®ºó»º´æ¾ÍËæÖ®Çå¿ÕÁË¡£
+
+
+203¡¢HibernateµÄÒ»¼¶»º´æ¸ÅÊö
+Hibernate¿ò¼Ü±¾ÉíµÄĞÔÄÜ²»ÊÇºÜºÃ£¬µ«ÊÇHibernateÌá¹©ÁËºÜ¶àµÄĞÔÄÜÓÅ»¯µÄÊÖ¶Î£¬±ÈÈç£¬»º´æ¡£
+
+Hibernate¿ò¼Ü¹²Ìá¹©ÁËÁ½¸ö¼¶±ğµÄ»º´æ£º
+Ò»¼¶»º´æ£º³ÆÎªSession¼¶±ğµÄ»º´æ¡£ÒòÎªÒ»¼¶»º´æµÄÉúÃüÖÜÆÚÓësessionÒ»ÖÂµÄ¡£×Ô´øµÄ£¬²»¿ÉĞ¶ÔØµÄ¡£(ÓÉSessionÖĞÒ»ÏµÁĞµÄJava¼¯ºÏ¹¹³ÉµÄ)
+
+
+¶ş¼¶»º´æ£º³ÆÎªSessionFactory¼¶±ğµÄ»º´æ¡£ĞèÒª½øĞĞÅäÖÃµÄ»º´æµÄ²å¼ş¡£Ä¬ÈÏ²»¿ªÆôµÄ¡£ehche   redis
+
+Ps: ³ıÁËÉ¾³ı,Ôö¸Ä²éºÍÊı¾İ¿â´òÍê½»µÀ,¶¼»áÍùÒ»¼¶»º´æÖĞÁôÒ»·İ£¨×¢Òâ£¬É¾³ı²»Áô¼ÇÂ¼£©
+*********µ«ÊÇsessionÖ»Òª¹Ø±Õ*******,Ò»¼¶»º´æµÄÊı¾İÈ«²¿Çå¿Õ
+
+
+204¡¢ThreadLocalÔÚsessionÉÏµÄÓ¦ÓÃ£º
+HibernateÖĞÉèÖÃÓëµ±Ç°Ïß³Ì°ó¶¨µÄsessionµÄÊ¹ÓÃ£¨Ò²¾ÍÊÇÓÃThreadLocalĞŞÊÎsession£©¡£
+
+
+205¡¢ÔÚhibernateÖĞ,²éÑ¯ÅúÁ¿Êı¾İµÄ·½Ê½:
+
+Query·½Ê½  : Èç¹ûÊÇÊ¹ÓÃÕâÖÖ·½Ê½×ö²éÑ¯,ÓÖ±»³Æ×÷ÎªHQL²éÑ¯
+
+Criteria·½Ê½ :  Èç¹ûÊÇÊ¹ÓÃÕâÖÖ·½Ê½×ö²éÑ¯,ÓÖ±»³Æ×÷ÎªQBC²éÑ¯
+
+
+206¡¢Query £ºHQL²éÑ¯
+½ÓÊÕÒ»¸öHQL½øĞĞ²éÑ¯£ºHQL-Hibernate Query Language Hibernate²éÑ¯ÓïÑÔ£¬ÓëSQLÓïÑÔÓï·¨ºÜÏàËÆµÄÒ»¸öÓïÑÔ¡£ÃæÏò¶ÔÏó¡££¨×¢ÒâHQLÊÇ´«ÈëµÄ²ÎÊı£©
+	@Test
+	/**
+	 * Query½Ó¿Ú
+	 * HQLÃæÏò¶ÔÏóµÄ²éÑ¯.²éÑ¯¶¼ÊÇ¶ÔÏó
+	 */
+	public void demo1(){
+		Session session = HibernateUtils.getCurrentSession();
+		Transaction transaction = session.beginTransaction();//¿ªÆôÊÂÎñ
+		
+		// ²éÑ¯È«²¿¿Í»§ĞÅÏ¢£º
+		/*Query query = session.createQuery("from Customer");//Ìæ»»ÁËÔ­À´µÄget·½·¨
+		List<Customer> list = query.list();
+		
+		for (Customer customer : list) {
+			System.out.println(customer);
+		}*/
+		
+		// Ìõ¼ş²éÑ¯
+		/*Query query = session.createQuery("from Customer where cust_name like ?");
+		// ÉèÖÃ²ÎÊı
+		query.setParameter(0, "ºÂ%");//0±íÊ¾µÚÒ»¸öÎÊºÅ¡±?¡±
+		List<Customer> list = query.list();
+		for (Customer customer : list) {
+			System.out.println(customer);
+		}*/
+		
+		// ·ÖÒ³²éÑ¯:
+		Query query = session.createQuery("from Customer");//¿ÉÒÔ¿´³öHQL²éÑ¯¶¼ÊÇcreateQuery·½·¨
+		// ´ÓÄÄ¿ªÊ¼µÄ
+		query.setFirstResult(3);
+		// Ã¿Ò³ÏÔÊ¾¼ÇÂ¼Êı
+		query.setMaxResults(3);
+		
+		List<Customer> list = query.list();
+		for (Customer customer : list) {
+			System.out.println(customer);
+		}
+		transaction.commit();
+	}
+
+
+207¡¢Criteria £ºQBC²éÑ¯
+QBC-Query By Criteria Ìõ¼ş²éÑ¯¡£¸ü¼ÓÃæÏò¶ÔÏó»¯²éÑ¯ÓïÑÔ¡£
+	@Test
+	/**
+	 * QBC²éÑ¯£ºQuery By Criteria
+	 */
+	public void demo2(){
+		Session session = HibernateUtils.getCurrentSession();
+		Transaction transaction = session.beginTransaction();
+		
+		// ²éÑ¯È«²¿:
+	/*	Criteria criteria = session.createCriteria(Customer.class);//½«from Customer±ä³ÉÁËCustomer.class
+		List<Customer> list = criteria.list();//´ÓÕâÀïÍùÏÂ¶¼ºÍHQL²éÑ¯Ò»Ñù
+		for (Customer customer : list) {
+			System.out.println(customer);
+		}*/
+		
+		// Ìõ¼ş²éÑ¯
+	    /**
+		 * == 	eq
+		 * >	    gt				 
+* >=	ge		
+		 * <	    lt		
+		 * <=	le		
+		 * <>	ne		
+		 * in   in
+		 * like like
+		 * 
+		 */
+
+
+		/*Criteria criteria = session.createCriteria(Customer.class);
+		// criteria.add(Restrictions.eq("cust_name", "ºÂÌìÒ»"));//×¢ÒâÒ»¸ölikeÒ»¸öeq¡£
+		criteria.add(Restrictions.like("cust_name", "ºÂ%"));
+		List<Customer> list = criteria.list();
+		for (Customer customer : list) {
+			System.out.println(customer);
+		}*/
+		
+		// ·ÖÒ³²éÑ¯
+		Criteria criteria = session.createCriteria(Customer.class);
+		criteria.setFirstResult(3);
+		criteria.setMaxResults(3);
+		List<Customer> list = criteria.list();
+		for (Customer customer : list) {
+			System.out.println(customer);
+		}
+		
+		transaction.commit();
+	}
+
+
+208¡¢JPAÊÇÒ»Ì×ORM¹æ·¶(ËãÊÇÒ»¸ö½Ó¿Ú)£¬hibernateÊµÏÖÁËJPA¹æ·¶(ËãÊÇÒ»¸öÊµÏÖÀà)
+
+
+209¡¢JPAµÄÅäÖÃÎÄ¼ş£ºÔÚsrcÏÂÃæµÄMETA-INFÎÄ¼ş¼ĞÏÂÃæ´´½¨Ò»¸öÃû³ÆÎªpersistence.xmlµÄÎÄ¼ş¡£ÅäÖÃÎÄ¼şµÄÄÚÈİÎªÊı¾İ¿âµÄÁ¬½ÓĞÅÏ¢µÈ¡£
+
+
+210¡¢hibernate³£ÓÃ×¢½â£º
+@Entity
+	×÷ÓÃ£ºÖ¸¶¨µ±Ç°ÀàÊÇÊµÌåÀà¡£Ğ´ÉÏ´Ë×¢½âÓÃÓÚÔÚ´´½¨SessionFactory/EntityManagerÊ±£¬¼ÓÔØÓ³ÉäÅäÖÃ¡£
+@Table
+	×÷ÓÃ£ºÖ¸¶¨ÊµÌåÀàºÍ±íÖ®¼äµÄ¶ÔÓ¦¹ØÏµ¡£
+	ÊôĞÔ£º
+		name£ºÖ¸¶¨Êı¾İ¿â±íµÄÃû³Æ
+@Id
+	×÷ÓÃ£ºÖ¸¶¨µ±Ç°×Ö¶ÎÊÇÖ÷¼ü¡£
+@GeneratedValue
+	×÷ÓÃ£ºÖ¸¶¨Ö÷¼üµÄÉú³É·½Ê½¡£JPAµÄÖ÷¼üÉú³É·½Ê½Ïê½â¼û2.4Ğ¡½ÚµÄËµÃ÷¡£
+	ÊôĞÔ£º
+		strategy?£ºÖ¸¶¨Ö÷¼üÉú³É²ßÂÔ¡£JPAÖ§³ÖËÄÖÖÉú³É²ßÂÔ£¬¾ßÌå½éÉÜ¿´2.4Ğ¡½Ú¡£
+@Column
+	×÷ÓÃ£ºÖ¸¶¨ÊµÌåÀàÊôĞÔºÍÊı¾İ¿â±íÖ®¼äµÄ¶ÔÓ¦¹ØÏµ
+	ÊôĞÔ£º
+		name£ºÖ¸¶¨Êı¾İ¿â±íµÄÁĞÃû³Æ¡£
+		unique£ºÊÇ·ñÎ¨Ò» ?
+			nullable£ºÊÇ·ñ¿ÉÒÔÎª¿Õ ?
+			inserttable£ºÊÇ·ñ¿ÉÒÔ²åÈë ?
+			updateable£ºÊÇ·ñ¿ÉÒÔ¸üĞÂ ?
+			columnDefinition: ¶¨Òå½¨±íÊ±´´½¨´ËÁĞµÄDDL ?
+			secondaryTable: ´Ó±íÃû¡£Èç¹û´ËÁĞ²»½¨ÔÚÖ÷±íÉÏ£¨Ä¬ÈÏ½¨ÔÚÖ÷±í£©£¬¸ÃÊôĞÔ¶¨Òå¸ÃÁĞËùÔÚ´Ó±íµÄÃû×Ö¡£ ?
+
+
+211¡¢JPA´úÂë²Ù×÷£º
+
+ÏÈ±àĞ´¹¤¾ßÀà»ñµÃÊµÌå¹ÜÀí¹¤³§EntityManagerFactory£º
+ public final class JPAUtil {
+	//JPAµÄÊµÌå¹ÜÀíÆ÷¹¤³§£ºÏàµ±ÓÚHibernateµÄSessionFactory
+	private static EntityManagerFactory em;
+	//Ê¹ÓÃ¾²Ì¬´úÂë¿é¸³Öµ
+	static {
+		//×¢Òâ£º¸Ã·½·¨²ÎÊı±ØĞëºÍpersistence.xmlÖĞpersistence-unit±êÇ©nameÊôĞÔÈ¡ÖµÒ»ÖÂ
+		em = Persistence.createEntityManagerFactory("myPersistUnit");
+	}
+
+	/**
+	 * Ê¹ÓÃ¹ÜÀíÆ÷¹¤³§Éú²úÒ»¸ö¹ÜÀíÆ÷¶ÔÏó
+	 * @return
+	 */
+	public static EntityManager getEntityManager() {
+		return em.createEntityManager();
+	}
+}
+
+Ê¹ÓÃJPAUtil¹¤¾ßÀà£º
+/**
+	 * ±£´æÒ»¸öÊµÌå
+	 */
+	@Test
+	public void testAdd(){  
+		//¶¨Òå¶ÔÏó
+		Customer c = new Customer();
+		c.setCustName("´«ÖÇÑ§Ôº");
+		c.setCustLevel("VIP¿Í»§");
+		c.setCustSource("ÍøÂç");
+		c.setCustIndustry("IT½ÌÓı");
+		c.setCustAddress("²ıÆ½Çø±±Æß¼ÒÕò");
+		c.setCustPhone("010-84389340");
+		EntityManager em=null;  //ÕâÓ¦¸ÃÊÇ¹¤¾ßÀàÖĞµÄÄÚÈİ
+        EntityTransaction tx=null;  
+        try{  
+        	//»ñÈ¡ÊµÌå¹ÜÀí¶ÔÏó
+        	em=JPAUtil.getEntityManager();
+        	//£¨´ÓÊµÌå¹ÜÀí¶ÔÏóÀïÃæ£©»ñÈ¡ÊÂÎñ¶ÔÏó
+        	tx=em.getTransaction();
+        	//¿ªÆôÊÂÎñ
+        	tx.begin();
+        	//Ö´ĞĞ²Ù×÷,Ïàµ±ÓÚsession.save
+        	em.persist(c);
+        	//Ìá½»ÊÂÎñ
+        	tx.commit();  
+        }catch(Exception e){
+        	//»Ø¹öÊÂÎñ
+        	tx.rollback();
+        	e.printStackTrace();  
+        }finally{  
+        	//ÊÍ·Å×ÊÔ´
+            em.close();  
+        }    
+    }
+
+ÆäÖĞJPAµÄÔöÉ¾¸Ä²é²Ù×÷µÄ·½·¨·Ö±ğÎª£ºem.persist(¶ÔÏó)£¬Customer c=em.find(Customer.class,6L)---em.remove(c),Customer c=em.find(Customer.class,6L)---c.setXXX(),em.find(Customer.class,6L)
+
+crud:
+		persist()
+			----±£´æ
+
+		find()  : Á¢¼´¼ÓÔØ
+		getReference():ÑÓ³Ù¼ÓÔØ
+			-----µ¥ÌõÊı¾İµÄoid²éÑ¯
+
+		merge()£¨ºÏ²¢£¬ÍÌÃ»£©
+			---ĞŞ¸Ä
+
+		
+		remove()
+			---É¾³ı
+
+
+212¡¢JpaÑÓ³Ù¼ÓÔØ£º
+Customer c1 = em.getReference(Customer.class, 1L);
+
+
+213¡¢JPAºÍHQL,QBCµÄ¹ØÏµ£ºJPA¼È¿ÉÒÔÓÃHQL·½·¨²éÑ¯ÓÖ¿ÉÒÔÓÃQBC·½·¨²éÑ¯¡£
+
+
+214¡¢Êı¾İ¿âÊµÌåÀàÊµÏÖSerializibleĞòÁĞ»¯½Ó¿ÚµÄÔ­Òò£ºÖ»ÓĞÊµÏÖÁËĞòÁĞ»¯½Ó¿Ú²ÅÄÜ´ÓÄÚ´æÖĞĞòÁĞ»¯µ½´ÅÅÌÉÏ¡£µ±´«µİ¶ÔÏóĞÅÏ¢Ê±£¨ÀıÈç·Ö²¼Ê½µÄÏîÄ¿Ö®¼ä´«µİ¶ÔÏóĞÅÏ¢£©£¬
+´«µİµÄÊÇ¶ÔÏóµÄµØÖ·£¬Ö»ÓĞĞòÁĞ»¯µ½´ÅÅÌÉÏ²Å»áÓĞµØÖ·¡£
+
+
+215¡¢Êı¾İ¿â±íÒ»¶Ô¶àµÄ²Ù×÷£ºÏÈ±£´æÖ÷±íÔÙ±£´æ´Ó±í£¬ÏÈÉ¾³ı´Ó±íÔÙÉ¾³ıÖ÷±í¡£¼ÙÈçÏëÔÚ´Ó±íÃ»É¾³ıÖ®Ç°É¾³ıÖ÷±í£¬¾ÍÒªÊ¹ÓÃ£¨ÅäÖÃ£©¼¶ÁªÉ¾³ı¡£
+¼¶Áª:
+		cascade=CascadeType.ALL  ×ö¼¶Áª±£´æÒÔ¼°¼¶ÁªÉ¾³ı
+		cascade=CascadeType.PERSIST Ö»×ö¼¶Áª±£´æ
+		cascade=CascadeType.REMOVE Ö»×ö¼¶ÁªÉ¾³ı
+
+
+216¡¢ÔÚ¶à¶Ô¶àµÄÉ¾³ıÊ±£¬Ë«Ïò¼¶ÁªÉ¾³ı¸ù±¾²»ÄÜÅäÖÃ£¨Ò²¾ÍÊÇ½ûÓÃ£¬ÒòÎª»áÀ´»ØÉ¾³ı£¬¼¸ºõÉ¾³ıÁËËùÓĞÊı¾İ£©
+
+
+217¡¢5.2JPAºÍhibernateÖĞ²Ù×÷Êı¾İµÄ·½·¨¶ÔÕÕ£º
+JPA£ºpersist(),merge(),remove£¬find(),Ê¹ÓÃHQLÓï¾ä
+hibernate£ºsave(),update,delete()£¬get(),Ê¹ÓÃJPQLÓï¾ä
+
+
+218¡¢Struts2µÄÖ´ĞĞÁ÷³Ì
+Ò³Ãæ·¢ËÍÇëÇó£¬ÇëÇóÏÈµ½´ïÇ°¶Ë¿ØÖÆÆ÷£¨ºËĞÄ¹ıÂËÆ÷StrutsPrepareAndExecuteFilter£©£¬¹ıÂËÆ÷ÖĞÖ´ĞĞÒ»×éÀ¹½ØÆ÷£¬Õâ×éÀ¹½ØÆ÷Íê³ÉÁË²¿·ÖµÄ¹¦ÄÜ´úÂë¡£Èç¹ûÃ»ÓĞÀ¹½ØÆ÷£¬¾Í»áÖ´ĞĞÄ¿±êAction¡£Ö´ĞĞActionºó·µ»ØÒ»¸öÂß¼­ÊÓÍ¼Ãû³Æ¡£¸ù¾İResult½øĞĞÒ³ÃæÌø×ª¡£
+
+
+219¡¢struts.xmlÖĞÅäÖÃ
+ºËĞÄÅäÖÃÎÄ¼ş£¬Ö÷Òª¸ºÔğ¹ÜÀíAction
+??	Í¨³£·ÅÔÚsrcÄ¿Â¼ÏÂ£¬ÔÚ¸ÃÄ¿Â¼ÏÂµÄstruts.xmlÎÄ¼ş¿ÉÒÔ±»×Ô¶¯¼ÓÔØ
+
+
+220¡¢Struts2ÖĞActionµÄ3ÖÖ´´½¨·½Ê½
+1£©ÆÕÍ¨µÄJavaÀà
+2£©ÊµÏÖAction½Ó¿Ú
+3£©¼Ì³ĞActionSupportÀà
+
+
+221¡¢Struts2ÖĞAction·½·¨µÄ3ÖÖ·ÃÎÊ·½Ê½
+1£©¶¯Ì¬·½·¨·ÃÎÊ
+
+2£©Í¨¹ımethodÊôĞÔÅäÖÃ
+
+3£©Í¨¹ıÍ¨Åä·ûµÄÅäÖÃ·½Ê½£º
+
+<action name= "*User"  class="cn.jbit.houserent.action.UserAction" method="{1}">
+   <result name=¡±success¡±>/{1}_success.jsp</result>
+   <result name="input">/{1}.jsp</result>
+   <result name="error">/error.jsp</result>
+</action>
+
+ËµÃ÷£º
+±àĞ´form±íµ¥ÖĞaction=¡±loginUser.action¡±
+Ôòstruts.xmlÖĞµÄ´úÂëÏàµ±ÓÚ
+method="login"
+/login_success.jsp
+/login.jsp
+	
+
+222¡¢Struts2Ä£ĞÍÇı¶¯£º
+£¨Ä£ĞÍÇı¶¯¾ÍÊÇÒªÊµÏÖModelDriven<>½Ó¿Ú£©
+Action:
+public class CustomerDemo3Action extends ActionSupport implements ModelDriven<Customer>{
+	private Customer customer = new Customer(); // ±ØĞëÊÖ¶¯´´½¨¶ÔÏó¡£
+	// Ä£ĞÍÇı¶¯Ê¹ÓÃµÄ·½·¨:
+	@Override
+	public Customer getModel() {£¨ÓÉgetCustomer()±ä³ÉÁËgetModel()£©
+		return customer;
+	}
+	@Override
+	public String execute() throws Exception {
+		System.out.println(customer);
+		return NONE;
+	}
+}
+
+
+223¡¢ÊÇ·ñ¾­¹ıºóÌ¨Òª¿´Á´½ÓÊÇ*.jsp»¹ÊÇ*.action¡£
+
+
+224¡¢ÏÈ¾­¹ıweb.xmlµÄ¹ıÂËÆ÷£¬ÔÚ¾­¹ıÀ¹½ØÆ÷¡£À¹½ØÆ÷µÄ¶¨Òå£º
+
+À¹½ØÆ÷ÊÇStruts2¶ÔAction·ÃÎÊµÄÀ¹½Ø¡£À¹½ØÆ÷ÊÇStruts2µÄÖ´ĞĞµÄºËĞÄ¡£
+¹ıÂËÆ÷ÊÇ´Ó¿Í»§¶ËÏò·şÎñÆ÷·¢ËÍµÄÇëÇóµÄÀ¹½Ø¡£
+À¹½ØÆ÷Ö´ĞĞÁ÷³Ì£¨Çø·Ö¹ıÂËÆ÷ºÍÀ¹½ØÆ÷£©
+¿Í»§¶ËÇëÇóAction£¬Ö´ĞĞºËĞÄ¹ıÂËÆ÷£¬ÔÚºËĞÄ¹ıÂËÆ÷ÄÚ²¿´´½¨ÁËActionµÄ´úÀíÀà£¬µ÷ÓÃ´úÀíÀàµÄexecute·½·¨£¬ÔÚexecute·½·¨ÄÚ²¿Ö´ĞĞActionInvocationµÄinvoke·½·¨¡£ÔÚinvoke·½·¨ÄÚ²¿µİ¹éµ÷ÓÃÀ¹½ØÆ÷µÄÀ¹½ØµÄ·½·¨¡£Èç¹ûÃ»ÓĞÏÂÒ»¸öÀ¹½ØÆ÷Ö´ĞĞÄ¿±êAction£¬ActionÖ´ĞĞ½áÊøºó¸ù¾İResult½øĞĞÒ³ÃæÌø×ª£¬Ö´ĞĞÀ¹½ØÆ÷µÄºóÃæÏàÓ¦µÄ´úÂë£¬×îºóÓÉresponse¶ÔÏóÉú³ÉÏìÓ¦¡£
+À¹½ØÆ÷µÄÖ´ĞĞÊ±»ú
+	ÔÚ·ÃÎÊstruts2ºËĞÄÄÚ²¿Ê±£¬ÔÚ¶¯×÷·½·¨Ö´ĞĞÖ®Ç°ÏÈÕıĞòÖ´ĞĞ£¬È»ºóÖ´ĞĞ¶¯×÷·½·¨£¬Ö´ĞĞÍê¶¯×÷·½·¨ºÍ½á¹ûÊÓÍ¼Ö®ºó£¬ÔÙµ¹ĞòÖ´ĞĞ¡£ËùÒÔËüÊÇÏÈ½øºó³ö£¬ÊÇ¸öÕ»µÄ½á¹¹¡£¾ßÌå¿É²Î¿¼ÏÂÍ¼£º
+
+
+×Ô¶¨ÒåÀ¹½ØÆ÷£¨Çø·Ö±àĞ´À¹½ØÆ÷ºÍÅäÖÃÀ¹½ØÆ÷£©
+¡¾±àĞ´À¹½ØÆ÷Àà¡¿
+±àĞ´À¹½ØÆ÷µÄÀàÊµÏÖInterceptor½Ó¿Ú£¬¼Ì³ĞAbstractInterceptor£¬»òÕßÖ»¼Ì³ĞMethodFilterInterceptor¡£
+
+¡¾ÅäÖÃÀ¹½ØÆ÷¡¿£¨Çø·ÖÀ¹½ØÆ÷ºÍÀ¹½ØÆ÷Õ»£©
+1¡¢ÅäÖÃÀ¹½ØÆ÷
+
+2¡¢ÅäÖÃÀ¹½ØÆ÷Õ»
+
+
+±àĞ´È¨ÏŞµÄÀ¹½ØÆ÷£¨À¹½ØÆ÷Ò²ÊÇÒ»¸öÀà£¬ÊÇÒ»¸öµ¥¶ÀµÄÀàÎÄ¼ş£©
+public class PrivilegeInterceptor extends MethodFilterInterceptor {
+
+	@Override
+	protected String doIntercept(ActionInvocation invocation) throws Exception {
+		// ÅĞ¶ÏsessionÖĞÊÇ·ñÓĞµÇÂ¼µÄÓÃ»§µÄĞÅÏ¢¡£
+		User existUser = (User) ServletActionContext.getRequest().getSession().getAttribute("existUser");
+		// Èç¹ûÓĞĞÅÏ¢·ÅĞĞ£¬Ã»ÓĞµÄ»°»Øµ½µÇÂ¼Ò³Ãæ¡£
+		if(existUser == null){
+			// ËµÃ÷Ã»ÓĞµÇÂ¼¹ı¡£
+			return "login";
+		}else{
+			// ÒÑ¾­µÇÂ¼³É¹¦¡£Ïàµ±ÓÚ·ÅĞĞ£¨Ô­À´²ÎÊıÀïÃæµÄinvocationÊÇÔÚÕâÀïÊ¹ÓÃ£©£¨²»ÓÃĞ´×ªµ½ÄÄ¸öÒ³Ãæ£¬Ğ´·ÅĞĞ¾ÍĞĞ£©
+			return invocation.invoke();
+		}		
+	}
+
+}
+ÅäÖÃÀ¹½ØÆ÷£¨·ÖÎª¶¨ÒåÀ¹½ØÆ÷ºÍÊ¹ÓÃÀ¹½ØÆ÷£¬ÆäÖĞÊ¹ÓÃÀ¹½ØÆ÷¿ÉÒÔÓÃÅäÖÃÎÄ¼ş»òÕß×¢½â£¬¶ø¶¨ÒåÀ¹½ØÆ÷Ö»ÄÜÓÃÅäÖÃÎÄ¼ş£©
+¡¾¶¨ÒåÀ¹½ØÆ÷£¬ÔÚActionÖĞÅäÖÃÀ¹½ØÆ÷¡¿£¨ÔÚactionµÄÉÏÃæ¶¨ÒåÀ¹½ØÆ÷£¬ÔÚactionÀïÃæÒıÓÃÀ¹½ØÆ÷£©
+	<package name="crm" extends="struts-default" namespace="/">
+		<!-- ¶¨ÒåÀ¹½ØÆ÷ -->
+		<interceptors>
+			<interceptor name="privilegeInterceptor" class="com.itheima.crm.web.interceptor.PrivilegeInterceptor"/>£¨²»ÓÃÓĞ½áÊø±êÇ©£©
+		</interceptors>
+	
+		<action name="customer_*" class="com.itheima.crm.web.action.CustomerAction" method="{1}">
+			<result name="findAll">/jsp/customer/list.jsp</result>
+			<result name="saveUI">/jsp/customer/add.jsp</result>
+			<result name="saveSuccess" type="redirectAction">customer_findAll.action</result>£¨²»½ö¿ÉÒÔµ½jspÒ³Ãæ»¹¿ÉÒÔµ½actionÖĞ£¬Ö»ÊÇÒªÉèÖÃtypeÊôĞÔµÄÖµ£©
+			
+			<!-- ÒıÓÃÀ¹½ØÆ÷ -->
+			<interceptor-ref name="privilegeInterceptor"/>£¨ref±íÊ¾reference£¬Ò²¾ÍÊÇÒıÓÃ£©
+			<!-- Ò»µ©ÒıÓÃÁË×Ô¶¨ÒåÀ¹½ØÆ÷£¬Ä¬ÈÏÀ¹½ØÆ÷¾Í²»Ö´ĞĞÁË¡£ ĞèÒª½«Ä¬ÈÏÀ¹½ØÆ÷ÒıÈë½øÀ´¡£-->
+			<interceptor-ref name="defaultStack"/>£¨Ò²¿ÉÒÔÖ±½ÓÒıÓÃÒ»¸öÀ¹½ØÆ÷Õ»£¬Ëû¾Í°üº¬ÁËËùÓĞµÄÀ¹½ØÆ÷ºÍÄ¬ÈÏÀ¹½ØÆ÷Õ»£¬±êÇ©Ãû×ÖÒÀÈ»ÊÇintercepter-ref£©
+		</action>
+		
+		<action name="user_*" class="com.itheima.crm.web.action.UserAction" method="{1}">
+			<result name="login">/login.jsp</result>
+			<result name="loginSuccess" type="redirect">/index.jsp</result>
+		</action>
+	</package>
+
+
+¡¾¶¨ÒåÀ¹½ØÆ÷Õ»£¬ÔÚActionÖĞÒıÓÃÀ¹½ØÆ÷Õ»¡¿£¨Çø·Ö¶¨ÒåÀ¹½ØÆ÷ºÍ¶¨ÒåÀ¹½ØÆ÷Õ»£¬ºóÕß¿ÉÒÔÃ»ÓĞ£¬µ«ÊÇÇ°ÕßÒ»¶¨ÒªÓĞ£¬¼´Ê¹¶¨ÒåÁËÀ¹½ØÆ÷Õ»Ò²Òª¶¨ÒåÀ¹½ØÆ÷£¬ÒòÎªÀ¹½ØÆ÷ÖĞÓĞ¶ÔÓ¦µÄÀ¹½ØÆ÷ÀàÎÄ¼şµÄµØÖ·¡£×¢Òâ£¬À¹½ØÆ÷intercepterºÍÀ¹½ØÆ÷Õ»intercepter-stack¶¼ÔÚinterceptersÔªËØµÄÄÚ²¿£©£¨¶¨ÒåÀ¹½ØÆ÷ºÍÒıÓÃÀ¹½ØÆ÷¶¼ÔÚÅäÖÃÎÄ¼şstruts.xmlÖĞ£¬Ö»ÊÇ¶¨ÒåÀ¹½ØÆ÷ÔÚactionÍâ£¬ÒıÓÃÀ¹½ØÆ÷ÔÚactionÄÚ£©
+
+
+225¡¢Struts2×¢½â¼ûStruts2µÚËÄÌì
+
+
+226¡¢@Action×¢½â¾Í¶ÔÓ¦ÓÚÔ­À´µÄxmlÖĞµÄActionÔªËØ¡£
+
+
+227¡¢SpringµÄÓÅµã¼ûspringµÚÒ»Ìì¡££¨ioc,aop,junit4·½±ã²âÊÔ£¬¼¯³ÉÆäËûÓÅĞã¿ò¼Ü£¬·â×°jdbcµÈ¼ò»¯´úÂë£¬ÉùÃ÷Ê½ÊÂÎñµÄÖ§³Ö£©
+
+
+228¡¢IOC:¿ØÖÆ·´×ª¡£ÓÃ·´ÉäµÄ·½Ê½½«¶ÔÏóµÄ´´½¨È¨·´×ª£¨½»£©¸øSpring¡£
+     DI:ÒÀÀµ×¢Èë¡£ÒÀÀµIOC£¬×¢ÈëÊôĞÔÖµ¡£
+
+229¡¢ÒÀÀµ×¢ÈëµÄ¸÷ÖÖ·½Ê½£º
+
+1¡¢ÊôĞÔ×¢Èë£º
+	¹¹Ôì·½·¨×¢Èë
+	<bean id="car1" class="com.itheima.demo4.Car1">
+		<constructor-arg name="name" value="±öÀû"/>
+		<constructor-arg name="price" value="9980000"/>
+	</bean> 
+
+	set·½·¨ÊôĞÔ×¢Èë
+	<bean id="car2" class="com.itheima.demo4.Car2">
+		<property name="name" value="ÈıÂÖ"/>
+		<property name="price" value="5000"/>
+	</bean>
+
+	¶ÔÏóÀàĞÍÊôĞÔ×¢Èë
+	<bean id="emp1" class="com.itheima.demo4.Employee">
+		<property name="username" value="±¦Ç¿"/>
+		<property name="car" ref="car1"/>
+	</bean>
+
+	pÃû³Æ¿Õ¼ä
+	xmlns:p="http://www.springframework.org/schema/p"
+	<bean id="emp2" class="com.itheima.demo4.Employee" p:username="ÍõÈØ" p:car-ref="car2"></bean>
+
+	SpEL±í´ïÊ½
+	<bean id="car1" class="com.itheima.demo4.Car1">
+		<constructor-arg name="name" value="#{'±öÀû'}"/>
+		<constructor-arg name="price" value="#{calc1.calc()}"/>
+	</bean>
+
+2¡¢¼¯ºÏÀàĞÍÊôĞÔ×¢Èë
+	<!-- ¸øÊı×é¸³Öµ -->
+	<property name="arr">
+		<array>
+			<value>aa</value>
+			<value>bb</value>
+			<value>sb</value>
+			<value>cc</value>
+			<value>mm</value>
+		</array>
+	</property>
+	
+	<!-- ¸ølist¼¯ºÏ¸³Öµ -->
+	<property name="list">
+		<list>
+			<value>aaa</value>
+			<value>bbb</value>
+			<value>ccc</value>
+			<ref bean="car1"/>
+		</list>
+	</property>
+	<!-- ¸øset¼¯ºÏ¸³Öµ -->
+	<property name="set">
+		<set>
+			<value>aaaa</value>
+			<value>bbbb</value>
+			<value>cccc</value>
+			<ref bean="car2"/>
+		</set>
+	</property>
+	
+
+
+230¡¢Spring¿ªÆô×¢½âĞèÒªÔÚxmlÎÄ¼şÖĞ½øĞĞÅäÖÃ£º
+
+ÔÚspringµÄÅäÖÃÎÄ¼şÖĞ¿ªÆôspring¶Ô×¢½âiocµÄÖ§³Ö
+<!-- ¸æÖªspring¿ò¼ÜÔÚ£¬¶ÁÈ¡ÅäÖÃÎÄ¼ş£¬´´½¨ÈİÆ÷Ê±£¬É¨Ãè×¢½â£¬ÒÀ¾İ×¢½â´´½¨¶ÔÏó£¬²¢´æÈëÈİÆ÷ÖĞ£¨Ô­À´´´½¨µÄ¶ÔÏó´æÔÚÓÚÈİÆ÷ÖĞ£© -->
+	<context:component-scan base-package="com.itheima"></context:component-scan>
+
+
+231¡¢JDK¶¯Ì¬´úÀí£º
+1¡¢Ê²Ã´´úÀí£¿
+Ò»¸öÀà²»ÄÜ»ò²»ÊÊºÏ·ÃÎÊÄ¿±êÀà£¬¿ÉÒÔÊ¹ÓÃ´úÀíÀà¡£
+
+2¡¢ËüÄÜ½â¾öÊ²Ã´ÎÊÌâ£¿
+  ¿ÉÒÔ²»¸Ä±äÄ¿±êÀà£¬¶ÔÄ¿±ê·½·¨½øĞĞ¹¦ÄÜÔöÇ¿¡£
+
+
+232¡¢AOPÒâÎªÃæÏòÇĞÃæ±à³Ì£¬Ô­ÀíÊÇÔËĞĞÆÚ¶¯Ì¬´úÀí¡£ÀûÓÃAOP¿ÉÒÔ¶ÔÒµÎñÂß¼­µÄ¸÷¸ö²¿·Ö½øĞĞ¸ôÀë£¬´Ó¶øÊ¹µÃ¸÷¸ö²¿·ÖµÄñîºÏ¶È½µµÍ£¬Ìá¸ßÁË³ÌĞòµÄ¿ÉÖØÓÃĞÔ£¬Ìá¸ßÁË¿ª·¢Ğ§ÂÊ¡£
+AOPÊÇOOPµÄÑÓÉìºÍÀ©Õ¹¡£AOPÈ¡´ú´«Í³µÄ×İÏò¼Ì³Ğ»úÖÆ£¬ÊÇºáÏò³éÈ¡»úÖÆ¡£
+
+AspectJ£º±¾Éí¾ÍÊÇÒ»¸öÃæÏòÇĞÃæµÄ¿ò¼Ü£¬Spring°ÑAspectJÒıÈë½øÀ´×÷Îª×ÔÉíAOPµÄ¿ª·¢¡£
+
+
+
+233¡¢SpringÊµÏÖAOPÊ¹ÓÃÁ½ÖÖ´úÀí»úÖÆ£º
+		* JDK¶¯Ì¬´úÀí	:»ùÓÚ½Ó¿ÚÊµÏÖ£¨¶¯Ì¬´úÀí´úÀíµÄÊÇÀà¶ø²»ÊÇ·½·¨£©£¨ÆäÊµAOPºËĞÄ¾ÍÊÇ½«ÇĞÈëµã´«ÈëÇĞÃæ²¢ÅäÖÃÇĞÃæÖĞµÄ¸÷ÖÖÔöÇ¿·½·¨¸øËû£©	
+		* Cglib¶¯Ì¬´úÀí	:»ùÓÚ×ÓÀàÊµÏÖ
+
+
+234¡¢JDKÊµÏÖ¶¯Ì¬´úÀíµÄÔ­Àí£º½«ÒµÎñÀà´«Èë´úÀí¹¤³§£¬ÓÃ´úÀí¹¤³§ÖĞµÄinvoke·½·¨¶ÔÒµÎñÀà½øĞĞ¼Ó¹¤ºÍÀ©Õ¹£¬·µ»ØÒ»¸öĞÂµÄ´úÀí¼Ó¹¤Ö®ºóµÄÒµÎñÀà¶ÔÏó¡£
+ÆäÖĞinvoke·½·¨ÓĞÈı¸ö²ÎÊı£¬µÚÒ»¸öÊÇ´úÀí¶ÔÏó±¾ÉíµÄÒıÓÃ£¬µÚ¶ş¸öÊÇ´úÀí¶ÔÏóµ÷ÓÃµÄ·½·¨£¬µÚÈı¸öÊÇ·½·¨ÖĞµÄ²ÎÊı¡£
+
+
+235¡¢SpringµÄAOPÖĞµÄÍ¨ÖªµÄÏê½â(ËùÓĞÍ¨Öª¶¼ËãÊÇÖ´ĞĞÔöÇ¿)
+¡¾Ç°ÖÃÍ¨Öª¡¿
+Ö¸µÄÊÇÔÚÄ¿±ê·½·¨Ö´ĞĞÖ®Ç°Ö´ĞĞÒ»¶ÎÔöÇ¿¡£
+¡¾ºóÖÃÍ¨Öª¡¿
+Ö¸µÄÊÇÔÚÄ¿±ê·½·¨Ö´ĞĞÖ®ºóÖ´ĞĞÒ»¶ÎÔöÇ¿¡£ºóÖÃÍ¨Öª»ñµÃ·½·¨µÄ·µ»ØÖµ¡£
+¡¾»·ÈÆÍ¨Öª¡¿
+Ö¸µÄÊÇÔÚÄ¿±ê·½·¨Ö´ĞĞÖ®Ç°ºÍÖ®ºó½øĞĞÔöÇ¿¡£×èÖ¹Ä¿±ê·½·¨Ö´ĞĞ¡£
+¡¾Òì³£Å×³öÍ¨Öª¡¿
+Ö¸µÄÊÇÔÚÄ¿±ê·½·¨Ö´ĞĞ³öÏÖÒì³£µÄÊ±ºòÖ´ĞĞµÄ¡£»ñµÃµ½Òì³£µÄĞÅÏ¢¡£
+¡¾×îÖÕÍ¨Öª¡¿
+Ö¸µÄÊÇÎŞÂÛÊÇ·ñÓĞÒì³££¬×ÜÊÇ±»Ö´ĞĞµÄ¡£
+
+
+236¡¢//Aspect£ºÇĞÃæÀà£¨ÇĞÃæÀàÀïÃæÓĞ¸÷ÖÖÔöÇ¿£¨Í¨Öª£©·½·¨£©
+public class MyAspect {
+    //advice:Í¨Öª/ÔöÇ¿
+	public void privilegeUser(){
+		System.out.println("Ğ£ÑéÓÃ»§È¨ÏŞÖ´ĞĞÁË¡£¡£¡£");
+	}
+	
+	//ºóÖÃÔöÇ¿
+	public void afterReturning(){
+		System.out.println("ºóÖÃÔöÇ¿Ö´ĞĞÁË¡£¡£¡£");
+	}
+	//»·ÈÆÍ¨Öª
+	public void around(ProceedingJoinPoint proceedingJoinPoint) throws Throwable{
+		System.out.println("Ä¿±ê·½·¨Ö´ĞĞÇ°¡£¡£¡£"+System.nanoTime());
+		proceedingJoinPoint.proceed();//Ö´ĞĞÄ¿±ê·½·¨
+		System.out.println("Ä¿±ê·½·¨Ö´ĞĞºó¡£¡£¡£"+System.nanoTime());
+	}
+	//Òì³£Í¨Öª
+	public void afterThrowing(){
+		System.out.println("Òì³£ÔöÇ¿Ö´ĞĞÁË¡£¡£¡£");
+	}
+	//×îÖÕÍ¨Öª
+	public void after(){
+		System.out.println("×îÖÕÔöÇ¿Ö´ĞĞÁË¡£¡£¡£");
+	}
+	
+}
+
+xmlÅäÖÃÎÄ¼şÀïÃæÖ÷Òª·ÖÎªÇĞÃæÀà£¬Ä¿±êÀàÒÔ¼°ÉùÃ÷AOPÅäÖÃ
+<!-- ´´½¨ÒµÎñÀà£¨Ä¿±êÀà£© -->
+	<bean id="customerService" class="cn.itcast.service.impl.CustomerServiceImpl"></bean>
+	
+	<!-- ´´½¨ÇĞÃæÀà -->
+	<bean id="myAspect" class="cn.itcast.aspect.MyAspect"></bean>
+	
+	 <!-- ÉùÃ÷aopµÄÅäÖÃ £¨·ÖÎªÅäÖÃÇĞÈëµãºÍÅäÖÃÇĞÃæ£¬ÆäÖĞºóÕßÒıÓÃÇ°ÕßµÄid£¬Ç°ÕßÏàµ±ÓÚÎªºóÕß·şÎñ£©-->£¨Çø·ÖÇĞÈëµãºÍÇĞÃæ£¬Ç°ÕßÊÇ´ıÔöÇ¿·½·¨£¬ºóÕßÖĞÊÇ¸÷ÖÖÔöÇ¿·½·¨£©
+	 <aop:config>
+	 	<!-- 1¡¢ÇĞÈëµã£ºÕæÕı±»ÔöÇ¿µÄ·½·¨  £¨ÅäÖÃÄÄĞ©Ä¿±êÀàÖĞµÄÄÄĞ©·½·¨ Òª±»ÔöÇ¿£© -->
+	 	<aop:pointcut expression="execution(* cn.itcast.service.CustomerService.add*(..))" id="pointcut1"/>
+	 	<aop:pointcut expression="execution(* cn.itcast.service.CustomerService.update*(..))" id="pointcut2"/>
+	 	<aop:pointcut expression="execution(* cn.itcast.service.CustomerService.delete*(..))" id="pointcut3"/>
+	 	<!-- 2¡¢ÅäÖÃAOPµÄÇĞÃæ£¨pointcut-ref±íÊ¾ÒıÓÃÇĞÈëµã£©£¨ĞèÒªÒıÓÃÇĞÃæÀàÎÄ¼ş£© -->
+	 	<aop:aspect ref="myAspect">
+	 		<!-- ÅäÖÃÇ°ÖÃÍ¨Öª -->
+	 		<aop:before method="privilegeUser" pointcut-ref="pointcut3"/>
+	 		<!-- ÅäÖÃºóÖÃÍ¨Öª -->
+	 		<aop:after-returning method="afterReturning" pointcut-ref="pointcut1"/>
+	 		<!-- ÅäÖÃ»·ÈÆÍ¨Öª -->
+	 		<aop:around method="around" pointcut-ref="pointcut2"/>
+	 		<!-- Òì³£Í¨Öª -->
+	 		<aop:after-throwing method="afterThrowing" pointcut-ref="pointcut3"/>
+	 		<!-- ÅäÖÃ×îÖÕÍ¨Öª -->
+	 		<aop:after method="after" pointcut-ref="pointcut3"/>
+	 	</aop:aspect>
+</aop:config>
+
+
+237¡¢<!-- ¿ªÆôaop×¢½â -->
+  	<aop:aspectj-autoproxy/>
+
+
+238¡¢SpringµÄAOPµÄ×¢½â½éÉÜ£¨Ò²¾ÍÊÇ¸÷ÖÖÍ¨ÖªµÄ@Ğ´·¨£©
+@Aspect		£º¶¨ÒåÇĞÃæÀà 
+
+@Before		:Ç°ÖÃÍ¨Öª
+@AfterReturning:ºóÖÃÍ¨Öª
+@Around		:»·ÈÆÍ¨Öª
+@AfterThrowing:Òì³£Å×³öÍ¨Öª
+@After		:×îÖÕÍ¨Öª
+
+@Pointcut	:¶¨ÒåÇĞÈëµã
+
+
+239¡¢SpringÅäÖÃÎÄ¼şÖĞ¿ÉÒÔÅäÖÃc3p0Êı¾İÔ´»òdbcpÊı¾İÔ´£¨Ò²¾ÍÊÇÁ¬½Ó³Ø£©
+
+
+240¡¢ÅäÖÃÊÂÎñ²½Öè
+µÚÒ»²½£ºÅäÖÃÊÂÎñ¹ÜÀíÆ÷£¨Çø·Ö¡¤ÅäÖÃÊÂÎñºÍÅäÖÃÊÂÎñ¹ÜÀíÆ÷£©
+<!-- ÅäÖÃÊÂÎñ¹ÜÀíÆ÷ -->
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+//ÅäÖÃÊÂÎñ¹ÜÀíÆ÷ÒªÓĞÊı¾İÔ´
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+µÚ¶ş²½£ºÅäÖÃÊÂÎñµÄÔöÇ¿£¨Çø·ÖÅäÖÃÊÂÎñ¹ÜÀíÆ÷ºÍÊÂÎñ¹ÜÀíÆ÷µÄÔöÇ¿¡£Ö»ÓĞÏÈÅäÖÃ²ÅÄÜÔöÇ¿£©
+	<!-- ÅäÖÃÊÂÎñµÄÔöÇ¿ -->
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+<!-- Ö¸¶¨·½·¨Ãû³Æ£ºÊÇÒµÎñºËĞÄ·½·¨ 
+	read-only£ºÊÇ·ñÊÇÖ»¶ÁÊÂÎñ¡£Ä¬ÈÏfalse£¬²»Ö»¶Á¡£
+	isolation£ºÖ¸¶¨ÊÂÎñµÄ¸ôÀë¼¶±ğ¡£Ä¬ÈÏÖµÊÇÊ¹ÓÃÊı¾İ¿âµÄÄ¬ÈÏ¸ôÀë¼¶±ğ¡£ 
+	propagation£ºÖ¸¶¨ÊÂÎñµÄ´«²¥ĞĞÎª¡£
+	timeout£ºÖ¸¶¨³¬Ê±Ê±¼ä¡£Ä¬ÈÏÖµÎª£º-1¡£ÓÀ²»³¬Ê±¡££¨¿´À´µÈ´ıÊ±¼äºÜ³¤£©
+	rollback-for£ºÓÃÓÚÖ¸¶¨Ò»¸öÒì³££¬µ±Ö´ĞĞ²úÉú¸ÃÒì³£Ê±£¬ÊÂÎñ»Ø¹ö¡£²úÉúÆäËûÒì³££¬ÊÂÎñ²»»Ø¹ö¡£Ã»ÓĞÄ¬ÈÏÖµ£¬ÈÎºÎÒì³£¶¼»Ø¹ö¡£
+	no-rollback-for£ºÓÃÓÚÖ¸¶¨Ò»¸öÒì³££¬µ±²úÉú¸ÃÒì³£Ê±£¬ÊÂÎñ²»»Ø¹ö£¬²úÉúÆäËûÒì³£Ê±£¬ÊÂÎñ»Ø¹ö¡£Ã»ÓĞÄ¬ÈÏÖµ£¬ÈÎºÎÒì³£¶¼»Ø¹ö¡£
+	-->
+//Ö÷Òå»¹¿ÉÒÔ´øĞÇºÅ´ú±í·½·¨µÄÒ»²¿·Ö
+			<!-- <tx:method name="save*" propagation="REQUIRED" />
+			<tx:method name="update*" propagatio="REQUIRED"/>
+			<tx:method name="delete*" propagation="REQUIRED"/>
+			<tx:method name="find*" read-only="true"/> -->
+			
+			<tx:method name="transfer" propagation="REQUIRED"/>
+		</tx:attributes>
+	</tx:advice>
+µÚÈı²½£ºÅäÖÃÊÂÎñµÄAOP
+	<!-- ÅäÖÃÊÂÎñµÄAOP -->
+	<aop:config>
+		<aop:pointcut expression="execution(* com.itheima. service.AccountServiceImpl.*(..))" id="pointcut1"/>//ÓÃid±ê¼Ç´ı¼ÓÇ¿µÄ·½·¨£¨´ıÅäÖÃÊÂÎñµÄ·½·¨£©
+		<!-- Advisor:SpringµÄ´«Í³µÄÇĞÃæ£¨Ò»¸öÇĞÈëµãºÍÒ»¸öÇĞÃæµÄ×éºÏ£© ºÍ Aspect:SpringÕæÕıÇĞÃæ£¨¶à¸öÇĞÈëµãºÍ¶à¸öÍ¨ÖªµÄ×éºÏ£© -->£¨txAdviceÏàµ±ÓÚÔöÇ¿¹æÔò£©£¨-refÇ°ÃæµÄ¾ÍÊÇaop:ºóÃæµÄ£©
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="pointcut1"/>
+	</aop:config>
+
+
+241¡¢springÒªÖ§³ÖÊÂÎñµÄ×¢½â±ØĞëÏÈÔÚÅäÖÃÎÄ¼şÀïÃæ¿ªÆô£©£¨annotation:×¢½â£©
+<!-- ¿ªÆôspring¶Ô×¢½âÊÂÎñµÄÖ§³Ö -->//ÒıÈëµÄÊÇÊÂÎñ¹ÜÀíÆ÷µÄid
+<tx:annotation-driven transaction-manager="transactionManager"/> 
+
+
+242¡¢sshÈı´ó¿ò¼ÜµÄÕûºÏ£º
+a.¶ÀÁ¢Ê½ÕûºÏÖ¸µÄÊÇÈı¸ö¿ò¼Ü¶¼Ê¹ÓÃ×Ô¼ºµÄÅäÖÃÎÄ¼ş¡£
+b.ÒıÈëÊ½ÕûºÏÖ¸µÄÊÇhibernateÖ÷ÅäÖÃÎÄ¼şÖĞµÄÄÚÈİ¶¼ÅäÖÃµ½springÅäÖÃÎÄ¼şÖĞ
+
+243¡¢springºÍhibernateµÄÕûºÏ£º
+SpringºÍHibernateµÄÕûºÏ¾ÍÊÇspring½Ó¹ÜSessionFactoryµÄ´´½¨£¨±¾À´SessionFactoryÊôÓÚhibernate¿ò¼Ü£¬Ïàµ±ÓÚÁ¬½Ó³Ø£©
+
+
+244¡¢ÅäÖÃSpringÊÂÎñµÄ²½Öè£º
+ÅäÖÃÊÂÎñ¹ÜÀíÆ÷²¢×¢ÈëSessionFactory---ÅäÖÃÔöÇ¿ÊÂÎñ¹ÜÀíÆ÷£¨ÅäÖÃÊÂÎñÍ¨Öª¼°Í¨ÖªµÄÊôĞÔ£©---ÅäÖÃAOP½¨Á¢ÇĞÈëµã±í´ïÊ½ºÍÊÂÎñÍ¨ÖªµÄ¹ØÏµ¡£
+
+
+245¡¢ÕûºÏSprigºÍHibernateµÄ²½Öè£º
+ÔÚSpringÅäÖÃÎÄ¼şÖĞÅäÖÃSessionFactory
+¸ÄÔìdao¼Ì³ĞHibernateDaoSupport
+ÔÚSpringÅäÖÃÎÄ¼şÖĞ¸øDao×¢ÈëSessionFactory£¨Á¬½Ó³Ø£©
+È¥µôSession°ó¶¨µ½µ±Ç°Ïß³ÌÉÏ£¨Ò²¾ÍÊÇĞŞ¸ÄhibernateÅäÖÃÎÄ¼ş£©£¨Ò²¾ÍÊÇ²»ÔÙ°ó¶¨session£©
+×îºóÒ»²½µÄ×÷ÓÃ£¨Ô­Òò£©
+ÊÇÓÉÓÚspringµÄHibernateTemplate¶ÔÏóÔÚÊ¹ÓÃSessionÊ±£¬spring´´½¨ÁËSessionµÄ´úÀí¶ÔÏó£¬ÔÚÕâ¸ö¹ı³ÌÖĞ£¬spring¶Ôhibernate°ó¶¨Sessionµ½µ±Ç°Ïß³ÌµÄÅäÖÃ²»ÈÏÊ¶ÁË£¬ËùÒÔÔËĞĞÊ§°Ü¡££¨Ò²¾ÍÊÇÓÃsessionµÄ´úÀí¶ÔÏó´úÌæÁËsession£©
+
+
+246¡¢springÕûºÏstruts2£º´ÓspringÈİÆ÷ÖĞ»ñÈ¡Àà£º
+ApplicationContext ac = new ClassPathXmlApplicationContext("applicationContext.xml");
+		//ÓÉÓÚ¶¯×÷ÀàÊÇ¶àÀıµÄ£¬Ã¿´Î¶¼»á´´½¨ÈİÆ÷£¬µ¼ÖÂ×ÊÔ´µÄÀË·Ñ¡£Ò»¸öÓ¦ÓÃÓ¦¸ÃÖ»ÓĞÒ»¸öÈİÆ÷
+		customerService = (CustomerService) ac.getBean("customerService");
+ÓÅ»¯·½·¨£º
+Ö»ÒªÈÃÈİÆ÷ÔÚÓ¦ÓÃ¼ÓÔØÊ±´´½¨(Ò²¾ÍÊÇÖ»ÓĞÔÚÓ¦ÓÃ¼ÓÔØÊ±²Å´´½¨Ò»´ÎÈİÆ÷£¬ÆäËûÊ±ºò²»´´½¨)£¬Ó¦ÓÃĞ¶ÔØÊ±Ïú»Ù¾Í¿ÉÒÔ¡£
+Spring¿ò¼ÜÎªÎÒÃÇÌá¹©ÁËÒ»¸ö¼àÌıÆ÷£ºContextLoaderListener¡£
+ËüÊÇServletContextListener½Ó¿ÚµÄÊµÏÖÀà£¬¸ºÔğ¼àÌıServletContext¶ÔÏóµÄ´´½¨£¬ÎªÎÒÃÇ´´½¨ÈİÆ÷£¬¼àÌıServletContext¶ÔÏóµÄÏú»Ù£¬Ïú»ÙÈİÆ÷¡£(×¢Òâ¸ÃÊµÏÖÀà»¹¿ÉÒÔ´´½¨ÈİÆ÷ºÍÏú»ÙÈİÆ÷)
+<listener>
+    <listener-class>
+		org.springframework.web.context.ContextLoaderListener
+	</listener-class>
+</listener>
+<context-param>
+    <param-name>contextConfigLocation</param-name>
+    <param-value>classpath:applicationContext.xml</param-value>
+</context-param>
+
+
+247¡¢ActionµÄÁ½ÖÖ¹ÜÀí·½Ê½£ºstruts2×Ô¼º¹ÜÀíºÍspring¹ÜÀí£¨Êµ¼ÊÊ¹ÓÃ£©
+
+
+248¡¢ÒıÈëÊ½ÕûºÏ¾ÍÊÇ°Ñhibernate.cfg.xmlÖĞµÄÅäÖÃ¶¼Å²µ½springµÄÅäÖÃÎÄ¼şÖĞ
+
+
+249¡¢4.2.3.2Ê¹ÓÃ×¢½âÅäÖÃAction
+/**
+ * ¿Í»§µÄ¶¯×÷Àà
+ */
+@Controller("customerAction")
+@Scope("prototype")//½«µ¥ÀıÄ£Ê½×ª±ä³É¶àÀıÄ£Ê½£¬¼´Ã¿´ÎÇëÇó¶¼´´½¨Ò»¸öaction¶ÔÏó*******************************
+//-------ÒÔÏÂ¶¼ÊÇstruts2µÄ×¢½â-----------
+@ParentPackage("struts-default")//Ö¸¶¨µ±Ç°°üµÄ¸¸°ü
+@Namespace("/")//Ö¸¶¨Ãû³Æ¿Õ¼ä£¬·ÃÎÊµ±Ç°actionµÄËùÓĞ·½·¨¶¼ĞèÒªÓĞÃû³Æ¿Õ¼ä
+public class CustomerAction extends ActionSupport implements ModelDriven<Customer> {
+	private Customer customer = new Customer();
+	
+	@Autowired
+	private ICustomerService customerService;	
+	
+	@Override
+	public Customer getModel() {
+		return customer;
+	}
+	
+	/**
+	 * ²éÑ¯ËùÓĞ¿Í»§
+	 * @return
+	 */
+	private List<Customer> customers;
+	//ÓÃÓÚÅäÖÃ¶¯×÷Ãû³Æ
+	@Action(value="findAllCustomer",results={
+//ÕâÊÇ¸öÊı×é£¬¿ÉÒÔÅäÖÃ¶à¸ö½á¹û
+			@Result(name="findAllCustomer",
+					type="dispatcher",
+					location="/jsp/customer/list.jsp")
+	})
+	public String findAllCustomer(){
+		customers = customerService.findAllCustomer();
+		return "findAllCustomer";
+	}
+	
+	/**
+	 * »ñÈ¡Ìí¼Ó¿Í»§Ò³Ãæ
+	 * @return
+	 */
+	@Action(value="addUICustomer",results={
+			@Result(name="addUICustomer",
+					location="/jsp/customer/add.jsp")
+	})
+	public String addUICustomer(){
+		return "addUICustomer";
+	}
+	
+	/**
+	 * Ìí¼Ó¿Í»§
+	 * @return
+	 */
+	@Action(value="addCustomer",results={
+			@Result(name="addCustomer",
+					type="redirect",
+					location="/jsp/success.jsp")
+	})
+	public String addCustomer(){
+		customerService.saveCustomer(customer);
+		return "addCustomer";
+	}
+	
+	public List<Customer> getCustomers() {
+		return customers;
+	}
+	public void setCustomers(List<Customer> customers) {
+		this.customers = customers;
+	}
+}
