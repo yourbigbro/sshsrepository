@@ -1,0 +1,164 @@
+1、web.xml中配置的是：struts2核心过滤器，spring核心监听器，spring配置文件applicationContext.xml的位置。
+
+
+2、pom.xml中引入Tomcat插件port可以修改tomcat端口，path还可以添加项目的访问路径代替原来的项目名。
+
+
+3、spring data jpa见项目一的第二天
+spring data jpa是为了简化数据访问，自动生成实现类，不用自己写sql语句，只需在dao接口上实现JpaRepository接口。
+@Query注解默认接受HQL语句，如果想配置SQL，可以将nativeQuery属性设置为true。
+Query注解也可以配置增删改操作，但是要添加@Modifying注解。
+对于不按规则写的查询或者增删改，需要自己写sql语句。
+
+
+4、service层配置事务：@Transactional注解
+
+
+5、将数据返回页面：ServletActionContext.getResponse().getWriter().print(要返回前台页面的json数据等);return none;
+
+
+6、action类继承ActionSupport的作用是可以使用SUCCESS代替原来的"success"字符串。
+
+
+7、@Result里面的type属性redirect和。。可以决定是转发还是重定向。
+
+
+8、快递员对象：包含快递员工号，姓名，电话，作废标记，取件员类型，车辆类型，车牌号等，与收派标准多对一，与收派时间多对一，与定区多对多。
+   区域对象：省，市，区，邮编，城市编码，简码，与分区一对多。
+   定区对象：定区名称，定区负责人，联系电话，所属单位，操作时间，操作员，操作单位，与分区一对多，与快递员多对多。
+   收派标准对象：标准名称，最小重量，最大重量，最小长度，最大长度，操作时间，操作员，操作单位。
+   分区对象：起始号，终止号，单双号，关键字，辅助关键字，与区域多对一，与定区多对一。
+   客户对象：用户名，密码，类型，生日，性别，手机，公司，部门，职位，地址，座机，邮箱，定区编码。
+
+9、一个区域包含多个分区，多个分区又组成一个定区。
+
+
+10、OCUpload一键上传、Apache POI解析excel文件、pinyin4j生成简码和城市编码：
+
+用.upload()方法一键上传，将表单编码方式改为multipart/form-data,post方式提交。
+利用struts2文件上传机制接收上传文件。
+maven中导入POI支持。
+解析excel的逻辑：工作簿，sheet，row,cell。
+区域简码：北京市海淀区BJHD
+城市编码：beijing
+maven导入pinyin4j
+
+
+11、抽取action的公共类，在构造函数里面完成带泛型的模型驱动。
+
+
+12、WebService
+webservice是一个平台独立的、低耦合的web的应用程序，可使用开放的xml标准来描述、发布、发现、协调和配置应用程序，用于开发分布式的互操作的应用程序。
+它使用http协议发送xml格式的数据，可以实现跨语言调用。
+
+调用网上的WebService服务：wsimport -s . 网址
+
+每个webservice服务都有一个wsdl文档，里面用soap格式的xml写成。
+wsdl地址的构成：webservice服务的发布地址+?wsdl
+
+然后就是服务端发布服务
+然后接收端根据wsdl文档获得服务的地址，用wsimport -s . 网址命令解析wsdl文件，生成本地java代码并复制到项目中即可使用。
+
+
+13、apache CXF
+cxf是webservice的框架，比webservice操作要简单，只需要在服务端的web.xml配置Servlet，在spring配置文件里面发布服务，然后在客户端接收服务即可，不用再生成.java文件。
+@WebService注解放在service接口上，用于发布cxf服务。然后再在spring配置文件里面配置service实现类。
+
+
+14、关联客户左右移动按钮绑定事件实现客户的关联与解除关联。原理：从数据库中查询到前台页面，再根据数据生成客户项元素；移动的时候会对两边的客户元素进行增删，当提交的时候会首先解除所有绑定，再按照新的来绑定一次。
+
+
+15、定区关联快递员：作用是可以让客户找到定区所对应的快递员。
+步骤：在定区里面设置快递员和时间，首先要查询出快递员列表和时间列表。
+
+
+16、发送短信：查看短信接口服务（调用短信平台的服务方法）。验证码原理：生成一个随机验证码并用键值对保存在session中，然后当用户提交表单时后台检查表单元素，看是否和session中保存的值相同。
+
+
+17、邮箱绑定功能：用户输入邮箱账号---使用javamail技术向邮箱发送含有激活码（激活链接）的激活邮件---用户在24小时之内可以点击激活邮件链接完成邮箱绑定（保存24小时用redis实现）
+
+在pom.xml中配置发送邮件的javamail的jar包，然后用工具方法发送邮件。
+redis默认端口为6379
+在pom.xml配置jedis需要的jar包
+在application.xml中配置jedis连接池和jedis连接工厂并配置spring data jedis
+当用户点击激活链接时，还要对比redis中存储的激活码
+百度地图（用于用户填写详细地址），省市区三级联动city-picker，百度地图实现详细地址自动补全只需要看着说明书复制粘贴即可。
+
+
+18、取派件业务分析：
+受理：客户下单后，系统自动为客户分配快递员，生成取件任务的工单，以短信形式通知快递员。快递员根据百度地图取件之后，在系统中录入运单，包括货物的包装，计费，签收等等。
+调度：当系统录入数据有误，或者系统自动分单到快递员失败时，就会需要人工调度，有管理员手动为订单分配快递员。
+
+自动分单的逻辑：在实现定区关联客户时，用户的地址已经与定区进行过关联，假如下单地址与crm客户地址完全一样，就自动由定区找到快递员。
+假如下单地址与crm客户地址不同，就从省市区中获得区域的信息，找到区域中的所有分区，获取分区的关键字和辅助关键字，用用户填写的下单地址匹配这些关键字，找到分区的话就找到定区，继而找到对应的快递员。
+假如没找到对应的快递员，就进行人工调度，分配快递员。
+
+
+19、基于activeMQ改造短信发送方式
+1、解决服务之间耦合 
+2、使用消息队列，增加系统并发处理量
+
+生产者要配置activemq连接工厂，在spring配置文件中配置管理工厂，配置jmsTemplate模板，写一个发送方法的工具类（里面引用jmsTemplate模板），然后就可以在程序中调用该工具类。（当然也可以不写在工具类里面而是直接在代码中调用jmsTemplete中的方法进行消息的生产）
+消费者要配置queue监听器或者topic监听器，里面配置的是消费者类。
+
+@Qualifier("")：当配置文件中的名称与类中变量名字不同时和@Autowired配合使用。
+
+
+20、权限管理apache shiro：
+?认证:系统提供的用于识别用户身份的功能就是认证功能。通常用户登录功能就是认证功能。-----让系统知道你是谁
+授权:系统授予用户可以操作某些功能的许可。----让系统知道你能操作哪些功能
+
+
+21、权限控制的两种方式：
+1．URL拦截实现权限控制：底层基于拦截器或者过滤器实现。
+2．方法注解实现权限控制：底层基于（动态）代理技术实现的。
+
+权限模块的四种实体类：
+用户User、角色Role、权限Permission、菜单Menu
+	用户：系统登录用户 User 
+	权限：描述权限信息（粗粒度权限控制，在权限表描述访问资源URL信息） Permission
+	角色：方便用户进行授权，角色就是权限的集合Role 
+Menu 菜单，为了方便进行动态菜单管理，为不同用户定制不同系统菜单
+	不同用户系统菜单，可以根据用户角色进行管理    角色 * --- * 菜单
+
+22、配置shiro的步骤：
+第一步：在项目的pom.xml中引入shiro框架坐标
+第二步：在web.xml中配置spring框架用于整合shiro框架的过滤器
+第三步：在applicationContext.xml中配置一个bean，id和上面过滤器的name相同
+<!-- 配置Shiro核心Filter -->
+	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+		<!-- 安全管理器 -->
+		<property name="securityManager" ref="securityManager" />
+		<!-- 未认证，跳转到哪个页面 -->
+		<property name="loginUrl" value="/login.html" />
+		<!-- 登录页面页面 -->
+		<property name="successUrl" value="/index.html" />
+		<!-- 认证后，没有权限跳转页面 -->
+		<property name="unauthorizedUrl" value="/unauthorized.html" />
+		<!-- shiro URL控制过滤器规则 -->
+		<property name="filterChainDefinitions">
+			<value>
+				/login.html* = anon
+				/userAction_login.action* = anon
+				/validatecode.jsp* = anon
+				/css/** = anon
+				/js/** = anon
+				/images/** = anon
+				/services/** = anon
+				/pages/base/courier.html* = perms[courier]
+				/pages/base/area.html* = roles[base]
+				/** = authc
+			</value>
+		</property>
+	</bean>
+
+anon：允许匿名访问
+authc：必须认证后才可以访问
+perms：进行权限校验的过滤器
+
+第四步：自定义realm类
+第五步：创建UserAction，提供login方法
+第六步：配置applicationContext.xml（注册安全管理器对象）
+
+
+23、
