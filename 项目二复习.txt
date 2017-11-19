@@ -1,0 +1,961 @@
+1、MyBatis是一个优秀的持久层框架，它对jdbc的操作数据库的过程进行封装，使开发者只需要关注 SQL 本身，而不需要花费精力去处理例如注册驱动、创建connection、创建statement、手动设置参数、结果集检索等jdbc繁杂的过程代码。
+
+
+2、（原生）jdbc编程步骤：
+1、加载数据库驱动
+2、创建并获取数据库链接
+3、创建jdbc statement对象
+4、设置sql语句
+5、设置sql语句中的参数(使用preparedStatement)
+6、通过statement执行sql并获取结果
+7、对sql执行结果进行解析处理
+8、释放资源(resultSet、preparedstatement、connection)
+
+
+3、jdbc问题总结如下：
+1、数据库连接创建、释放频繁造成系统资源浪费，从而影响系统性能。如果使用数据库连接池可解决此问题。
+2、Sql语句在代码中硬编码，造成代码不易维护，实际应用中sql变化的可能较大，sql变动需要改变java代码
+3、使用preparedStatement向占有位符号传参数存在硬编码，因为sql语句的where条件不一定，可能多也可能少，修改sql还要修改代码，系统不易维护。
+4、对结果集解析存在硬编码（查询列名），sql变化导致解析代码变化，系统不易维护，如果能将数据库记录封装成pojo对象解析比较方便。
+
+
+4、mybatis架构：
+
+1、mybatis配置（区分配置文件和映射文件）
+SqlMapConfig.xml，此文件作为mybatis的全局配置文件，配置了mybatis的运行环境等信息。
+mapper.xml文件即sql映射文件，文件中配置了操作数据库的sql语句。此文件需要在SqlMapConfig.xml中加载。
+2、通过mybatis环境等配置信息构造SqlSessionFactory即会话工厂
+3、由会话工厂创建sqlSession即会话，操作数据库需要通过sqlSession进行。
+4、mybatis底层自定义了Executor执行器接口操作数据库，Executor接口有两个实现，一个是基本执行器、一个是缓存执行器。
+5、Mapped Statement也是mybatis一个底层封装对象，它包装了mybatis配置信息及sql映射信息等。mapper.xml文件中一个sql对应一个Mapped Statement对象，sql的id即是Mapped statement的id。
+6、（输入映射）Mapped Statement对sql执行输入参数进行定义，包括HashMap、基本类型、pojo，Executor通过Mapped Statement在执行sql前将输入的java对象映射至sql中，输入参数映射就是jdbc编程中对preparedStatement设置参数。
+7、（输出映射）Mapped Statement对sql执行输出结果进行定义，包括HashMap、基本类型、pojo，Executor通过Mapped Statement在执行sql后将输出结果映射至java对象中，输出结果映射过程相当于jdbc编程中对结果的解析处理过程。
+
+
+5、mybatis使用实例：
+<select id="queryUserById" parameterType="int"
+		resultType="cn.itcast.mybatis.pojo.User">
+		SELECT * FROM `user` WHERE id  = #{id}
+	</select>
+
+Object user = sqlSession.selectOne("test.queryUserById", 1);
+
+
+6、#{}和${}
+#{}表示一个占位符号，通过#{}可以实现preparedStatement向占位符中设置值，自动进行java类型和jdbc类型转换。#{}可以有效防止sql注入。 #{}可以接收简单类型值或pojo属性值。 如果parameterType传输单个简单类型值，#{}括号中可以是任意值。
+
+${}表示拼接sql串，通过${}可以将parameterType 传入的内容拼接在sql中且不进行jdbc类型转换， ${}可以接收简单类型值或pojo属性值，如果parameterType传输单个简单类型值，${}括号中只能是value。（总之写value肯定是没错）
+
+
+7、配置selectKey标签返回mysql的自增主键，解决返回的主键id为null的问题。
+
+LAST_INSERT_ID():是mysql的函数，返回auto_increment自增列新记录id值。
+
+其中将order属性从AFTER改成BEFORE可以使用uuid实现主键。
+
+
+8、Mybatis解决jdbc编程的问题
+1、数据库连接创建、释放频繁造成系统资源浪费从而影响系统性能，如果使用数据库连接池可解决此问题。
+解决：在SqlMapConfig.xml中配置数据连接池，使用连接池管理数据库链接。
+2、Sql语句写在代码中造成代码不易维护，实际应用sql变化的可能较大，sql变动需要改变java代码。
+解决：将Sql语句配置在XXXXmapper.xml文件中与java代码分离。（前面虽然将sql语句写在了xml中，但是命名是User.xml）
+3、向sql语句（xml文件中）传参数麻烦，因为sql语句的where条件不一定，可能多也可能少，占位符需要和参数一一对应。
+解决：Mybatis自动将java对象映射至sql语句，通过statement中的parameterType定义输入参数的类型。
+4、对结果集解析麻烦，sql变化导致解析代码变化，且解析前需要遍历，如果能将数据库记录封装成pojo对象解析比较方便。
+解决：Mybatis自动将sql执行结果映射至java对象，通过statement中的resultType定义输出结果的类型。
+
+
+9、mybatis与hibernate不同
+Mybatis和hibernate不同，它不完全是一个ORM框架(实现程序对象到关系数据库数据的映射)，因为MyBatis需要程序员自己编写Sql语句。mybatis可以通过XML或注解方式灵活配置要运行的sql语句，并将java对象和sql语句映射生成最终执行的sql，最后将sql执行的结果再映射生成java对象。V2
+
+Mybatis学习门槛低，简单易学，程序员直接编写原生态sql，可严格控制sql执行性能，灵活度高，非常适合对关系数据模型要求不高的软件开发，例如互联网软件、企业运营类软件等，因为这类软件需求变化频繁，一但需求变化要求成果输出迅速。但是灵活的前提是mybatis无法做到数据库无关性，如果需要实现支持多种数据库的软件则需要自定义多套sql映射文件，工作量大。
+
+Hibernate对象/关系映射能力强，数据库无关性好，对于关系模型要求高的软件（例如需求固定的定制化软件）如果用hibernate开发可以节省很多代码，提高效率。但是Hibernate的学习门槛高，要精通门槛更高，而且怎么设计O/R映射，在性能和对象模型之间如何权衡，以及怎样用好Hibernate需要具有很强的经验和能力才行。
+总之，按照用户的需求在有限的资源环境下只要能做出维护性、扩展性良好的软件架构都是好架构，所以框架只有适合才是最好。
+
+
+10、原始Dao开发中存在以下问题：
+?Dao方法体存在重复代码：通过SqlSessionFactory创建SqlSession
+?调用sqlSession的数据库操作方法需要指定statement的id，这里存在硬编码，不得于开发维护。（也就是映射文件xml的元素的id属性值）
+
+
+11、使用pojo对应UserMapper.xml中的返回值returnType：（起别名基本不用，可以不看了）
+
+<!--当使用包扫描时，mapper.xml中可以直接引入别名代替原来的类的全路径（使用全路径时不必扫描，因为扫描的本质是起别名），并且UserMapper.xml和UserMapper.java必须在同一个包的下面-->
+	<typeAliases>
+		<!-- 单个别名定义 -->
+		<typeAlias alias="user" type="cn.itcast.mybatis.pojo.User" />
+		<!-- 批量别名定义，扫描整个包下的类，别名为类名（大小写不敏感） -->
+		<package name="cn.itcast.mybatis.pojo" />
+		<package name="其它包" />
+	</typeAliases>
+
+
+12、从外部文件db.properties中加载键值对：（下面的代码放在SqlMapConfig.xml中）
+<!-- 是用resource属性加载外部配置文件 -->
+	<properties resource="db.properties">
+		<!-- 在properties内部用property定义属性 -->
+		<property name="jdbc.username" value="root123" />
+		<property name="jdbc.password" value="root123" />
+	</properties>
+
+
+13、在SqlMapConfig中加载mapper.xml映射文件：
+
+<!-- 加载映射文件 -->
+	<mappers>
+		<mapper resource="sqlmap/User.xml" />
+		<mapper resource="mapper/UserMapper.xml" />
+	</mappers>
+
+
+14、mapper.xml放在config文件夹中的mapper包中。
+
+
+15、dao开发方式分为原始dao开发方式和mapper动态代理方式。他们两个的区别是前者是接口---实现类---xml映射文件，后者是接口---xml映射文件。
+
+
+16、mapper接口开发规范
+	Mapper接口开发方法只需要程序员编写Mapper接口（相当于Dao接口），由Mybatis框架根据接口定义创建接口的动态代理对象，代理对象的方法体同上边Dao接口实现类方法。
+
+Mapper接口开发需要遵循以下规范：
+1、Mapper.xml文件中的namespace（属性值）与mapper接口的类路径（也就是实体类pojo的全路径）相同。
+2、Mapper接口方法名和Mapper.xml中定义的每个statement的id相同 
+3、Mapper接口方法的输入参数类型（注意，是参数的类型必须相同而不是参数的名称必须相同）和mapper.xml中定义的每个sql 的parameterType的类型相同
+4、Mapper接口方法的输出参数类型和mapper.xml中定义的每个sql的resultType的类型相同（区分parameterType和resultType，前者是输入类型，后者是输出类型）
+
+
+17、使用resultMap
+由于上边的mapper.xml中sql查询列(user_id)和Order类属性(userId)不一致，所以查询结果不能映射到pojo中。
+需要定义resultMap，把orderResultMap将sql查询列(user_id)和Order类属性(userId)对应起来
+
+改造OrderMapper.xml，如下：
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace：命名空间，用于隔离sql，还有一个很重要的作用，Mapper动态代理开发的时候使用，需要指定Mapper的类路径 -->
+<mapper namespace="cn.itcast.mybatis.mapper.OrderMapper">
+
+	<!-- resultMap最终还是要将结果映射到pojo上，type就是指定映射到哪一个pojo -->
+	<!-- id：设置ResultMap的id -->
+	<resultMap type="order" id="orderResultMap">
+		<!-- 定义主键 ,非常重要。如果是多个字段（应该叫联合主键吧）,则定义多个id -->
+		<!-- property：主键在pojo中的属性名 -->
+		<!-- column：主键在数据库中的列名 -->
+		<id property="id" column="id" />
+
+		<!-- 定义普通属性 -->
+		<result property="userId" column="user_id" />
+		<result property="number" column="number" />
+		<result property="createtime" column="createtime" />
+		<result property="note" column="note" />
+	</resultMap>
+
+	<!-- 查询所有的订单数据 -->
+	<select id="queryOrderAll" resultMap="orderResultMap">
+		SELECT id , user_id,
+		number,
+		createtime, note FROM `order`
+	</select>
+
+</mapper>
+
+
+18、动态sql标签之sql片段，where，if:
+
+<!-- 根据条件查询用户 -->
+<select id="queryUserByWhere" parameterType="user" resultType="user">
+	<!-- SELECT id, username, birthday, sex, address FROM `user` -->
+	<!-- 使用include标签加载sql片段；refid是sql片段id -->
+	SELECT <include refid="userFields" /> FROM `user`
+	<!-- where标签可以自动添加where关键字，同时处理sql语句中第一个and关键字 -->
+	<where>
+		<if test="sex != null">
+			AND sex = #{sex}
+		</if>
+		<if test="username != null and username != ''">
+			AND username LIKE
+			'%${username}%'
+		</if>
+	</where>
+</select>
+
+<!-- 声明sql片段 -->
+<sql id="userFields">
+	id, username, birthday, sex, address
+</sql>
+
+
+19、动态sql片段之foreach标签（用来解析list）：
+
+<!-- 根据ids查询用户 -->
+<select id="queryUserByIds" parameterType="queryVo" resultType="user">
+	SELECT * FROM `user`
+	<where>
+		<!-- foreach标签，进行遍历 -->
+		<!-- collection：遍历的集合，这里是QueryVo的ids属性 -->
+		<!-- item：遍历的项目，可以随便写，，但是和后面的#{}里面要一致 -->
+		<!-- open：在前面添加的sql片段 -->
+		<!-- close：在结尾处添加的sql片段 -->
+		<!-- separator：指定遍历的元素之间使用的分隔符 -->
+		<foreach collection="ids" item="item" open="id IN (" close=")"
+			separator=",">
+			#{item}
+		</foreach>
+	</where>
+</select>
+
+
+20、mapper中的关联查询：使用pojo里面加入属性或者pojo里面加入pojo。
+关联查询的一对一和一对多的区别就是加入的是单个属性还是一个包含属性的集合。
+
+21、Mybatis整合spring 
+
+整合思路
+1、SqlSessionFactory对象应该放到spring容器中作为单例存在。（前面是在类文件中）
+2、传统dao的开发方式中，应该从spring容器中获得sqlsession对象。
+3、Mapper代理形式中，应该从spring容器中直接获得mapper的代理对象。
+4、数据库的连接以及数据库连接池事务管理都交给spring容器来完成（区分数据库连接和事务管理。这是两个东西。）。
+
+
+22、Mybatis逆向工程（代码生成工具）
+使用官方网站的Mapper自动生成工具mybatis-generator-core-1.3.2来生成pojo类和Mapper映射文件
+
+使用方法：修改逆向工程的配置文件，修改数据库连接信息，要生成的pojo的名称位置，要生成的mapper的名称位置，指定数据库表等。然后执行main主函数即可生成需要的文件，然后复制粘贴到自己的项目中即可。
+
+
+23、逆向工程生成代码的特点：
+
+1.逆向工程生成的代码只能做单表查询
+2.不能在生成的代码上进行扩展，因为如果数据库变更，需要重新使用逆向工程生成代码，原来编写的代码就被覆盖了。
+3.一张表会生成4个文件
+
+
+24、Springmvc是什么：
+Spring web mvc和Struts2都属于表现层的框架,它是Spring框架的一部分
+
+
+25、springmvc的处理流程：
+
+用户请求---前端控制器---到处理器映射器找到映射的方法（@RequestMapping("list")）---带着找到的类和方法回到前端控制器---到处理器适配器(辨别是注解式开发还是继承了Controller)并带着modelandview回到前端控制器---到视图解析器根据路径找到视图并且用数据填充和解析jsp页面----回到浏览器展示页面。
+
+老师写的架构流程
+1、用户发送请求至前端控制器DispatcherServlet
+2、DispatcherServlet收到请求调用HandlerMapping处理器映射器。
+3、处理器映射器根据请求url找到具体的处理器，生成处理器对象及处理器拦截器(如果有则生成)一并返回给DispatcherServlet。
+4、DispatcherServlet通过HandlerAdapter处理器适配器调用处理器
+5、执行处理器(Controller，也叫后端控制器)。
+6、Controller执行完成返回ModelAndView
+7、HandlerAdapter将controller执行结果ModelAndView返回给DispatcherServlet
+8、DispatcherServlet将ModelAndView传给ViewReslover视图解析器
+9、ViewReslover解析后返回具体View
+10、DispatcherServlet对View进行渲染视图（即将模型数据填充至视图中）。
+11、DispatcherServlet响应用户
+
+我们最常用的视图就是jsp。
+
+注意，处理器映射器是找到处理器controller，处理器适配器是执行处理器controller，执行处理器之后再返回modelandview给视图解析器。
+
+26、创建SpringMVC的核心配置文件
+SpringMVC本身就是Spring的子项目，对Spring兼容性很好，不需要做很多配置。
+这里只配置一个Controller扫描就可以了，让Spring对页面控制层Controller进行管理。（感觉应该将spring改成springmvc）
+
+区分springmvc的核心配置文件和前端控制器。
+
+
+27、@RequestMapping注解：
+
+在方法上面添加@RequestMapping注解，里面指定请求的url。其中“.action”可以加也可以不加，前面的斜杠也是可以加也可以不加
+
+
+28、在springmvc的各个组件中，处理器映射器、处理器适配器、视图解析器称为springmvc的三大组件。我们没有做任何配置，就可以使用这些组件，
+因为框架已经默认加载这些组件了。
+
+
+29、注解驱动
+直接配置处理器映射器和处理器适配器比较麻烦，可以使用注解驱动来加载。
+SpringMVC使用<mvc:annotation-driven>自动加载RequestMappingHandlerMapping和RequestMappingHandlerAdapter
+可以在springmvc.xml配置文件中使用<mvc:annotation-driven>替代注解处理器和适配器的配置。
+
+
+30、在springmvc.xml配置文件中配置视图解析器如下：
+	<!-- Example: prefix="/WEB-INF/jsp/", suffix=".jsp", viewname="test" -> 
+		"/WEB-INF/jsp/test.jsp" -->
+	<!-- 配置视图解析器 -->
+	<bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<!-- 配置逻辑视图的前缀 -->
+		<property name="prefix" value="/WEB-INF/jsp/" />
+		<!-- 配置逻辑视图的后缀 -->
+		<property name="suffix" value=".jsp" />
+	</bean>
+
+
+31、ModelAndView，用来存放数据和视图
+
+
+32、springmvc是spring的一部分，两者是无缝整合，所以不用进行额外的整合操作。
+
+
+33、4.3.Springmvc和mybatis整合思路（注意，三层都有扫描包这一项配置）
+Dao层：
+1、SqlMapConfig.xml，空文件即可，但是需要文件头。（但是需要configuration空元素）
+2、applicationContext-dao.xml
+a)数据库连接池
+b)SqlSessionFactory对象，需要spring和mybatis整合包下的。
+c)配置mapper文件扫描器。
+
+Service层：（注意，有两个xml文件）
+1、applicationContext-service.xml包扫描器，扫描@service注解的类。
+2、applicationContext-trans.xml配置事务。（里面配置了事务管理器，传播行为，切面）
+
+Controller层：（可以总结为扫描和配置springmvc三大组件）
+1、Springmvc.xml
+a)包扫描器，扫描@Controller注解的类。
+b)配置注解驱动
+c)配置视图解析器
+
+Web.xml文件：
+1、配置spring（spring）
+2、配置前端控制器。（springmvc）
+3、处理post乱码
+
+34、事务的七种传播行为：
+
+PROPAGATION_REQUIRED--支持当前事务，如果当前没有事务，就新建一个事务。这是最常见的选择。 
+PROPAGATION_SUPPORTS--支持当前事务，如果当前没有事务，就以非事务方式执行。 
+PROPAGATION_MANDATORY--支持当前事务，如果当前没有事务，就抛出异常。 
+PROPAGATION_REQUIRES_NEW--新建事务，如果当前存在事务，把当前事务挂起。 
+PROPAGATION_NOT_SUPPORTED--以非事务方式执行操作，如果当前存在事务，就把当前事务挂起。 
+PROPAGATION_NEVER--以非事务方式执行，如果当前存在事务，则抛出异常。
+
+
+35、Model和ModelAndView
+http://127.0.0.1:8080/springmvc-web/itemEdit.action?id=1
+
+需要从请求的参数中把请求的id取出来。
+Id包含在Request对象中。可以从Request对象中取id。
+
+想获得Request对象只需要在Controller方法的形参中添加一个参数即可。Springmvc框架会自动把Request对象传递给方法。
+
+代码实现
+/**
+ * 根据id查询商品
+ * 
+ * @param request
+ * @return
+ */
+@RequestMapping("/itemEdit")
+public ModelAndView queryItemById(HttpServletRequest request) {
+	// 从request中获取请求参数
+	String strId = request.getParameter("id");
+//因为前台输入的都是字符串，即使是数字也是数字类型的字符串
+	Integer id = Integer.valueOf(strId);
+
+	// 根据id查询商品数据
+	Item item = this.itemService.queryItemById(id);
+
+	// 把结果传递给页面
+	ModelAndView modelAndView = new ModelAndView();
+	// 把商品数据放在模型中
+	modelAndView.addObject("item", item);
+	// 设置逻辑视图（设置跳转到哪个jsp页面）
+	modelAndView.setViewName("itemEdit");
+
+	return modelAndView;
+}
+
+6.1.6.默认支持的参数类型
+处理器形参中添加如下类型的参数处理适配器会默认识别并进行赋值。
+6.1.6.1.HttpServletRequest
+通过request对象获取请求信息
+6.1.6.2.HttpServletResponse
+通过response处理响应信息
+6.1.6.3.HttpSession
+通过session对象得到session中存放的对象
+
+6.1.7.Model/ModelMap
+6.1.7.1.Model（这个方法比较简单）
+除了ModelAndView以外，还可以使用Model来向页面传递数据，
+Model是一个接口，在参数里直接声明model即可。
+
+如果使用Model则可以不使用ModelAndView对象，Model对象可以向页面传递数据，View对象则可以使用String返回值替代。
+不管是Model还是ModelAndView，其本质都是使用Request对象向jsp传递数据。
+代码实现：
+/**
+ * 根据id查询商品,使用Model
+ * 
+ * @param request
+ * @param model
+ * @return
+ */
+@RequestMapping("/itemEdit")
+public String queryItemById(HttpServletRequest request, Model model) {
+	// 从request中获取请求参数
+	String strId = request.getParameter("id");
+	Integer id = Integer.valueOf(strId);
+
+	// 根据id查询商品数据
+	Item item = this.itemService.queryItemById(id);
+
+	// 把结果传递给页面
+	// ModelAndView modelAndView = new ModelAndView();
+	// 把商品数据放在模型中
+	// modelAndView.addObject("item", item);
+	// 设置逻辑视图
+	// modelAndView.setViewName("itemEdit");
+
+	// 把商品数据放在模型中（代替了原来的addObject()）
+	model.addAttribute("item", item);
+
+	return "itemEdit";
+}
+
+6.2.绑定简单类型
+当请求的参数名称和处理器形参名称一致时会将请求参数与形参进行绑定。
+这样，从Request取参数的方法就可以进一步简化。（也就是不用request.getparameter()，只需要直接将参数写在函数形参上）
+/**
+ * 根据id查询商品,绑定简单数据类型
+ * 
+ * @param id
+ * @param model
+ * @return
+ */
+@RequestMapping("/itemEdit")
+public String queryItemById(int id, ModelMap model) {
+	// 根据id查询商品数据
+	Item item = this.itemService.queryItemById(id);
+
+	// 把商品数据放在模型中
+	model.addAttribute("item", item);
+
+	return "itemEdit";
+}
+
+36、@RequestParam：这个属性在前台参数和后台接受参数不一样的时候使用
+
+value：参数名字，即入参的请求参数名字，如value=“itemId”表示请求的参数	   区中的名字为itemId的参数的值将传入（这个属性在前台参数和后台接受参数不一样的时候使用）
+
+required：是否必须，默认是true，表示请求中一定要有相应的参数，否则将报错
+TTP Status 400 - Required Integer parameter 'XXXX' is not present
+
+defaultValue：默认值，表示如果请求中没有同名参数时的默认值
+
+定义如下：
+@RequestMapping("/itemEdit")
+public String queryItemById(@RequestParam(value = "itemId", required = true, defaultValue = "1") Integer id,
+		ModelMap modelMap) {
+
+
+37、乱码的处理：
+
+在web.xml中加入：
+	<!-- 解决post乱码问题（加入了filter过滤器） -->
+	<filter>
+		<filter-name>encoding</filter-name>
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+		<!-- 设置编码参是UTF8 -->
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>UTF-8</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>encoding</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+以上可以解决post请求乱码问题。（注意不是get请求）
+
+对于get请求中文参数出现乱码解决方法有两个：
+修改tomcat配置文件添加编码与工程编码一致，如下：
+<Connector URIEncoding="utf-8" connectionTimeout="20000" port="8080" protocol="HTTP/1.1" redirectPort="8443"/>
+
+另外一种方法对参数进行重新编码：（也就是先按照ISO8859-1解码，再按照utf-8编码）
+String userName new 
+String(request.getParamter("userName").getBytes("ISO8859-1"),"utf-8")
+ISO8859-1是tomcat默认编码，需要将tomcat编码后的内容按utf-8编码
+
+
+38、类型转换converter（例如将前端的string转换成后台需要的data）
+
+6.5.4.自定义Converter
+//Converter<S, T>
+//S:source,需要转换的源的类型
+//T:target,需要转换的目标类型
+public class DateConverter implements Converter<String, Date> {
+
+	@Override
+	public Date convert(String source) {
+		try {
+			// 把字符串转换为日期类型
+			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyy-MM-dd HH:mm:ss");
+			Date date = simpleDateFormat.parse(source);
+
+			return date;
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		// 如果转换异常则返回空
+		return null;
+	}
+}
+
+6.5.5.配置Converter
+我们同时可以配置多个的转换器。
+类似下图的usb设备，可以接入多个usb设备
+
+
+<!-- 配置注解驱动 -->
+<!-- 如果配置此标签,可以不用配置... -->
+<mvc:annotation-driven conversion-service="conversionService" />
+
+<!-- 转换器配置 -->
+<bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+	<property name="converters">
+		<set>
+			<bean class="cn.itcast.springmvc.converter.DateConverter" />
+		</set>
+	</property>
+</bean>
+
+
+39、springmvc与struts2的不同之处
+
+1、springmvc的入口是一个servlet即前端控制器，而struts2入口是一个filter过滤器。
+2、springmvc是基于方法开发(一个url对应一个方法)，请求参数传递到方法的形参，可以设计为单例或多例(建议单例)，struts2是基于类开发，传递参数是通过类的属性，只能设计为多例。
+3、Struts采用值栈存储请求和响应的数据，通过OGNL存取数据， springmvc通过参数解析器是将request请求内容解析，并给方法形参赋值，将数据和视图封装成ModelAndView对象，最后又将ModelAndView中的模型数据通过request域传输到页面（感觉是response呢）。Jsp视图解析器默认使用jstl。
+
+servlet是不安全的，springmvc和struts2是安全的。单例的springmvc会节省内存。springmvc底层封装的ThreadLocal。（多例的struts2的action每次访问都会创建一个值栈，数据是不共享的，所以不会出现安全问题）。springmvc默认是单例的，假如有共享数据就将单例改成多例。
+
+
+40、jstl：指的是标签那种解析方式；el：指的是${}那种解析方式。前者方便循环读取数据，后者就是通过json读取数据。
+
+
+41、@RequestMapping可以放在类上面也可以放在方法上面。里面可以配置请求路径和请求方法。例如：
+@RequestMapping(value = "itemList",method = RequestMethod.POST)
+
+
+42、和modelandview相比，model对象只能用于接收参数不能用于返回参数。
+
+
+43、多线程产生安全问题的三个条件：
+有多线程，有共享数据，多线程要操作共享数据。
+
+
+44、controller中的方法可以返回三种类型的字符串：
+逻辑视图名：..
+重定向：return "redirect:/itemEdit.action?itemId=" + item.getId();
+转发：return "forward: /itemEdit.action";
+
+
+45、异常处理器：
+
+springmvc在处理请求过程中出现异常信息交由异常处理器进行处理，自定义异常处理器可以实现一个系统的异常处理逻辑。
+	
+6.1.异常处理思路
+	系统中异常包括两类：预期异常和运行时异常RuntimeException，前者通过捕获异常从而获取异常信息，后者主要通过规范代码开发、通过测试手段减少运行时异常的发生。
+	系统的dao、service、controller出现异常都通过throws Exception向上抛出，最后由springmvc前端控制器交由异常处理器进行异常处理。
+
+6.2.自定义异常类（里面有get/set方法和有参无参构造函数）（区分自定义异常和自定义异常处理器。后者中引用了前者）
+	为了区别不同的异常,通常根据异常类型进行区分，这里我们创建一个自定义系统异常。
+如果controller、service、dao抛出此类异常说明是系统预期处理的异常信息。
+public class MyException extends Exception {
+	// 异常信息
+	private String message;
+
+	public MyException() {
+		super();
+	}
+
+	public MyException(String message) {
+		super();
+		this.message = message;
+	}
+
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
+
+}
+
+
+6.3.自定义异常处理器
+public class CustomHandleException implements HandlerExceptionResolver {
+
+	@Override
+	public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object handler,
+			Exception exception) {
+		// 定义异常信息
+		String msg;
+
+		// 判断异常类型
+		if (exception instanceof MyException) {
+			// 如果是自定义异常，读取异常信息
+			msg = exception.getMessage();
+		} else {
+			// 如果是运行时异常，则取错误堆栈，从堆栈中获取异常信息
+			Writer out = new StringWriter();
+			PrintWriter s = new PrintWriter(out);
+			exception.printStackTrace(s);
+			msg = out.toString();
+
+		}
+
+		// 把错误信息发给相关人员,邮件,短信等方式
+		// TODO
+
+		// 返回错误页面，给用户友好页面显示错误信息
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.addObject("msg", msg);
+		modelAndView.setViewName("error");
+
+		return modelAndView;
+	}
+}
+
+
+6.4.异常处理器配置
+在springmvc.xml中添加：
+<!-- 配置全局异常处理器 -->
+<bean 
+id="customHandleException" 	class="cn.itcast.ssm.exception.CustomHandleException"/>
+
+
+46、tomcat配置图片服务器：连项目名都没有了，端口号后面直接就是配置的路径。
+
+
+47、struts2上传文件的话要用表单type="file"。然后在springmvc.xml中配置文件上传解析器：
+<!-- 文件上传,id必须设置为multipartResolver -->
+<bean id="multipartResolver"
+	class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+	<!-- 设置文件上传大小 -->
+	<property name="maxUploadSize" value="5000000" />
+</bean>
+
+注意，上传文件写的是真实路径，访问文件写的是eclipse中配置的路径。
+
+
+48、@RequestBody和@ResponseBody：
+
+@RequestBody注解用于读取http请求的内容(字符串)，通过springmvc提供的HttpMessageConverter接口将读到的内容（json数据）转换为java对象并绑定到Controller方法的参数上。
+
+@ResponseBody注解用于将Controller的方法返回的对象（总之就是对象和json之间的相互转换），通过springmvc提供的HttpMessageConverter接口转换为指定格式的数据如：json,xml等，通过Response响应给客户端
+
+例子：
+public @ResponseBody Item testJson(@RequestBody Item item) {
+	return item;
+}
+
+
+49、Restful就是一个资源定位及资源操作的风格。不是标准也不是协议，只是一种风格。基于这个风格设计的软件可以更简洁，更有层次，更易于实现缓存等机制。
+
+
+50、使用(@PathVariable() Integer id)获取url上的数据。假如没参数的话可以没有数据。
+
+
+51、如果加上@ResponseBody注解，就不会走视图解析器，不会返回字符串对应的页面，目前返回的json数据。如果不加，就走视图解析器，返回字符串对应的页面。
+
+
+52、拦截器（区分拦截器和过滤器）
+10.1.定义
+	Spring Web MVC 的处理器拦截器类似于Servlet 开发中的过滤器Filter，用于对处理器进行预处理和后处理。
+10.2.拦截器定义
+实现HandlerInterceptor接口，如下：
+public class HandlerInterceptor1 implements HandlerInterceptor {
+	// controller执行后且视图返回后调用此方法
+	// 这里可得到执行controller时的异常信息
+	// 这里可记录操作日志
+	@Override
+	public void afterCompletion(HttpServletRequest arg0, HttpServletResponse arg1, Object arg2, Exception arg3)
+			throws Exception {
+		System.out.println("HandlerInterceptor1....afterCompletion");
+	}
+
+	// controller执行后但未返回视图前调用此方法
+	// 这里可在返回用户前对模型数据进行加工处理，比如这里加入公用信息以便页面显示
+	@Override
+	public void postHandle(HttpServletRequest arg0, HttpServletResponse arg1, Object arg2, ModelAndView arg3)
+			throws Exception {
+		System.out.println("HandlerInterceptor1....postHandle");
+	}
+
+	// Controller执行前调用此方法
+	// 返回true表示继续执行，返回false中止执行
+	// 这里可以加入登录校验、权限拦截等
+	@Override
+	public boolean preHandle(HttpServletRequest arg0, HttpServletResponse arg1, Object arg2) throws Exception {
+		System.out.println("HandlerInterceptor1....preHandle");
+		// 设置为true，测试使用
+		return true;
+	}
+}
+10.3.拦截器配置
+上面定义的拦截器再复制一份HandlerInterceptor2，注意新的拦截器修改代码：
+System.out.println("HandlerInterceptor2....preHandle");
+
+在springmvc.xml中配置拦截器（两个interceptor元素）
+<!-- 配置拦截器 -->
+<mvc:interceptors>
+	<mvc:interceptor>
+		<!-- 所有的请求都进入拦截器（注意是两个*） -->
+		<mvc:mapping path="/**" />
+		<!-- 配置具体的拦截器 -->
+		<bean class="cn.itcast.ssm.interceptor.HandlerInterceptor1" />
+	</mvc:interceptor>
+	<mvc:interceptor>
+		<!-- 所有的请求都进入拦截器 -->
+		<mvc:mapping path="/**" />
+		<!-- 配置具体的拦截器 -->
+		<bean class="cn.itcast.ssm.interceptor.HandlerInterceptor2" />
+	</mvc:interceptor>
+</mvc:interceptors>
+
+
+53、lucene全文索引：
+
+为了解决数据库压力和速度的问题，我们的数据库就变成了索引库,将顺序扫描法变成了倒排索引法。
+
+
+54、什么是全文索引（全文检索）
+计算机索引程序通过扫描文章中的每一个词，对每一个词建立一个索引，指明该词在文章中出现的次数和位置，当用户查询时，检索程序就根据事先建立的索引进行查找，并将查找的结果反馈给用户的检索方式
+
+
+55、lucene与搜索引擎的区别：
+Lucene是一套用java或其它语言写的全文检索的工具包，不是一个单独运行的软件系统；搜索引擎是一个全文检索系统，它是一个单独运行的软件系统。
+
+
+56、创建索引的流程：原始文档--获得文档（采集数据，获得原始文档）--构建文档对象--分析文档（分词）--创建索引
+
+索引的目的是为了搜索，最终要实现只搜索被索引的语汇单元从而找到Document（文档）。（注意是找到文档而不是找到域）
+
+创建索引是对语汇单元索引，通过词语找文档，这种索引的结构叫倒排索引结构。
+
+
+57、倒排索引的结构：
+倒排索引结构也叫反向索引结构，包括索引和文档两部分，索引即词汇表，它的规模较小，而文档集合较大。
+
+
+58、分词器：
+
+?分词：采集到的数据会存储到document对象的Field域中，分词就是将Document中Field的value值切分成一个一个的词。
+?过滤：包括去除标点符号过滤、去除停用词过滤（的、是、a、an、the等）、大写转小写、词的形还原（复数形式转成单数形参、过去式转成现在式。。。）等。
+也就是说，分词之后还要经过过滤器链。
+
+停用词就是分词之后忽略的词。
+
+59、 搜索和索引都要使用分词器。搜索使用的分析器要和索引使用的分析器一致。
+
+分词的步骤：文档集合，文档，域对象field，分词。
+
+
+60、solr：
+是Apache组织下的一个顶级的开源项目：搜索引擎系统，能在服务器中独立运行。
+
+
+61、Field属性
+a)是否分词：目的：创建索引
+b)是否索引：目的：搜索
+是否存储：目的：在页面显示
+
+62、solr
+schema.xml
+schema.xml文件在SolrCore（应该是solrhome吧）的conf目录下，在此配置文件中定义了域以及域的类型等一些配置。在solr中域必须先定义后使用。
+
+field域在schema.xml文件中的配置
+<field name="id" type="string" indexed="true" stored="true" required="true" multiValued="false" />
+?Name：域的名称
+?Type：域的类型
+?Indexed：是否索引
+?Stored：是否存储
+?Required：是否必须
+?multiValued：是否是多值，存储多个值时设置为true，solr允许一个Field存储多个值，比如存储一个用户的好友id（多个），商品的图片（多个，大图和小图）
+
+
+63、配置中文分词器：将分词器，分词器配置文件，停用词典和自定义词典复制到solr中。
+
+
+64、配置业务域：
+要使用solr实现网站中商品搜索，需要 将mysql数据库中数据在solr中创建索引。
+
+需要在solr的schema.xml文件定义要存储的商品Field。
+需要把MySQL的数据导入到solr索引库中
+
+先确定定义的商品document的Field域有哪些？
+可以根据mysql数据库中商品表的字段来确定。然后在Schema.xml中配置业务域。
+使用插件dataimportHandler将数据库数据导入到索引库中。
+
+
+65、solrj查询索引库：
+
+//复杂查询索引
+@Test
+public void queryIndex2() throws Exception {
+	//创建连接
+	SolrServer solrServer = new HttpSolrServer("http://localhost:8080/solr");
+	//创建一个query对象
+	SolrQuery query = new SolrQuery();
+	//设置查询条件（没写成json格式，因此使用了默认的搜索域）
+	query.setQuery("钻石");
+	//过滤条件
+	query.setFilterQueries("product_catalog_name:幽默杂货");
+	//排序条件
+	query.setSort("product_price", ORDER.asc);
+	//分页处理
+	query.setStart(0);
+	query.setRows(10);
+	//结果中域的列表
+		query.setFields("id","product_name","product_price","product_catalog_name","product_picture");
+	//设置默认搜索域
+	query.set("df", "product_keywords");
+	//高亮显示
+	query.setHighlight(true);
+	//高亮显示的域
+	query.addHighlightField("product_name");
+	//高亮显示的前缀
+	query.setHighlightSimplePre("<em>");
+	//高亮显示的后缀
+	query.setHighlightSimplePost("</em>");
+	//执行查询
+	QueryResponse queryResponse = solrServer.query(query);
+	//取查询结果
+	SolrDocumentList solrDocumentList = queryResponse.getResults();
+	//共查询到商品数量
+	System.out.println("共查询到商品数量:" + solrDocumentList.getNumFound());
+	//遍历查询的结果
+	for (SolrDocument solrDocument : solrDocumentList) {
+
+
+66、电商系统模块以及功能介绍：
+
+后台管理系统：提供商品管理、类目选择以及内容发布等功能。
+前台系统：提供用户注册、用户登录、浏览商品、首页（门户）、下单等功能。
+订单系统：提供下单、定时处理订单。
+搜索系统：提供商品的搜索功能。
+购物车系统：提供加入商品到购物车，修改购物车，删除购物车等功能。
+单点登录系统：为多个系统提供用户登录以及查询登录用户信息等功能。
+
+
+67、传统架构的缺点：1各个功能之间耦合性高，2无法进行水平扩展（也就是搭建集群）
+分布式架构的缺点：1系统间的调用比系统内的调用的效率低。2系统间的通知无法直接进行，需要使用mq消息机制。（区分调用和通知）
+
+
+68、dubbo:
+Dubbo的客户端和服务端有三种连接方式，分别是：广播，直连和使用zookeeper注册中心。
+
+Dubbo直连
+这种方式在企业中一般在开发中环境中使用，但是生产环境很少使用，因为服务是直接调用，没有使用注册中心，很难对服务进行管理。
+
+dubbo服务端配置文件的配置：暴露服务地址，暴露服务端口，暴露服务接口。
+
+dubbo客户端配置文件的配置：配置dubbo服务，声明要调用的服务。
+
+69、zookeeper
+官方推荐使用zookeeper作为dubbo中的注册中心。
+
+
+70、zookeeper的配置方式：在服务端使用zookeeper注册中心----在客户端配置zookeeper注册中心。
+然后用dubbo的monitor监控中心进行服务的监控。
+
+71、集成通用mapper：
+在SqlMapConfig.xml中集成通用mapper。
+使用的时候继承Mapper<POJO>。
+通用mapper之中有很多写好的方法可以直接使用。
+
+
+72、分页插件：
+首先在SqlMapConfig.xml中集成分页插件。
+
+73、在SqlMapConfig.xml中开启驼峰自动映射之后符合驼峰法的数据库列名就不用映射了。
+
+
+74、nginx域名访问：
+nginx是反向代理服务器，其特点是占用内存少，并发能力强。
+
+
+75、反相代理
+反向代理是指以代理服务器来接受internet上的连接请求，然后将请求转发给内部网络上的服务器，并将从服务器上得到的结果返回给internet上请求连接的客户端。此时代理服务器对外就表现为一个反向代理服务器。
+
+
+76、nginx/conf/nginx.conf中进行配置，配置监听的端口号和域名，再配置转接到的ip地址和端口。
+
+77、nginx三个命令
+启动:	start nginx.exe
+停止:	nginx.exe –s stop
+重载:	nginx.exe –s reload
+
+
+78、新增商品的时候会将新增商品的时间也放进去。
+
+
+79、FastDFS图片文件上传
+
+图片服务器的特点：
+1.存储空间可扩展
+2.提供统一的访问方式（tomcat服务器实现的话成本太高）
+3.访问效率高
+原来使用Tomcat配置虚拟路径的方式不能满足需求。
+
+解决方案：
+使用FastDFS分布式文件系统 （他不是只能做图片服务器。图片只是文件的一种）
+fastdfs充分考虑了冗余备份、负载均衡、横向扩展等机制
+
+80、nginx的内部结构：
+
+Tracker 管理集群（称为调度服务器）
+收集信息，处理信息
+为了保证高可用，可以搭建集群
+
+Storage 保存文件（的服务器）
+分为很多组，组和组之间的数据不一样
+可以增加组，达到扩容的效果
+组内成员数据是一样的（同步线程），冗余备份，高可用
+
+
+81、fastdfs文件上传流程：
+
+存储服务器向调度服务器定时传递状态信息。
+
+客户端上传连接请求---查询可用的存储服务器--返回存储的ip地址和端口---生成file-id并将上传文件写入磁盘---返回file-id（路径信息和文件名）
+
+
+82、fastdfs客户端上传文件后存储服务器将文件ID返回给客户端，此文件ID用于以后访问该文件的索引信息。文件索引信息包括：组名，虚拟磁盘路径，数据两级目录，文件名。
+
+其中图片的文件名：
+?文件名：与文件上传时不同。是由存储服务器根据特定信息生成，文件名包含：源存储服务器IP地址、文件创建时间戳、文件大小、随机数和文件拓展名等信息。
+
+
+83、文件下载流程：
+
+下载连接请求---查询可用的存储服务器---返回可用的存储服务器的ip和端口---客户端发送自己保存的field-id---返回请求的文件。
+
+
+84、要配置图片服务器fastdfs，首先需要在pom.xml中引入依赖。
+
+
+85、java客户端上传步骤：
+
+1、加载配置文件，配置文件中的内容就是tracker服务的地址。
+配置文件内容：tracker_server=192.168.37.161:22122
+2、创建一个TrackerClient对象。直接new一个。
+3、使用TrackerClient对象创建连接，获得一个TrackerServer对象。
+4、创建一个StorageServer的引用，值为null
+5、创建一个StorageClient对象，需要两个参数TrackerServer对象、StorageServer的引用
+6、使用StorageClient对象上传图片。
+7、返回数组。包含组名和图片的路径。
+
+总结起来就是：创建与调度服务器的连接---图片上传---返回field-id。
+
+
+86、图片到达后端之后在上传到fastdfs之前还要进行校验，有大小校验，后缀校验，图片特征（例如宽高）校验。
+
+富文本编辑器上传组件对火狐浏览器的兼容不好，不能使用json响应，应该改成text/html文本响应。修改方法：
+@RequestMapping(method = RequestMethod.POST, produces = MediaType.TEXT_HTML_VALUE)
+
+
+87、
