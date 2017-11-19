@@ -161,4 +161,79 @@ perms：进行权限校验的过滤器
 第六步：配置applicationContext.xml（注册安全管理器对象）
 
 
-23、
+23、总结shiro提供的权限控制方式
+第一种：URL级别粗粒度权限控制（基于过滤器实现）
+配置web.xml 的shiroFilter 拦截 /*
+	在spring的applicationContext*.xml 配置文件中配置同名bean，配置filterChainDefinitions拦截控制规则
+	xxx.html* = anon （未登录可以访问）
+	xxx.html* =authc （必须登录才能访问）
+	xxx.html* = perms[权限] （需要特定权限才能访问）
+	xxx.html* = roles[角色] （需要特定角色才能访问）
+
+第二种：方法级别细粒度权限控制（基于代理技术实现）
+在spring的applicationContext*.xml 配置 spring aop 对spring管理bean对象开启shiro注解支持
+	@RequiresPermissions(权限)  需要特定权限才能访问
+	@RequiresRoles(角色)  需要特定角色才能访问
+	@RequiresAuthentication 需要认证才能访问
+
+第三种：通过shiro自定义标签（下面的shiro这个单词就是自定义标签），实现页面元素显示控制（基于标签技术实现）
+	<shiro:authenticated>登录后才能访问
+	<shiro:hasPermission name="abc">需要特定权限才能访问（只有他常用）
+	<shiro:hasRole name="abc">需要特定角色才能访问
+
+第四种：在程序中通过代码判断用户是否具有指定权限（不太常用，有代码侵入）
+
+
+24、注销登录：可以用shiro的subject对象进行注销登录。
+
+
+25、菜单管理：treegrid显示菜单列表。每个菜单项可以有一个父菜单和多个子菜单。菜单的增删改查。
+
+
+26、权限数据列表显示permission：包含权限的名称，关键字，描述。与角色roles是多对多的关系。
+    menu菜单：从菜单名称，访问路径，优先级，描述，与角色多对多与子菜单一对多，与父菜单多对一
+    用户user：生日，性别等信息，与角色多对多
+    角色role：角色名称，关键字，描述，与用户多对多，与权限多对多，与菜单多对多
+
+
+27、角色管理：角色是权限的集合，为了方便对用户授权，需要为用户授予角色。实现角色在菜单中的动态显示。
+角色添加时需要关联权限和菜单。
+
+
+28、用户管理：。。。最终结果：菜单根据登录人动态显示。
+
+
+29、Quartz任务调度框架实现定时发送邮件：
+首先引入maven坐标。
+编写要定时执行的类和方法。
+将quartz定时任务配置到spring配置文件中并注入要定时执行的类和类中的方法。（配置JobDetail，由这个对象负责通过反射调用自定义的Job的方法）
+配置触发器，指定触发的时间。（用cron表达式）
+配置任务调度工厂。
+加载spring配置文件，创建spring工厂。
+
+
+30、使用POI将数据导入（写入）到excel表格：
+查询数据---创建表格文件---创建行---创建标题行---将数据写入各个行---设置一个头两个流提供下载。
+
+
+31、基于HighCharts实现分区分布图：
+HighCharts支持的图表类型有曲线图、区域图、柱状图、饼状图、散状点图和综合图表。
+首先引入highcharts的js文件
+在页面中提供一个window窗口，用于展示饼状图
+用this.java2json方法将查询到的list数据转换成json格式并给highcharts传过去
+
+
+32、PDF格式报表生成 JasperResport：
+首先新建一个JasperReport模板文件 .jrxml，设置语言和字库。在ireport添加符合WayBill对象属性的Field，然后为模板连接数据库并设置jdbc驱动。
+然后将模板放入项目中，导入 jasperReport开发包，并用开发包中的api生成报表并提供下载。
+
+了解报表模板结构 
+Title: 报表标题 
+PageHeader: 页眉 
+ColumnHeader: 表格列标题 
+Detail： 表格数据内容 
+ColumnFooter： 表格页脚
+PageFooter： 页脚
+    Summary: 摘要
+
+
