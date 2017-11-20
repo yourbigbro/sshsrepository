@@ -1,0 +1,231 @@
+1、cookie,session
+
+
+2、io流
+
+有了。就是内存和磁盘。分为字节流，字符流，高效流，转换流。可以一个一个的，也可以用数组一堆一堆的。
+
+
+3、集合
+
+有了。
+
+4、jvm
+
+
+5、设计模式，算法
+
+
+6、框架
+
+
+7、gc（分代回收机制）
+
+gc（分代回收机制）是jvm的垃圾回收机制。将内存中的堆分为年轻代（新生代）和老年代（持久代）。
+年轻代一般是刚new出来不久，占空间较小，回收较为频繁。
+老年代在内存中活动较久，占用空间较大，回收不频繁。
+gc分为次gc和full gc，年轻代内存不足时触发gc,老年代内存不足触发full gc。
+
+8、linux命令
+
+有了。
+
+9、持久化
+
+
+10、类加载器（类加载过程）
+
+
+11、数据库事务
+
+
+12、数据库四个级别
+
+数据库隔离级别:
+1 read uncommitted	:读未提交.脏读，不可重复读，虚读/幻读都可能发生.
+2 read committed	:读已提交.避免脏读.但是不可重复读和虚读/幻读有可能发生.（Oracle默认）
+4 repeatable read	:可重复读.避免脏读,不可重复读.但是虚读/幻读有可能发生.（MySql默认）
+8 serializable		:串行化，可解决所有问题（也就是没有任何问题）
+
+脏读：还没有提交的就被读取了
+不可重复读：在读取的过程中另一个线程修改了数据，导致两次读到的不一样
+虚读/幻读：在读取的过程中另一个线程增加/减少了数据，导致两次读到的数据条数不一样
+
+13、多线程
+
+
+14、mysql索引
+
+索引的优点是方便数据库的查询操作，缺点是增删之后需要重建索引。索引分为单行索引，多行索引，主键索引等。通常在非业务相关的列上设置索引，通常不在数据量很大的列上面设置索引。索引是一种树型数据结构。
+
+15、防sql注入的方法
+
+用占位符。jdbc原生用？占位符，springmvc用#{}占位符。
+
+
+16、HQL
+
+
+17、技术的好处和应用场景
+
+
+18、准备业务上的解说！！！！！！
+
+
+19、异常
+
+
+20、遇到哪些问题
+
+1。cxf或者dubbo服务未开启就接收并使用服务了，导致找不到包和类。
+2。null不能调用equals方法。当变量为null的情况下错误的调用了equals方法。
+3.多表关联时需要先填入主表信息再填入相应的从表信息。
+4。400 BadRequest json报错 ：json格式不正确。
+5.类中引入的实体类报错（出现大量红线） ：重新install打包即可。
+6.BeanCreationException:忘了写注解。
+
+21、mysql的锁
+
+数据库的锁分为行锁，表锁等等。
+
+
+22、数据库分表
+
+数库分表的目的是为了加快查询速度，分为横向分表和纵向分表。分表原则：负载均衡。分表之后需要用数据库集群，用mycat做数据库集群。
+
+
+23、哨兵模式
+
+
+24、java实现链表
+
+
+25、集合
+
+arraylist底层是数组。
+Linkedlist底层是链表。
+linkedhashset底层基于哈希表和链表，他同时有有序和唯一的特性。
+HashSet集合，采用哈希表结构存储数据，保证元素唯一性的方式依赖于：hashCode()与equals()方法。
+collection中的集合称为单列集合，map中的集合称为双列集合。map中的集合主要分为hashmap和linkedhashmap，前者基于hashset，后者基于linkedhashset。
+list的子集合还有一个vector，他和arraylist的唯一区别就是vector是线程安全的，arraylist是线程不安全的。vector操作数据比较慢。
+在不知道应用场景的情况下，单列集合用arraylist，双列集合用hashmap，因为arraylist可以很容易的转化成其他种类的集合。
+
+26、hashmap实现
+
+hashmap的负载因子是0.75，也就是当他填满了75%的容量时，就会将大小扩展到原来的两倍。
+hashmap的特点是查找和增删都很快，综合了数组和链表的优点。
+hashmap和hashset相似，只不过一个是单列集合一个是双列集合。
+hashset的唯一性是用hashcode和equals实现，除了object对象（所有类都继承的是object，他是顶层类）之外其他所有对象的equals方法都是比较字符串值，只有object比较的是地址。
+
+27、值栈
+
+
+28、九大内置对象
+
+
+29、ehcache二级缓存
+
+
+30、各个技术和框架的缺点
+
+springmvc的缺点是当访问seo伪静态页面的时候只能返回text/html不能返回json，导致前台无法解析返回的数据。
+
+
+31、出过哪些bug
+
+
+32、死锁
+
+所谓死锁：是指两个或两个以上的进程在执行过程中，因争夺资源而造成的一种互相等待的现象，若无外力作用，它们都将无法推进下去。
+预防死锁的方法是为共享数据加锁，解决死锁的方法是撤销优先级低的进程，让优先级高的进程获得资源。
+
+ Java产生死锁的一个简单例子：
+
+思路是创建两个字符串a和b，再创建两个线程A和B，让每个线程都用synchronized锁住字符串（A先锁a，再去锁b；B先锁b，再锁a），如果A锁住a，B锁住b，A就没办法锁住b，B也没办法锁住a，这时就陷入了死锁。直接贴代码：
+
+public class DeadLock {
+    public static String obj1 = "obj1";
+    public static String obj2 = "obj2";
+    public static void main(String[] args){
+        Thread a = new Thread(new Lock1());
+        Thread b = new Thread(new Lock2());
+        a.start();
+        b.start();
+    }    
+}
+class Lock1 implements Runnable{
+    @Override
+    public void run(){
+        try{
+            System.out.println("Lock1 running");
+            while(true){
+                synchronized(DeadLock.obj1){
+                    System.out.println("Lock1 lock obj1");
+                    Thread.sleep(3000);//获取obj1后先等一会儿，让Lock2有足够的时间锁住obj2
+                    synchronized(DeadLock.obj2){
+                        System.out.println("Lock1 lock obj2");
+                    }
+                }
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+}
+class Lock2 implements Runnable{
+    @Override
+    public void run(){
+        try{
+            System.out.println("Lock2 running");
+            while(true){
+                synchronized(DeadLock.obj2){
+                    System.out.println("Lock2 lock obj2");
+                    Thread.sleep(3000);
+                    synchronized(DeadLock.obj1){
+                        System.out.println("Lock2 lock obj1");
+                    }
+                }
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+}
+
+33、悲观锁乐观锁
+
+一般用数据库的隔离级别来设置安全性，锁现在较少使用。
+悲观锁是表锁，效率比较低下，为了改善效率，就有了乐观锁。乐观锁是每个线程访问数据库都会生成一个版本号，
+当数据库发生变化之后版本号就会变化，另一个线程检测到版本号发生变化就会抛出异常；假如检测到版本号没有发生变化就会操作数据库。
+
+34、总结一下easyui
+
+
+35、日志问题（五种等级）
+
+DEBUG 调试信息提示
+INFO 比较重要的信息提示
+WARN 可能存在的潜在问题的提示
+ERROR 系统发生异常的提示
+FATAL 系统发生了致命的错误的提示 
+
+36、mysql的底层数据结构
+
+MySQL官方对索引的定义为：索引(Index)是帮助MySQL高效获取数据的数据结构。提取句子主干，就可以得到索引的本质：索引是数据结构。
+mysql索引的数据结是B+Tree。
+
+37、哈希冲突：
+
+两个关键字经过哈希函数计算映射到同一个地址称为哈希冲突。解决哈希冲突的四种方式：
+
+1）开放定址法：又分为线性探测再散列，二次探测再散列，伪随机数再散列。其中伪随机数再散列的存储地址取决于伪随机数列。
+2）再哈希法：地址冲突时改用另外一个哈希函数进行计算，直到不发生冲突。
+3）链地址法：将哈希值为同一地址值的冲突关键字放入同一个链表中。
+4）建立公共溢出区：将发生冲突的关键字放入另一个用于存放冲突关键字的溢出表中。
+
+
+38、stringbuilder和stringbuffer：
+前者是线程不安全的，后者是线程安全的。
+string在对字符串进行拼接操作时，每次拼接都会构建一个新的string对象，既耗时又浪费空间。而stringbuilder可以解决这个问题。
+注意stringbuilder是在堆中，stringbuilder中的原料是从常量池中拿出来的。
+
