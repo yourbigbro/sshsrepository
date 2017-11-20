@@ -959,3 +959,448 @@ Storage 保存文件（的服务器）
 
 
 87、
+门户系统：用户，消费者（前台系统）（就相当于京东的首页）
+后台系统：入住的商家、网站管理者
+
+
+88、后台管理系统中：
+内容表：id,标题，子标题，描述，图片，链接等
+内容分类表：是否为父类目，创建时间，几级类目等
+每个内容分类的下面都有多个内容（多个具体商品）
+
+
+89、实现内容分类管理（包括查询分类列表和增加分类）和内容管理，内容分类比如分成大广告位小广告位，内容管理是具体商品的增删查改。
+
+
+90、大广告位：
+大广告位的内容展示：
+数据准备
+在后台管理系统中，使用内容管理功能，增加大广告数据
+
+首页的大广告展示模块 对应 内容管理系统的大广告分类
+大广告的6条信息 对应 内容管理系统的大广告的内容数据
+
+注意：只能保存6条数据，不能多也不能少
+
+
+91、首页大广告添加缓存：
+
+为什么要添加缓存？
+随着访问用户越来越多，并发越来越大，直接从MySQL数据库查询性能较低。
+可以使用把数据进行缓存，从缓存读取速度更快
+
+什么样的数据需要添加缓存？
+1.访问频率高
+2.更新频率低
+
+首页访问量很大，大广告的更新频率较低，所以可以添加缓存
+可以使用redis增加缓存
+因为redis的读写速度快
+
+我们的架构是把缓存放在服务层
+服务层把需要缓存的数据放在redis中，
+先从redis查询数据，如果redis没有数据，再去MySQL查询。
+
+
+92、redis也有连接池，就是jedispool
+
+
+93、redis集群及其原理：
+
+(1)所有的redis节点彼此互联(PING-PONG机制),内部使用二进制协议优化传输速度和带宽。
+
+(2)节点的fail是通过集群中超过半数的节点检测失效时才生效。
+
+(3)客户端与redis节点直连,不需要中间proxy层.客户端不需要连接集群所有节点,连接集群中任何一个可用节点即可。
+
+Redis 集群中内置了 16384 个哈希槽，当需要在 Redis 集群中放置一个 key-value 时，redis 先对 key 使用 crc16 算法算出一个结果，然后把结果对 16384 求余数，这样每个 key 都会对应一个编号在 0-16383 之间的哈希槽，redis 会根据节点数量大致均等的将哈希槽映射到不同的节点（插槽相当于门牌号，节点相当于房间，一个房间可能对应于多个门牌号。节点的数量不能大于插槽，否则有的节点永远用不上。所以最多可以有16384个节点）（从节点是没有插槽的）
+
+还要区分主节点和从节点
+
+什么时候整个集群不可用(cluster_state:fail)??
+a:如果集群任意master挂掉,且当前master（主节点）没有slave（从节点）.集群进入fail状态,也可以理解成集群的slot映射[0-16383]不完整时进入fail状态.（此种情况虽然只挂掉了一个节点但是该节点的信息丢失导致整个集群的信息不完整）
+b:如果集群超过半数以上master挂掉，无论是否有slave，集群进入fail状态.
+
+
+
+94、Redis集群搭建
+为了保证可以进行投票，需要至少3个主节点。
+每个主节点都需要至少一个从节点,所以需要至少3个从节点
+一共需要6台redis服务器
+可以使用6个redis实例
+6个redis实例的端口号,7001~7006
+
+
+95、redis（jedis）的集群配置应该交给spring
+
+
+96、首页大广告缓存是先从redis中根据配置文件里面的键进行查询，如果没有就从mysql数据库中查询然后存储到redis中，如果mysql发生变化的话就用activemq通知redis。
+
+
+97、使用restful风格开发接口：
+
+2.3.RESTful接口结构
+2.3.1.协议
+API与用户的通信协议，例如http或者https协议。
+
+2.3.2.域名
+应该尽量将API部署在专用域名之下。
+https://example.org/user/
+
+2.3.3.路径
+在RESTful架构中，每个网址代表一种资源（resource），所以网址中不能有动词，只能有名词，而且所用的名词往往与数据库的表格名对应。
+https://rest.example.com/user
+
+2.3.4.HTTP动词（REST资源操作）
+对于资源的具体操作类型，由HTTP动词表示。
+常用的HTTP动词有下面四个（括号里是对应的SQL命令）。
+GET（SELECT）：从服务器取出资源（一项或多项）。
+POST（INSERT）：在服务器新建一个资源。
+PUT（UPDATE）：在服务器更新资源（客户端提供改变后的完整资源）。
+DELETE（DELETE）：从服务器删除资源。
+还有三个不常用的HTTP动词。
+PATCH（UPDATE）：在服务器更新资源（客户端提供改变的属性）。
+HEAD：获取资源的元数据。
+OPTIONS：获取信息，关于资源的哪些属性是客户端可以改变的。
+
+下面是一些例子。（注意，同样是一种http动词，有的有参数有的没有参数）
+GET /user：列出所有用户
+POST /user：新建一个用户
+GET /user/{id}：获取某个指定用户的信息
+PUT /user/{id}：更新某个指定用户的信息（提供该用户的全部信息）
+DELETE /zoos/{id}：删除某个用户
+
+原来的方式
+http://127.0.0.1/user/queryUser/{id}			GET方法，根据用户id获取数据
+http://127.0.0.1/user/updateUser				POST方法，用户修改
+http://127.0.0.1/user/saveUser				POST方法，用户新增
+http://127.0.0.1/user/deleteUser/{id}			GET/POST方法，用户根据id删除
+
+RESTful
+http://127.0.0.1/user/{id}						GET方法，根据用户id获取数据
+http://127.0.0.1/user/						PUT方法，用户修改
+http://127.0.0.1/user/						POST方法，用户新增
+http://127.0.0.1/user/{id}						DELETE方法，用户根据id删除
+
+2.3.5.提供json作为返回格式
+现在开始比较一下XML和json了。XML既冗长、难以阅读，又不适合各种编程语言解析。
+很多应用（youtube,twitter）都已经开始抛弃XML了， google上的使用xm和json的趋势图：
+
+
+2.4.HTTP状态码
+
+重点是200（查询成功）.201（新增成功）.204（修改或删除成功）.400（请求参数列表错误）.404（找不到资源）.500（服务器内部错误）
+
+
+98、restful最佳实践：
+
+2.5.最佳实践（最佳实践也属于restful，但是不用最佳实践也可以属于restful）
+2.5.1.最佳实践：REST接口设计
+?URL的组成
+–网络协议（http、https）
+–服务器地址
+–接口名称
+–参数列表
+?URL定义限定
+–不要使用大写字母（因为容易混淆）
+–使用中线 - 代替下划线 _（容易被误认为空格）
+–参数列表应该被encode过（对中文）
+2.5.2.最佳实践：响应设计
+?Content body 仅仅用来传输数据（也就是响应体里面不能出现状态码例如200）
+?数据要做到拿来就可用的原则，不需要“拆箱”的过程（拆箱就是得到data之后还要进行解析）
+?用来描述数据或者请求的元数据放Header中（描述数据的数据叫做元数据）
+
+
+99、http状态码：
+
+重点是200（查询成功）.201（新增成功）.204（修改或删除成功）.400（请求参数列表错误）.404（找不到资源）.500（服务器内部错误）
+
+
+100、接收不同的请求类型的方法和返回不同的状态码的方法：
+@RequestMapping(method = RequestMethod.POST)
+ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);（body()中的参数是返回前台的内容，没有就是null）
+
+
+101、测试接口的方法：谷歌浏览器的插件Advanced Rest Client
+
+
+102、单点登录：在门户进行登陆的时候需要调用单点登录系统的服务。
+
+103、跨域：ajax异步请求存在跨域问题，dataType的值是jsonp。跨域就是跨域名或跨端口号进行调用。
+
+什么是跨域问题？
+js使用Ajax进行跨域请求（js和ajax两个条件缺一不可，少一个条件就不再是跨域问题了，也就不会再出现跨域问题），无法返回数据（json、xml等）。
+
+为什么会有跨域问题？
+浏览器基于安全考虑，不允许Ajax请求跨域调用数据（json、xml等）
+
+我们现在碰到的问题就是，www.taotao.com请求sso.taotao.com，因为跨域问题，是无法使用Ajax获取数据的
+
+
+104、jsonp原理（他只是一个方法而已，不是一个技术）
+jsonp核心原理：
+js使用Ajax无法跨域调用数据（xml，json等），但是可以跨域调用js数据。所以我们在后台将json数据包成js方法返回前台页面即可。
+
+
+105、给用户的密码进行md5加密：DigestUtils.md5Hex(user.getPassword())
+
+
+106、406错误
+
+406的原因
+Ajax需要返回的是json格式的响应，但我们返回的是文本响应
+
+原因：springMVC看到html结尾的请求，就会返回文本的响应
+
+解决方案
+请求的时候，不使用html结尾即可，可以使用service开头
+
+修改taotao-portal的web.xml中的前端控制器，再加上一个servlet-mapping元素。
+
+
+107、单点登录系统的原理是将ticket存入cookie返回到浏览器，然后将ticket作为redis数据库的键，值是用户对象转化成的json，不管去哪个系统都会检测cookie然后到单点登录系统里面的redis中拿到用户信息。不管哪个系统都会判断一次用户是否登录，未登录的话只能返回门户系统或者登录页面。
+
+
+108、登陆成功之后没能成功保存cookie的原因：
+在保存的时候需要为cookie设置domain（也就是适用的域名），但是反向代理之后丢失了域名，只剩下了ip地址。解决方法是配置nginx反向代理中的配置文件。
+cookie中domain的作用：
+每个cookie都是对应自己的域名，不同的域名访问时保存的信息放在不同的cookie中，使用domain进行区分。
+查看淘宝、京东、百度等。他们使用的都是自己的domain
+
+
+109、solrj对索引库的增删改查（利用httpsolrserver对象）（都是基于document文档对象的）：
+
+3.2.2.创建httpSolrServer
+public class SolrjTest {
+	private HttpSolrServer httpSolrServer;
+	@Before
+	public void init() {
+		// 声明接口地址
+		String baseURL = "http://solr.taotao.com/solr/ ";
+		// 创建HttpSolrServer
+		this.httpSolrServer = new HttpSolrServer(baseURL);
+	}
+}
+
+3.2.3.实现新增/修改索引库（也就是在索引库中增加document）
+solrj没有修改方法，是使用add方法进行修改
+在业务域中配置了唯一域id，如果id存在则更新，id不存在则新增
+@Test
+public void testCreateAndUpdateIndex() throws Exception {
+
+	// 创建SolrInputDocument对象
+	SolrInputDocument document = new SolrInputDocument();
+	document.addField("id", "c1001");
+	document.addField("item_title", "java编程思想");
+
+	// 把SolrInputDocument对象添加到索引库中
+	this.httpSolrServer.add(document);
+
+	// 4. 提交
+	this.httpSolrServer.commit();
+}
+
+3.2.4.实现删除索引库
+两种方式删除
+@Test
+public void testDeleteIndex() throws Exception {
+	// 根据id删除索引数据（删除id为某值的document文档）
+	// this.httpSolrServer.deleteById("c1001");
+
+	// 根据条件删除（如果是*:*就表示全部删除，慎用）
+	this.httpSolrServer.deleteByQuery("*:*");
+
+	// 提交
+	this.httpSolrServer.commit();
+}
+
+3.2.5.实现查询索引库
+@Test
+public void testSearchIndex() throws Exception {
+	// 创建搜索对象
+	SolrQuery solrQuery = new SolrQuery();
+	// 设置查询条件
+	solrQuery.setQuery("item_title:java");
+
+	// 设置分页
+	solrQuery.setStart(0);
+	solrQuery.setRows(10);
+
+	// 设置高亮
+	solrQuery.setHighlight(true);
+	solrQuery.addHighlightField("item_title");
+	solrQuery.setHighlightSimplePre("<font color=\"red\">");
+	solrQuery.setHighlightSimplePost("</font>");
+
+	// 查询数据
+	QueryResponse response = this.httpSolrServer.query(solrQuery);
+	SolrDocumentList results = response.getResults();
+
+	System.out.println("搜索到的数据总条数：" + results.getNumFound());
+
+	Map<String, Map<String, List<String>>> map = response.getHighlighting();
+
+	// 解析查询结果
+	for (SolrDocument solrDocument : results) {
+		System.out.println("----------------------------------------------------");
+		// 获取高亮数据
+		List<String> list = map.get(solrDocument.get("id")).get("item_title");
+
+		System.out.println("商品ID：" + solrDocument.get("id"));
+		// 显示高亮
+		if (list != null && list.size() > 0) {
+			System.out.println("商品名称：" + list.get(0));
+		} else {
+			System.out.println("商品名称：" + solrDocument.get("item_title"));
+		}
+	}
+}
+
+
+110、solr集群版就是solrcloud，是solr的分布式搜索方案，特点是大规模和容错。
+
+
+111、solr集群（solrcloud）的结构：
+
+SolrCloud需要Solr基于Zookeeper部署，Zookeeper是一个集群管理软件，由于SolrCloud需要由多台服务器组成，由Zookeeper来进行协调管理。
+
+collection的两个分片体现的是分布式，master和slave体现的是集群。只有master可以执行写操作，slave只能执行读操作。既防止服务器挂掉又加快了查询数据的速度。
+
+4.3.1.物理结构
+三个Solr实例（ 每个实例包括两个Core），组成一个SolrCloud。
+4.3.2.逻辑结构
+索引集合包括两个Shard（shard1和shard2），shard1和shard2分别由三个Core组成，其中一个Leader两个Replication，Leader是由zookeeper选举产生，zookeeper控制每个shard上三个Core的索引数据一致，解决高可用问题。
+用户发起索引请求分别从shard1和shard2上获取，解决高并发问题。
+
+1.collection
+Collection在SolrCloud集群中是一个逻辑意义上的完整的索引结构。它常常被划分为一个或多个Shard（分片），它们使用相同的配置信息。
+比如：针对商品信息搜索可以创建一个collection。
+
+
+112、zookeeper在这里的作用：从core中选举leader，以及保持每个core中数据相同。
+
+
+113、
+（注意dubbo的zookeeper和solr的zookeeper用的是一个技术，搭建集群的方法也是一样的，只不过他们所应用的原理没什么关系）（不要用同一个zookeeper同时管理dubbo和solr）
+SolrCloud结构图如下：（可以看出solr集群至少要七台服务器）
+
+
+114、集群两大部分（zookeeper和redis集群都有投票机制，solr集群没有投票机制）
+1.zookeeper集群
+a)zookeeper需要保证高可用，需要搭建集群
+b)zookeeper需要进行投票和选举机制，最少需要三个节点
+2.Solr的集群
+a)需要四个节点
+b)整个collection分成两个分片，每个分片都由两个服务器组成，master和slave
+c)每个Tomcat有一个solr服务
+
+
+115、从多个field域中搜索的话用or就行，这样商品标题，详情等地方含有该关键字的都会被搜索到document。
+
+
+116、搜索功能数据同步：
+
+后台增加商品数据的时候，索引库没有同步更新。
+
+以前的解决方案：
+可以在taotao-search编写保存数据到solr索引库的方法，taotao-manager进行商品保存的时候，调用taotao-search的服务，更新索引库。这样做存在的问题：
+1.耦合性很高，每次都需要两边都进行修改
+2.随着业务的发展，业务逻辑越来越复杂，后台系统需要调用的服务会越来越多，之间的调用越来越复杂，难以管理。
+
+现在使用mq的解决方案：
+1.后台系统进行商品修改，通知MQ
+2.其他系统监听MQ是否有消息。如果没有消息，持续监听，如果有消息，处理相关业务逻辑处理
+
+存在的问题：
+1.（MQ）要是挂了，所有相关服务都挂了
+2.（MQ）性能瓶颈的问题，在使用时，尽量减少消息内容大小（因为消息越大处理速度越慢）
+
+
+117、activemq：
+
+ActiveMQ消息的传递有两种类型：
+一种是点对点的，即一个生产者和一个消费者一一对应；
+另一种是发布/订阅模式，即一个生产者产生消息并进行发送后，可以由多个消费者进行接收。（比如微信公众号，不订阅就无法收到消息）
+
+activemq使用内嵌的jms接口负责发送和接收消息：
+JMS即Java消息服务（Java Message Service）应用程序接口（MQ类的服务一般都会实现jms类型的接口），是一个Java平台中关于面向消息中间件（MOM）的API，用于在两个应用程序之间，或分布式系统中发送消息，进行异步通信。
+JMS是一个与具体平台无关的API，具有跨平台性。
+它主要用于在生产者和消费者之间进行消息传递，生产者负责产生消息，而消费者负责接收消息。把它应用到实际的业务需求中的话我们可以在特定的时候利用生产者生成一消息，并进行发送，对应的消费者在接收到对应的消息后去完成对应的业务逻辑。
+JMS定义了五种不同的消息正文格式：
+　　? StreamMessage -- Java原始值的数据流
+　　? MapMessage--一套名称-值对
+　　? TextMessage--一个字符串对象（只需要掌握这一种）
+　　? ObjectMessage--一个序列化的 Java对象
+　　? BytesMessage--一个字节的数据流
+
+
+118、activemq分为点对点模式和发布订阅模式，这里两种模式的接受方都有直接接收方式和使用监听器接收消息的模式。
+发送方的开发步骤：
+1. 创建ActiveMQConnectionFactory，创建工厂需要ip和端口号，指定的是tcp协议
+2. 从工厂中获取连接
+3. 使用连接的start方法，开启连接
+4. 使用连接获取session对象
+5. 使用session创建Destination，就是创建queue，（可以设置queue（点对点）和topic（订阅）
+6. 使用session创建Product，消息的是生产者
+7. 创建消息对象TextMessage，设置消息
+8. 发送消息
+9. 释放资源，关闭Product、session、connection
+
+接收方的开发步骤：
+1. 创建连接工厂ActiveMQConnectionFactory，需要ip和端口
+2. 从连接工厂中创建连接对象
+3. 执行start方法开始连接
+4. 从连接中创建session对象
+5. 从session中创建Destination对象，设置queue名称（有两种类型queue和topic）
+6. 从session中创建Consumer对象
+7. 接收消息
+8. 打印结果
+ 关闭session、连接
+
+
+119、activemq整合spring：在spring配置文件中加入activemq依赖和jms依赖。
+
+消息发送
+1.创建spring容器
+2.从容器中获取JMSTemplate对象，发送消息
+3.定义Destination
+4.使用JMSTemplate对象发送消息
+
+消息接受
+1.创建一个类实现MessageListener 接口。业务处理在此类中实现。
+2．在spring容器中配置DefaultMessageListenerContainer对象，引用MessageListener 实现类对象接收消息。
+
+配置文件中主要是设置jmstemplate，messageListener，主题目的地（设置是topic还是queue）
+
+
+120、通过mq在将商品更新信息保存到数据库之后通知索引库进行操作，是将改变的商品的id通过mq传了过去，由索引库那边从数据库中查询出来数据。并不是将商品对象或者转化成的json传过去，因为activemq在数据量大的时候会有性能瓶颈。
+
+
+121、商品详情页freemarker：
+
+为什么要用静态化（redis不要和静态化一起使用，因为访问静态化页面的话就不会再访问redis了，反而会降低效率）
+商品详情页是消费者了解商品的主要途径，访问的频率非常高。
+所以需要对商品详情页进行优化，提高访问的速度。
+
+2.使用静态化
+把动态页面（jsp，php，asp等)，转变成静态页面（html）
+好处：
+1.访问静态页面不需要经过程序处理，可以提高速度。（处理速度，和数据库访问速度）
+2.稳定性高。（即使后台服务器和数据库挂了也能访问）
+3.从安全角度讲，静态网页不易遭到黑客攻击。
+静态页面相对于动态页面更容易被搜索引擎收录。（SEO）
+
+
+应该在商品生成和修改的时候生成静态页面，这样就不会出现用户访问到的和数据库内的不一样。
+
+freemarker是一个模板引擎，可以基于模板生成文本（html）
+freemarker和应用服务器（Tomcat、jetty）是没有关联的，不需要使用jsp和servlet技术
+freemarker除了前端页面展示的功能外，还可以生成xml，java（jdbc+freemarker可以做逆向工程，例如生成mapper）
+
+模板 + 数据 = 静态页面
+
+静态化的过程：获取模板---指定数据模型---指定输出路径---静态化。
+
+模板里面可以写javaBean,list,map，时间等等类型的数据。
+
+图片就保存在本地，然后用nginx搭建本地静态资源服务器。（也就是配置一个root+本地绝对路径）
