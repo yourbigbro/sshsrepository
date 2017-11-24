@@ -2619,3 +2619,27 @@ Maven的好处：
 
 
 260、父工程：类型该为pom
+
+
+261、多对多查询
+
+表Task： taskID,taskName
+表Person: personID, personName
+表TaskPerson: taskID，personID
+每个任务有多个人担当，每个人同时也担当多人任务。
+求教SQL文，查询1：每个任务对应的担当者
+查询2：每个人承担的任务
+
+防止出现有任务没有对应的人担当，因此用left join防止漏掉任务
+  
+查询1：每个任务对应的担当者  
+SELECT t.taskID, t.taskName, tp.personID, p.personName
+FROM task t
+LEFT JOIN TaskPerson tp ON t.taskID = tp.taskID
+LEFT JOIN Person p ON p.personID = tp.personID
+
+查询2：每个人承担的任务
+SELECT p.personID, p.personName, tp.taskID, t.taskName
+FROM Person p
+LEFT JOIN TaskPerson tp ON p.personID = tp.personID
+LEFT JOIN Task t ON t.taskID = tp.taskID
