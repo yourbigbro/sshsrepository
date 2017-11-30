@@ -2650,4 +2650,18 @@ IoC最大的好处是什么？因为把对象生成放在了XML里定义，所以当我们需要换一个实现子类
 IoC最大的缺点是什么？（1）生成一个对象的步骤变复杂了（事实上操作上还是挺简单的），对于不习惯这种方式的人，会觉得有些别扭和不直观。（2）对象生成因为是使用反射编程，在效率上有些损耗。但相对于IoC提高的维护性和灵活性来说，这点损耗是微不足道的，除非某对象的生成对效率要求特别高。（3）缺少IDE重构操作的支持，如果在Eclipse要对类改名，那么你还需要去XML文件里手工去改了，这似乎是所有XML方式的缺陷所在。
 
 
-263、
+263、项目二配置文件内容：
+taotao-sso-web：
+               log4j.properties:设置日志等级
+               springmvc.xml:加载properties日志配置文件，扫描controller，配置注解驱动，配置dubbo(zookeeper，声明要调用的服务)
+               pom.xml:配置tomcat插件设置端口和路径等
+taotao-sso-service:
+                   SqlMapConfig.xml:分页插件，通用mapper
+                   jdbc.properties:数据库连接信息
+                   redis.properties:ticket前缀，redis连接信息（ip和端口号）
+                   log4j.properties:日志等级
+                   applicationContext-dao.xml:数据源，连接池，mapper扫描
+                   applicationContext-redis.xml：集群版的连接对象（包含集群各个节点的信息）
+                   applicationContext-service.xml：service扫描，dubbo,zookeeper
+                   applicationContext-trans.xml：事务管理器，事务策略，切面
+                   log4j.properties:设置日志等级
